@@ -1,0 +1,700 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI碳足迹助手 - 农大闲置</title>
+    <link rel="stylesheet" href="./style/main.css">
+    <style>
+        /* ========== 星空背景 ========== */
+        body { position: relative; }
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
+            z-index: -1;
+            background: url('./images/bg-starry.jpg') center center / cover no-repeat;
+        }
+        /* ========== AI碳足迹助手 - 星空玻璃拟态风格 ========== */
+        
+        .ai-header {
+            padding: 60px 20px 0;
+            text-align: left;
+        }
+        
+        .ai-header h1 { 
+            margin: 0 0 6px 0; 
+            font-size: 26px; 
+            font-weight: 700;
+            background: transparent;
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        .ai-header p { 
+            margin: 0; 
+            color: rgba(255,255,255,0.6); 
+            font-size: 13px; 
+        }
+        
+        .ai-container {
+            max-width: 700px;
+            margin: 20px auto;
+            padding: 0 16px 100px;
+        }
+        
+        .ai-chat-box {
+            background: transparent;
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border: 1px solid rgba(255,255,255,0.12);
+            border-radius: 20px;
+            box-shadow: 0 8px 32px rgba(0,0,0,0.3);
+            overflow: hidden;
+            margin-bottom: 20px;
+        }
+        
+        .ai-messages {
+            height: 400px;
+            overflow-y: auto;
+            padding: 20px;
+        }
+        
+        .ai-message {
+            margin-bottom: 16px;
+            display: flex;
+            animation: msgIn 0.3s ease;
+        }
+        
+        @keyframes msgIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        .ai-message.user { justify-content: flex-end; }
+        .ai-message.ai { justify-content: flex-start; }
+        
+        .ai-message-bubble {
+            max-width: 80%;
+            padding: 12px 16px;
+            border-radius: 16px;
+            line-height: 1.6;
+            word-break: break-word;
+        }
+        
+        .ai-message.user .ai-message-bubble {
+            background: transparent;
+            color: #fff;
+            border-bottom-right-radius: 4px;
+            border: 1px solid rgba(96,165,250,0.3);
+        }
+        
+        .ai-message.ai .ai-message-bubble {
+            background: transparent;
+            backdrop-filter: blur(10px);
+            color: rgba(255,255,255,0.9);
+            border-bottom-left-radius: 4px;
+            border: 1px solid rgba(255,255,255,0.1);
+        }
+        
+        .ai-message.ai.typing .ai-message-bubble {
+            padding: 20px;
+        }
+        
+        .ai-typing-dots {
+            display: inline-flex;
+            gap: 4px;
+        }
+        
+        .ai-typing-dots span {
+            width: 8px;
+            height: 8px;
+            background: transparent;
+            border-radius: 50%;
+            animation: typing 1.4s infinite;
+        }
+        
+        .ai-typing-dots span:nth-child(2) { animation-delay: 0.2s; }
+        .ai-typing-dots span:nth-child(3) { animation-delay: 0.4s; }
+        
+        @keyframes typing {
+            0%, 60%, 100% { transform: translateY(0); opacity: 0.4; }
+            30% { transform: translateY(-6px); opacity: 1; }
+        }
+        
+        .ai-message-time {
+            font-size: 0.75rem;
+            color: rgba(255,255,255,0.4);
+            margin-top: 4px;
+        }
+        
+        .ai-message.user .ai-message-time { text-align: right; }
+        
+        .ai-quick-questions {
+            padding: 16px;
+            border-top: 1px solid rgba(255,255,255,0.1);
+            background: rgba(255,255,255,0.03);
+        }
+        
+        .ai-quick-questions h4 {
+            margin: 0 0 12px 0;
+            background: transparent;
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            font-size: 0.9rem;
+        }
+        
+        .ai-quick-btns {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+        }
+        
+        .ai-quick-btn {
+            background: rgba(96,165,250,0.15);
+            color: #60a5fa;
+            border: 1px solid rgba(96,165,250,0.25);
+            padding: 8px 14px;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            cursor: pointer;
+            transition: all 0.25s ease;
+        }
+        
+        .ai-quick-btn:hover {
+            background: rgba(96,165,250,0.3);
+            transform: translateY(-1px);
+        }
+        
+        .ai-quick-btn:disabled {
+            opacity: 0.4;
+            cursor: not-allowed;
+        }
+        
+        .ai-input-area {
+            padding: 16px;
+            display: flex;
+            gap: 12px;
+            border-top: 1px solid rgba(255,255,255,0.1);
+            background: rgba(255,255,255,0.05);
+        }
+        
+        .ai-input {
+            flex: 1;
+            padding: 12px 16px;
+            background: rgba(255,255,255,0.08);
+            border: 1px solid rgba(255,255,255,0.15);
+            border-radius: 25px;
+            font-size: 1rem;
+            color: #fff;
+            outline: none;
+            transition: all 0.25s ease;
+        }
+        
+        .ai-input:focus { 
+            border-color: rgba(96,165,250,0.5);
+            background: rgba(255,255,255,0.12);
+        }
+        
+        .ai-input::placeholder {
+            color: rgba(255,255,255,0.4);
+        }
+        
+        .ai-send-btn {
+            background: transparent;
+            color: #fff;
+            border: 1px solid rgba(96,165,250,0.4);
+            padding: 12px 24px;
+            border-radius: 25px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        .ai-send-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 24px rgba(96,165,250,0.3);
+            background: transparent;
+        }
+        
+        .ai-send-btn:disabled {
+            opacity: 0.4;
+            cursor: not-allowed;
+            transform: none;
+        }
+        
+        .ai-stats-card {
+            background: transparent;
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border: 1px solid rgba(255,255,255,0.12);
+            border-radius: 20px;
+            padding: 20px;
+            box-shadow: 0 8px 32px rgba(0,0,0,0.2);
+            margin-bottom: 20px;
+        }
+        
+        .ai-stats-card h3 {
+            background: transparent;
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin: 0 0 16px 0;
+            font-size: 1.1rem;
+        }
+        
+        .ai-stats-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 12px;
+            text-align: center;
+        }
+        
+        .ai-stat-item {
+            background: rgba(255,255,255,0.05);
+            padding: 12px;
+            border-radius: 12px;
+            border: 1px solid rgba(255,255,255,0.08);
+        }
+        
+        .ai-stat-value {
+            font-size: 1.4rem;
+            font-weight: bold;
+            background: transparent;
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        
+        .ai-stat-label {
+            font-size: 0.75rem;
+            color: rgba(255,255,255,0.5);
+            margin-top: 4px;
+        }
+        
+        .ai-status {
+            background: transparent;
+            backdrop-filter: blur(20px);
+            border-radius: 16px;
+            padding: 16px;
+            margin-bottom: 20px;
+            border: 1px solid rgba(96,165,250,0.25);
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+        
+        .ai-status-dot {
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            background: transparent;
+            box-shadow: 0 0 10px rgba(96,165,250,0.5);
+        }
+        
+        .ai-status-text {
+            flex: 1;
+            color: rgba(255,255,255,0.8);
+            font-size: 0.9rem;
+        }
+        
+        .ai-back-btn {
+            position: fixed;
+            top: 80px;
+            left: 16px;
+            background: transparent;
+            backdrop-filter: blur(20px);
+            color: #fff;
+            border: 1px solid rgba(255,255,255,0.15);
+            padding: 10px 16px;
+            border-radius: 25px;
+            font-weight: 600;
+            cursor: pointer;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.3);
+            z-index: 100;
+            text-decoration: none;
+            transition: all 0.3s ease;
+        }
+        
+        .ai-back-btn:hover {
+            background: transparent;
+            transform: translateY(-2px);
+        }
+        
+        @media (max-width: 768px) {
+            .ai-stats-grid { grid-template-columns: repeat(2, 1fr); }
+            .ai-messages { height: 350px; }
+            .ai-quick-btn { font-size: 0.8rem; padding: 6px 12px; }
+            .ai-back-btn { top: 80px; left: 12px; }
+        }
+    
+        /* 页面头部 */
+        .page-header {
+            padding: 80px 20px 20px;
+            text-align: left;
+            max-width: 900px;
+            margin: 0 auto;
+        }
+        .page-header h1 {
+            font-size: 28px;
+            font-weight: 700;
+            margin: 0 0 8px 0;
+            background: linear-gradient(135deg, #fff 0%, #60A5FA 50%, #C084FC 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        .page-header p {
+            font-size: 14px;
+            color: rgba(255,255,255,0.6);
+            margin: 0;
+        }
+        .page-container {
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 0 16px 100px;
+        }
+        </style>
+</head>
+<body style="background: transparent;">
+    <div class="cosmos-bg">
+        <div class="cosmos-stars"></div>
+        <div class="cosmos-nebula"></div>
+    </div>
+    <a href="user_center.html" class="ai-back-btn">← 返回</a>
+    
+    <div class="ai-header">
+        <h1>🤖 AI碳足迹助手</h1>
+        <p>获取个性化环保建议，了解闲置背后的碳价值</p>
+    </div>
+    
+    <div class="ai-container">
+        <!-- 用户碳数据 -->
+        <div class="ai-stats-card">
+            <h3>📊 您的碳足迹数据</h3>
+            <div class="ai-stats-grid">
+                <div class="ai-stat-item">
+                    <div class="ai-stat-value" id="userCarbon">0</div>
+                    <div class="ai-stat-label">累计减碳(kg)</div>
+                </div>
+                <div class="ai-stat-item">
+                    <div class="ai-stat-value" id="userTrees">0</div>
+                    <div class="ai-stat-label">等效种树</div>
+                </div>
+                <div class="ai-stat-item">
+                    <div class="ai-stat-value" id="userPoints">0</div>
+                    <div class="ai-stat-label">碳积分</div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- AI状态 -->
+        <div class="ai-status" id="aiStatus">
+            <div class="ai-status-dot" id="aiStatusDot"></div>
+            <div class="ai-status-text" id="aiStatusText">🌿 AI助手已就绪</div>
+        </div>
+        
+        <!-- 聊天窗口 -->
+        <div class="ai-chat-box">
+            <div class="ai-messages" id="aiMessages">
+                <!-- 消息由JS动态添加 -->
+            </div>
+            
+            <!-- 快捷问题 -->
+            <div class="ai-quick-questions">
+                <h4>💬 快捷问题</h4>
+                <div class="ai-quick-btns" id="quickBtns">
+                    <button class="ai-quick-btn" data-q="我的碳减排贡献有多少？">我的贡献</button>
+                    <button class="ai-quick-btn" data-q="如何获得更多碳积分？">获得积分</button>
+                    <button class="ai-quick-btn" data-q="教材类闲置的环保价值是什么？">教材价值</button>
+                    <button class="ai-quick-btn" data-q="碳积分可以兑换什么？">积分兑换</button>
+                    <button class="ai-quick-btn" data-q="什么是双碳目标？">双碳目标</button>
+                </div>
+            </div>
+            
+            <!-- 输入框 -->
+            <div class="ai-input-area">
+                <input type="text" class="ai-input" id="aiInput" placeholder="输入您的问题...">
+                <button class="ai-send-btn" id="aiSendBtn">发送</button>
+            </div>
+        </div>
+    </div>
+    
+    <script src="./script/carbon.js"></script>
+    <script>
+    (function() {
+        'use strict';
+        
+        // ========== DOM ==========
+        var messagesContainer = document.getElementById('aiMessages');
+        var input = document.getElementById('aiInput');
+        var sendBtn = document.getElementById('aiSendBtn');
+        var quickBtns = document.getElementById('quickBtns');
+        
+        // ========== 状态 ==========
+        var isTyping = false;
+        
+        // ========== 预设回复数据库 ==========
+        var REPLY_DATABASE = {
+            // 碳减排相关
+            '贡献': {
+                patterns: ['贡献', '减排', '碳排', '减碳', '节省'],
+                replies: [
+                    '🌱 您目前累计减碳{carbon}kg CO₂\n\n📊 相当于种了{trees}棵树！\n\n💪 继续保持，绿色校园离不开您的贡献！\n\n每笔闲置交易都在为碳减排做贡献，感谢您的参与~',
+                    '🌿 您的碳减排数据非常亮眼！\n\n累计减少碳排放 {carbon}kg，相当于减少了 {trees} 棵树木一年的吸碳量！\n\n🏆 继续保持，绿色校园需要你我共同努力！'
+                ]
+            },
+            // 积分获取
+            '积分获得': {
+                patterns: ['获得积分', '怎么获得', '如何获得', '积分怎么来', '积分如何'],
+                replies: [
+                    '🎁 获得碳积分的方式：\n\n• ✅ 每笔交易完成：+100积分\n• 🌿 每节省1kg CO₂：+10积分\n• 📦 发布闲置：+20积分\n• 📅 每日签到：+5积分\n• 📤 分享海报：+50积分\n\n您目前有{points}积分，继续加油！',
+                    '💰 积分获取攻略：\n\n1. 完成交易可获得基础积分\n2. 闲置品类越环保，额外奖励越多\n3. 定期签到保持活跃度\n4. 分享海报邀请好友可获得高额奖励\n\n当前积分：{points}分'
+                ]
+            },
+            // 教材价值
+            '教材': {
+                patterns: ['教材', '书', '书本', '书籍', '课本'],
+                replies: [
+                    '📚 教材类闲置是校园碳减排的"主力军"！\n\n每本教材二手流转可节省约8kg CO₂：\n• 📄 减少0.5kg纸张消耗\n• 💧 节省3L水资源\n• 🛍️ 减少0.2kg塑料包装\n\n毕业季回收教材，让知识循环起来！',
+                    '📖 教材循环利用的环保价值：\n\n• 减少新书生产带来的碳排放\n• 节约印刷用纸和水资源\n• 减少运输过程中的能源消耗\n• 延长书籍使用寿命\n\n建议：每学期末组织教材回收活动！'
+                ]
+            },
+            // 积分兑换
+            '兑换': {
+                patterns: ['兑换', '礼品', '奖励', '奖品', '换什么'],
+                replies: [
+                    '🎁 碳积分可兑换：\n\n• 🌿 100积分：环保书签\n• 🛍️ 500积分：二手袋套装\n• 🌱 1000积分：校园绿植一盆\n• 📜 5000积分：环保达人证书\n\n（兑换商店开发中，敬请期待~）',
+                    '🛒 积分兑换中心（即将上线）：\n\n• 环保文具套装\n• 二手袋/帆布袋\n• 绿植盆栽\n• 校外科普活动门票\n• 环保志愿者证书\n\n攒积分，兑好礼，倡导绿色生活！'
+                ]
+            },
+            // 双碳目标
+            '双碳': {
+                patterns: ['双碳', '碳达峰', '碳中和', '碳达', '碳中'],
+                replies: [
+                    '🌍 "双碳"目标是国家战略！\n\n**碳达峰**：2030年前CO₂排放达到峰值后不再增长\n\n**碳中和**：2060年前实现CO₂净零排放\n\n🏫 校园闲置循环是实现双碳目标的重要路径：\n• 延长物品使用寿命\n• 减少资源开采和运输\n• 培养低碳生活习惯',
+                    '📋 双碳目标解读：\n\n中国承诺：\n• 2030年前碳达峰\n• 2060年前碳中和\n\n作为大学生，我们能做什么？\n• 参与闲置交易，减少浪费\n• 选择二手物品，降低需求\n• 分享传播环保理念\n• 积极参加环保活动'
+                ]
+            },
+            // 问好
+            '你好': {
+                patterns: ['你好', 'hi', 'hello', '嗨', '您好', '早上好', '晚上好'],
+                replies: [
+                    '👋 你好！很高兴为你服务~\n\n作为农大闲置平台的AI助手，我可以帮你：\n• 分析你的碳减排数据\n• 提供环保建议\n• 解答双碳问题\n\n有什么想了解的吗？',
+                    '🌿 你好！我是碳足迹助手~\n\n你的当前数据：\n• 累计减碳 {carbon}kg\n• 等效种树 {trees} 棵\n• 碳积分 {points} 分\n\n继续参与绿色交易，一起为双碳目标努力！'
+                ]
+            },
+            // 电子产品
+            '电子': {
+                patterns: ['手机', '电脑', '平板', '电子', '数码', '耳机', '充电器'],
+                replies: [
+                    '📱 电子产品二手交易的环保价值：\n\n• 减少电子垃圾污染\n• 节省稀有金属资源开采\n• 降低生产过程的碳排放\n• 减少有毒物质排放\n\n提醒：交易前请确保个人数据已清除！',
+                    '💻 数码产品二手流转的环境效益：\n\n一台二手手机再利用，可减少约30kg碳排放！\n\n购买二手数码产品不仅省钱，还能为环保做贡献~'
+                ]
+            },
+            // 衣物
+            '衣服': {
+                patterns: ['衣服', '衣物', '衣服', '服装', '裙子', '裤子', '鞋子', '球鞋'],
+                replies: [
+                    '👕 衣物二手交易的环保价值：\n\n• 减少纺织业资源消耗\n• 降低服装生产的碳排放\n• 减少填埋场垃圾\n• 减少水污染（纺织业是高耗水行业）\n\n快来交易你的闲置衣物吧！',
+                    '👗 服装二手流转的生态意义：\n\n一件T恤从生产到上架，碳排放约7kg\n一件牛仔裤高达30kg CO₂\n\n二手衣物交易可显著降低这些排放！'
+                ]
+            },
+            // 日用品
+            '日用品': {
+                patterns: ['日用品', '生活用品', '生活用品', '收纳', '收纳箱'],
+                replies: [
+                    '🧸 日用品二手交易的环保价值：\n\n• 减少塑料制品生产\n• 降低包装材料消耗\n• 减少物流运输碳排放\n• 延长物品使用寿命\n\n闲置日用品的交易，让资源循环起来！',
+                    '🏠 生活用品再利用的好处：\n\n• 收纳箱、小家电等都可以二手交易\n• 减少资源开采和加工\n• 降低产品全生命周期的碳足迹\n\n整理闲置，让物品找到新主人~'
+                ]
+            },
+            // 运动用品
+            '运动': {
+                patterns: ['运动', '篮球', '足球', '羽毛球', '乒乓球', '健身', '瑜伽'],
+                replies: [
+                    '⚽ 运动用品二手交易的环保价值：\n\n• 减少体育用品生产碳排放\n• 延长运动器材使用寿命\n• 降低学生运动成本\n• 减少塑料和橡胶消耗\n\n毕业季运动器材回收，让学弟学妹也能享受运动的乐趣！',
+                    '🏀 体育用品再利用的生态效益：\n\n球类、球拍、健身器材等都适合二手交易\n\n二手购买不仅便宜，还能减少碳排放~\n\n一起倡导绿色运动！'
+                ]
+            }
+        };
+        
+        // 默认回复
+        var DEFAULT_REPLIES = [
+            '💡 感谢您的提问！\n\n作为农大闲置平台的用户，您的每一笔闲置交易都在为碳减排做贡献。\n\n当前数据：减碳{carbon}kg，等效种树{trees}棵\n\n继续参与绿色交易，一起为双碳目标努力！🌱',
+            '🌿 您的提问很棒！\n\n作为农大闲置平台的AI助手，我会持续为你提供碳足迹相关的知识和建议。\n\n当前减碳进度：{carbon}kg 🔋\n\n继续保持，绿色校园建设需要你我共同参与！',
+            '📝 关于您的问题，让我来解答：\n\n农大闲置平台致力于推广绿色交易理念，每一笔闲置交易都能减少碳排放。\n\n您的贡献：累计减碳{carbon}kg = 种了{trees}棵树的价值！\n\n继续加油，一起为环保助力！💪'
+        ];
+        
+        // ========== 获取用户数据 ==========
+        function getUserStats() {
+            if (window.HNAU_Carbon && typeof HNAU_Carbon.getStats === 'function') {
+                return HNAU_Carbon.getStats();
+            }
+            return {
+                totalSaved: 0,
+                treesEquivalent: 0,
+                totalPoints: 0
+            };
+        }
+        
+        // ========== 格式化回复 ==========
+        function formatReply(reply, stats) {
+            return reply
+                .replace('{carbon}', stats.totalSaved.toFixed(1))
+                .replace('{trees}', stats.treesEquivalent.toFixed(1))
+                .replace('{points}', stats.totalPoints);
+        }
+        
+        // ========== 获取预设回复 ==========
+        function getPresetResponse(question, stats) {
+            var lowerQ = question.toLowerCase();
+            
+            // 遍历预设回复库
+            for (var key in REPLY_DATABASE) {
+                var category = REPLY_DATABASE[key];
+                for (var i = 0; i < category.patterns.length; i++) {
+                    if (lowerQ.includes(category.patterns[i])) {
+                        var replies = category.replies;
+                        var reply = replies[Math.floor(Math.random() * replies.length)];
+                        return formatReply(reply, stats);
+                    }
+                }
+            }
+            
+            // 返回默认回复（随机选择）
+            var defaultReply = DEFAULT_REPLIES[Math.floor(Math.random() * DEFAULT_REPLIES.length)];
+            return formatReply(defaultReply, stats);
+        }
+        
+        // ========== 初始化 ==========
+        function init() {
+            var stats = getUserStats();
+            
+            // 更新用户数据
+            document.getElementById('userCarbon').textContent = stats.totalSaved.toFixed(1);
+            document.getElementById('userTrees').textContent = stats.treesEquivalent.toFixed(1);
+            document.getElementById('userPoints').textContent = stats.totalPoints;
+            
+            // 添加欢迎消息
+            var welcomeMsg = '👋 你好！我是农大碳足迹助手 🌱\n\n' +
+                '我可以帮你：\n' +
+                '• 📊 分析你的碳减排贡献\n' +
+                '• 💡 提供个性化环保建议\n' +
+                '• 🎁 介绍碳积分兑换方案\n' +
+                '• 📚 讲解闲置品类的环保价值\n' +
+                '• 🌍 科普双碳目标知识\n\n' +
+                '你的当前数据：累计减碳' + stats.totalSaved.toFixed(1) + 'kg，等效种树' + stats.treesEquivalent.toFixed(1) + '棵！\n\n' +
+                '有什么想了解的吗？';
+            
+            addMessage(welcomeMsg, 'ai');
+            
+            // 绑定事件
+            bindEvents();
+            
+            console.log('[HNAU AI] 碳足迹助手已初始化（纯前端预设模式）');
+        }
+        
+        // ========== 添加消息 ==========
+        function addMessage(text, type) {
+            var msg = document.createElement('div');
+            msg.className = 'ai-message ' + type;
+            msg.innerHTML = '<div class="ai-message-bubble">' + text.replace(/\n/g, '<br>') + '</div>' +
+                           '<div class="ai-message-time">' + new Date().toLocaleTimeString() + '</div>';
+            messagesContainer.appendChild(msg);
+            messagesContainer.scrollTop = messagesContainer.scrollHeight;
+        }
+        
+        // ========== 显示正在输入 ==========
+        function showTyping() {
+            var msg = document.createElement('div');
+            msg.className = 'ai-message ai typing';
+            msg.id = 'typingIndicator';
+            msg.innerHTML = '<div class="ai-message-bubble"><div class="ai-typing-dots"><span></span><span></span><span></span></div></div>';
+            messagesContainer.appendChild(msg);
+            messagesContainer.scrollTop = messagesContainer.scrollHeight;
+            isTyping = true;
+            setInputEnabled(false);
+        }
+        
+        // ========== 隐藏正在输入 ==========
+        function hideTyping() {
+            var typing = document.getElementById('typingIndicator');
+            if (typing) typing.remove();
+            isTyping = false;
+            setInputEnabled(true);
+        }
+        
+        // ========== 设置输入状态 ==========
+        function setInputEnabled(enabled) {
+            input.disabled = !enabled;
+            sendBtn.disabled = !enabled;
+            quickBtns.querySelectorAll('button').forEach(function(btn) {
+                btn.disabled = !enabled;
+            });
+        }
+        
+        // ========== 发送消息（纯前端预设模式）==========
+        function sendMessage() {
+            var text = input.value.trim();
+            if (!text || isTyping) return;
+            
+            // 添加用户消息
+            addMessage(text, 'user');
+            input.value = '';
+            
+            // 显示AI正在输入
+            showTyping();
+            
+            // 模拟延迟（1-2秒）
+            var delay = 1000 + Math.random() * 1000;
+            
+            setTimeout(function() {
+                hideTyping();
+                
+                // 获取预设回复
+                var stats = getUserStats();
+                var response = getPresetResponse(text, stats);
+                addMessage(response, 'ai');
+                
+                // 记录AI报告获取
+                if (window.HNAU_Carbon && typeof HNAU_Carbon.addAIReport === 'function') {
+                    HNAU_Carbon.addAIReport();
+                }
+            }, delay);
+        }
+        
+        // ========== 绑定事件 ==========
+        function bindEvents() {
+            // 发送按钮
+            sendBtn.addEventListener('click', sendMessage);
+            
+            // 回车发送
+            input.addEventListener('keypress', function(e) {
+                if (e.key === 'Enter' && !e.shiftKey) {
+                    e.preventDefault();
+                    sendMessage();
+                }
+            });
+            
+            // 快捷问题按钮
+            quickBtns.addEventListener('click', function(e) {
+                var btn = e.target.closest('.ai-quick-btn');
+                if (btn && !btn.disabled) {
+                    input.value = btn.dataset.q;
+                    sendMessage();
+                }
+            });
+        }
+        
+        // ========== 启动 ==========
+        if (document.readyState === 'loading') {
+            document.addEventListener('DOMContentLoaded', init);
+        } else {
+            init();
+        }
+    })();
+    </script>
+</body>
+</html>

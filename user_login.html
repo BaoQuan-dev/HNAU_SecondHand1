@@ -1,0 +1,448 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="河南农业大学登录注册">
+    <title>登录/注册 - 农大闲置</title>
+    <link rel="stylesheet" href="./style/main.css">
+    <style>
+        /* ========== 内嵌星空背景 ========== */
+        body { 
+            position: relative; 
+            background: url('./images/bg-starry.jpg') center center / cover no-repeat fixed !important;
+        }
+        body::before {
+            display: none;
+        }
+
+        /* ========== 页面容器 ========== */
+        .login-wrapper {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 60px 20px 40px;
+        }
+        
+        /* 覆盖 main.css 的 padding-top */
+        .main-content {
+            padding-top: 0 !important;
+            min-height: auto !important;
+            position: relative;
+            z-index: 10;
+        }
+        
+        /* 确保按钮可以点击 */
+        .btn {
+            pointer-events: auto !important;
+        }
+        .login-btn {
+            pointer-events: auto !important;
+        }
+        .login-form input {
+            pointer-events: auto !important;
+        }
+        
+        /* 返回按钮 - 玻璃拟态风格 */
+        .ai-back-btn {
+            position: fixed;
+            top: 20px;
+            left: 16px;
+            background: rgba(255,255,255,0.05);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            color: #fff;
+            border: 1px solid rgba(255,255,255,0.15);
+            padding: 10px 16px;
+            border-radius: 25px;
+            font-weight: 600;
+            cursor: pointer;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.3);
+            z-index: 100;
+            text-decoration: none;
+            transition: all 0.3s ease;
+        }
+        
+        .ai-back-btn:hover {
+            background: rgba(255,255,255,0.1);
+            transform: translateY(-2px);
+            box-shadow: 0 6px 25px rgba(96,165,250,0.3);
+        }
+
+        /* ========== 玻璃拟态卡片 ========== */
+        .login-card {
+            width: 100%;
+            max-width: 480px;
+            background: linear-gradient(135deg, rgba(30, 40, 80, 0.85) 0%, rgba(15, 25, 60, 0.9) 100%);
+            backdrop-filter: blur(24px);
+            -webkit-backdrop-filter: blur(24px);
+            border: 1px solid rgba(96, 165, 250, 0.25);
+            border-radius: 24px;
+            padding: 48px 40px;
+            box-shadow: 
+                0 20px 60px rgba(0, 0, 0, 0.4),
+                0 0 40px rgba(96, 165, 250, 0.1),
+                inset 0 1px 0 rgba(255, 255, 255, 0.1);
+        }
+
+        /* ========== 标题区域 ========== */
+        .login-header {
+            text-align: center;
+            margin-bottom: 36px;
+        }
+
+        .login-header h1 {
+            font-size: 32px;
+            font-weight: 700;
+            background: linear-gradient(135deg, #fff 0%, #60A5FA 50%, #A78BFA 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin: 0 0 12px 0;
+            letter-spacing: 2px;
+        }
+
+        .login-header p {
+            color: rgba(255, 255, 255, 0.6);
+            font-size: 15px;
+            margin: 0;
+        }
+
+        /* ========== 选项卡切换 ========== */
+        .login-tabs {
+            display: flex;
+            background: rgba(0, 0, 0, 0.3);
+            border-radius: 12px;
+            padding: 4px;
+            margin-bottom: 32px;
+        }
+
+        .login-tab {
+            flex: 1;
+            padding: 12px 20px;
+            text-align: center;
+            color: rgba(255, 255, 255, 0.5);
+            font-size: 15px;
+            font-weight: 500;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            border: none;
+            background: transparent;
+        }
+
+        .login-tab:hover {
+            color: rgba(255, 255, 255, 0.7);
+        }
+
+        .login-tab.active {
+            background: linear-gradient(135deg, rgba(96, 165, 250, 0.6) 0%, rgba(59, 130, 246, 0.6) 100%);
+            color: #fff;
+            box-shadow: 0 4px 15px rgba(96, 165, 250, 0.3);
+        }
+
+        /* ========== 表单区域 ========== */
+        .login-panel {
+            display: none;
+        }
+
+        .login-panel.active {
+            display: block;
+            animation: fadeIn 0.3s ease;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* ========== 输入框 ========== */
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-label {
+            display: block;
+            color: rgba(255, 255, 255, 0.8);
+            font-size: 14px;
+            font-weight: 500;
+            margin-bottom: 8px;
+        }
+
+        .form-input {
+            width: 100%;
+            padding: 14px 18px;
+            background: rgba(0, 0, 0, 0.4);
+            border: 1px solid rgba(96, 165, 250, 0.2);
+            border-radius: 12px;
+            color: #fff;
+            font-size: 15px;
+            transition: all 0.3s ease;
+            box-sizing: border-box;
+        }
+
+        .form-input::placeholder {
+            color: rgba(255, 255, 255, 0.35);
+        }
+
+        .form-input:focus {
+            outline: none;
+            border-color: rgba(96, 165, 250, 0.6);
+            box-shadow: 0 0 20px rgba(96, 165, 250, 0.2);
+            background: rgba(0, 0, 0, 0.5);
+        }
+
+        .form-help {
+            color: rgba(255, 255, 255, 0.4);
+            font-size: 12px;
+            margin-top: 6px;
+        }
+
+        .form-error {
+            color: #F87171;
+            font-size: 12px;
+            margin-top: 6px;
+            min-height: 18px;
+        }
+
+        /* ========== 提交按钮 ========== */
+        .btn-submit {
+            width: 100%;
+            padding: 16px;
+            margin-top: 8px;
+            background: linear-gradient(135deg, rgba(96, 165, 250, 0.9) 0%, rgba(59, 130, 246, 0.9) 100%);
+            border: none;
+            border-radius: 12px;
+            color: #fff;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 8px 25px rgba(96, 165, 250, 0.35);
+            letter-spacing: 2px;
+        }
+
+        .btn-submit:hover:not(:disabled) {
+            transform: translateY(-2px);
+            box-shadow: 0 12px 35px rgba(96, 165, 250, 0.45);
+            background: linear-gradient(135deg, rgba(147, 197, 253, 0.95) 0%, rgba(96, 165, 250, 0.95) 100%);
+        }
+
+        .btn-submit:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        /* ========== 切换链接 ========== */
+        .switch-text {
+            text-align: center;
+            margin-top: 24px;
+            color: rgba(255, 255, 255, 0.5);
+            font-size: 14px;
+        }
+
+        .switch-link {
+            color: #60A5FA;
+            text-decoration: none;
+            font-weight: 500;
+            transition: color 0.3s ease;
+        }
+
+        .switch-link:hover {
+            color: #93C5FD;
+            text-decoration: underline;
+        }
+
+        /* ========== 页脚 ========== */
+        .login-footer {
+            text-align: center;
+            margin-top: 32px;
+            padding-top: 24px;
+            border-top: 1px solid rgba(96, 165, 250, 0.15);
+        }
+
+        .login-footer p {
+            color: rgba(255, 255, 255, 0.4);
+            font-size: 13px;
+            margin: 0;
+        }
+
+        .login-footer .highlight {
+            color: #60A5FA;
+        }
+
+        /* ========== 响应式 ========== */
+        @media (max-width: 640px) {
+            .login-card {
+                padding: 32px 24px;
+                border-radius: 20px;
+                margin: 0 12px;
+            }
+
+            .login-header h1 {
+                font-size: 26px;
+            }
+
+            .login-tab {
+                padding: 10px 16px;
+                font-size: 14px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- 返回按钮 -->
+    <a href="starfield.html" class="ai-back-btn">← 返回</a>
+    
+    <main class="main-content" id="loginContent">
+        <div class="login-wrapper">
+            <div class="login-card">
+                <!-- 标题 -->
+                <div class="login-header">
+                    <h1>欢迎回来</h1>
+                    <p>登录或注册账号，开启星空之旅</p>
+                </div>
+
+                <!-- 选项卡 -->
+                <div class="login-tabs">
+                    <button class="login-tab active" data-tab="login">登录</button>
+                    <button class="login-tab" data-tab="register">注册</button>
+                </div>
+
+                <!-- 登录面板 -->
+                <div class="login-panel active" id="loginPanel">
+                    <form id="loginForm">
+                        <div class="form-group">
+                            <label class="form-label" for="loginUsername">用户名</label>
+                            <input type="text" id="loginUsername" class="form-input" 
+                                   placeholder="请输入用户名" autocomplete="username">
+                            <p class="form-error" id="loginUsernameError"></p>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label" for="loginPassword">密码</label>
+                            <input type="password" id="loginPassword" class="form-input" 
+                                   placeholder="请输入密码" autocomplete="current-password">
+                            <p class="form-error" id="loginPasswordError"></p>
+                        </div>
+                        <button type="submit" class="btn-submit" id="loginBtn">登 录</button>
+                    </form>
+                    <p class="switch-text">
+                        还没有账号？<a href="javascript:void(0)" class="switch-link" id="goRegister">立即注册</a>
+                    </p>
+                </div>
+
+                <!-- 注册面板 -->
+                <div class="login-panel" id="registerPanel">
+                    <form id="registerForm">
+                        <div class="form-group">
+                            <label class="form-label" for="regUsername">用户名</label>
+                            <input type="text" id="regUsername" class="form-input" 
+                                   placeholder="请输入6-20位字母、数字或下划线" 
+                                   maxlength="20" autocomplete="username">
+                            <p class="form-error" id="regUsernameError"></p>
+                            <p class="form-help">仅允许字母、数字、下划线，长度6-20位</p>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label" for="regPassword">密码</label>
+                            <input type="password" id="regPassword" class="form-input" 
+                                   placeholder="请输入6-16位密码" 
+                                   maxlength="16" autocomplete="new-password">
+                            <p class="form-error" id="regPasswordError"></p>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label" for="regConfirmPassword">确认密码</label>
+                            <input type="password" id="regConfirmPassword" class="form-input" 
+                                   placeholder="请再次输入密码" 
+                                   maxlength="16" autocomplete="new-password">
+                            <p class="form-error" id="regConfirmError"></p>
+                        </div>
+                        <button type="submit" class="btn-submit" id="registerBtn">注 册</button>
+                    </form>
+                    <p class="switch-text">
+                        已有账号？<a href="javascript:void(0)" class="switch-link" id="goLogin">立即登录</a>
+                    </p>
+                </div>
+
+                <!-- 页脚 -->
+                <div class="login-footer">
+                    <p>🌟 <span class="highlight">河南农业大学</span> · 星空校园闲置循环平台</p>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- 脚本 -->
+    <script src="./script/common.js"></script>
+    <script src="./script/login.js"></script>
+    <script>
+        // 选项卡切换
+        document.querySelectorAll('.login-tab').forEach(tab => {
+            tab.addEventListener('click', function() {
+                const target = this.dataset.tab;
+                
+                // 切换tab
+                document.querySelectorAll('.login-tab').forEach(t => t.classList.remove('active'));
+                this.classList.add('active');
+                
+                // 切换面板
+                document.querySelectorAll('.login-panel').forEach(p => p.classList.remove('active'));
+                document.getElementById(target + 'Panel').classList.add('active');
+            });
+        });
+
+        // 切换链接
+        document.getElementById('goRegister')?.addEventListener('click', function() {
+            document.querySelector('[data-tab="register"]').click();
+        });
+
+        document.getElementById('goLogin')?.addEventListener('click', function() {
+            document.querySelector('[data-tab="login"]').click();
+        });
+
+        // 移动端发布按钮
+        document.getElementById('mobileReleaseBtn')?.addEventListener('click', function() {
+            Auth.requireReleasePermission(function() {
+                Utils.跳转('release_goods.html');
+            });
+        });
+
+        // 登录表单提交
+        document.getElementById('loginForm')?.addEventListener('submit', function(e) {
+            e.preventDefault();
+            LoginModule.handleLogin();
+        });
+
+        // 检查预填充账号密码（注册后跳转）
+        (function checkPrefill() {
+            const prefillUsername = localStorage.getItem('prefillUsername');
+            const prefillPassword = localStorage.getItem('prefillPassword');
+            
+            if (prefillUsername && prefillPassword) {
+                // 自动填充到登录表单
+                const usernameInput = document.getElementById('loginUsername');
+                const passwordInput = document.getElementById('loginPassword');
+                
+                if (usernameInput && passwordInput) {
+                    usernameInput.value = prefillUsername;
+                    passwordInput.value = prefillPassword;
+                    
+                    // 清除预填充数据
+                    localStorage.removeItem('prefillUsername');
+                    localStorage.removeItem('prefillPassword');
+                    
+                    // 显示提示
+                    Toast.show('账号密码已填充，正在登录...', 'success');
+                    
+                    // 直接调用登录方法
+                    setTimeout(() => {
+                        if (typeof LoginModule !== 'undefined') {
+                            LoginModule.handleLogin();
+                        }
+                    }, 300);
+                }
+            }
+        })();
+    </script>
+</body>
+</html>

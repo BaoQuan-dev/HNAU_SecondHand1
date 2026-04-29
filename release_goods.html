@@ -1,0 +1,1169 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>发布闲置 - 农大闲置</title>
+    <link rel="stylesheet" href="./style/main.css">
+    <script src="./script/common.js"></script>
+    <style>
+        /* ========== 星空背景 ========== */
+        body { position: relative; }
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
+            z-index: -1;
+            background: url('./images/bg-starry.jpg') center center / cover no-repeat;
+        }
+        
+        /* ========== 发布闲置 - 星空玻璃拟态风格 ========== */
+        
+        .page-header {
+            background: transparent;
+            padding: calc(var(--nav-height, 64px) + 24px) 20px 0;
+            text-align: left;
+        }
+        
+        .page-header h1 {
+            margin: 0 0 8px 0;
+            font-size: 26px;
+            font-weight: 700;
+            background: transparent;
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        
+        .page-header p {
+            margin: 0;
+            color: rgba(255,255,255,0.6);
+            font-size: 13px;
+        }
+        
+        .page-container {
+            max-width: 700px;
+            margin: 0 auto;
+            padding: 24px 16px 100px;
+        }
+        
+        /* 返回按钮 - 玻璃拟态风格 */
+        .ai-back-btn {
+            position: fixed;
+            top: 20px;
+            left: 16px;
+            background: rgba(255,255,255,0.05);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            color: #fff;
+            border: 1px solid rgba(255,255,255,0.15);
+            padding: 10px 16px;
+            border-radius: 25px;
+            font-weight: 600;
+            cursor: pointer;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.3);
+            z-index: 100;
+            text-decoration: none;
+            transition: all 0.3s ease;
+        }
+        
+        .ai-back-btn:hover {
+            background: rgba(255,255,255,0.1);
+            transform: translateY(-2px);
+            box-shadow: 0 6px 25px rgba(96,165,250,0.3);
+        }
+        
+        /* ========== 表单卡片 ========== */
+        .form-card {
+            background: transparent;
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border: 1px solid rgba(255,255,255,0.12);
+            border-radius: 20px;
+            box-shadow: 0 8px 32px rgba(0,0,0,0.3);
+            padding: 24px;
+            margin-bottom: 20px;
+        }
+        
+        .form-group {
+            margin-bottom: 20px;
+        }
+        
+        .form-group:last-child {
+            margin-bottom: 0;
+        }
+        
+        .form-label {
+            display: block;
+            margin-bottom: 8px;
+            font-size: 14px;
+            font-weight: 600;
+            background: transparent;
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        
+        .form-label::before {
+            content: '';
+            display: inline-block;
+            width: 8px;
+            height: 8px;
+            background: linear-gradient(135deg, #60A5FA, #C084FC);
+            border-radius: 50%;
+            margin-right: 8px;
+            vertical-align: middle;
+        }
+        
+        .form-input,
+        .form-select,
+        .form-textarea {
+            width: 100%;
+            padding: 12px 16px;
+            background: rgba(255,255,255,0.08);
+            border: 1px solid rgba(255,255,255,0.15);
+            border-radius: 12px;
+            font-size: 15px;
+            color: #fff;
+            outline: none;
+            transition: all 0.25s ease;
+            box-sizing: border-box;
+        }
+        
+        .form-input:focus,
+        .form-select:focus,
+        .form-textarea:focus {
+            border-color: rgba(96,165,250,0.5);
+            background: rgba(255,255,255,0.12);
+            box-shadow: 0 0 20px rgba(96,165,250,0.15);
+        }
+        
+        .form-input::placeholder,
+        .form-textarea::placeholder {
+            color: rgba(255,255,255,0.4);
+        }
+        
+        .form-select {
+            cursor: pointer;
+            appearance: none;
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='rgba(255,255,255,0.6)' d='M6 8L1 3h10z'/%3E%3C/svg%3E");
+            background-repeat: no-repeat;
+            background-position: right 16px center;
+            padding-right: 40px;
+        }
+        
+        .form-select option {
+            background: #1a1a2e;
+            color: #fff;
+        }
+        
+        .form-textarea {
+            min-height: 120px;
+            resize: vertical;
+            line-height: 1.6;
+        }
+        
+        /* ========== 图片上传 ========== */
+        .image-upload-area {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 12px;
+        }
+        
+        .upload-item {
+            width: 100px;
+            height: 100px;
+            background: rgba(255,255,255,0.05);
+            border: 2px dashed rgba(255,255,255,0.2);
+            border-radius: 12px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.25s ease;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .upload-item:hover {
+            border-color: rgba(96,165,250,0.5);
+            background: rgba(96,165,250,0.1);
+        }
+        
+        .upload-item.has-image {
+            border-style: solid;
+            border-color: rgba(96,165,250,0.3);
+        }
+        
+        .upload-item img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            border-radius: 10px;
+        }
+        
+        .upload-icon {
+            font-size: 28px;
+            color: rgba(255,255,255,0.3);
+            margin-bottom: 4px;
+        }
+        
+        .upload-text {
+            font-size: 11px;
+            color: rgba(255,255,255,0.4);
+        }
+        
+        .upload-remove {
+            position: absolute;
+            top: 4px;
+            right: 4px;
+            width: 20px;
+            height: 20px;
+            background: rgba(239,68,68,0.8);
+            border: none;
+            border-radius: 50%;
+            color: #fff;
+            font-size: 12px;
+            cursor: pointer;
+            display: none;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .upload-item:hover .upload-remove {
+            display: flex;
+        }
+        
+        /* ========== 价格输入 ========== */
+        .price-input-wrapper {
+            position: relative;
+            display: flex;
+            align-items: center;
+        }
+        
+        .price-symbol {
+            position: absolute;
+            left: 16px;
+            font-size: 16px;
+            background: transparent;
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        
+        .price-input {
+            padding-left: 36px;
+        }
+        
+        .price-unit {
+            margin-left: 12px;
+            font-size: 14px;
+            background: transparent;
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        
+        /* ========== 提交按钮 ========== */
+        .submit-btn {
+            width: 100%;
+            padding: 16px 24px;
+            background: transparent;
+            border: 1px solid rgba(96,165,250,0.5);
+            border-radius: 14px;
+            font-size: 16px;
+            font-weight: 600;
+            color: #fff;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin-top: 8px;
+        }
+        
+        .submit-btn:hover {
+            background: rgba(96,165,250,0.2);
+            transform: translateY(-2px);
+            box-shadow: 0 8px 24px rgba(96,165,250,0.3);
+        }
+        
+        .submit-btn:active {
+            transform: translateY(0);
+        }
+        
+        .submit-btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+        
+        /* ========== 我的发布区域 ========== */
+        .my-publications {
+            margin-top: 40px;
+            padding: 24px;
+            background: rgba(255,255,255,0.05);
+            border: 1px solid rgba(255,255,255,0.1);
+            border-radius: 16px;
+            backdrop-filter: blur(10px);
+        }
+        
+        .publications-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            padding-bottom: 16px;
+            border-bottom: 1px solid rgba(255,255,255,0.1);
+        }
+        
+        .publications-header h2 {
+            margin: 0;
+            font-size: 18px;
+            color: #fff;
+        }
+        
+        .publications-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            gap: 16px;
+        }
+        
+        .publications-container .loading,
+        .publications-container .empty {
+            grid-column: 1 / -1;
+            text-align: center;
+            padding: 40px 20px;
+            color: rgba(255,255,255,0.5);
+        }
+        
+        .publication-card {
+            background: rgba(255,255,255,0.05);
+            border-radius: 12px;
+            overflow: hidden;
+            transition: transform 0.3s, box-shadow 0.3s;
+        }
+        
+        .publication-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 8px 24px rgba(0,0,0,0.2);
+        }
+        
+        .publication-card img {
+            width: 100%;
+            height: 140px;
+            object-fit: cover;
+        }
+        
+        .publication-card .card-content {
+            padding: 12px;
+        }
+        
+        .publication-card .card-title {
+            font-size: 14px;
+            font-weight: 600;
+            color: #fff;
+            margin-bottom: 8px;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+        
+        .publication-card .card-price {
+            font-size: 16px;
+            font-weight: 700;
+            color: #f56565;
+            margin-bottom: 8px;
+        }
+        
+        .publication-card .card-status {
+            display: inline-block;
+            padding: 4px 8px;
+            border-radius: 6px;
+            font-size: 11px;
+        }
+        
+        .publication-card .card-status.selling { background: rgba(72,199,142,0.2); color: #48c78e; }
+        .publication-card .card-status.reserved { background: rgba(96,165,250,0.2); color: #60a5fa; }
+        .publication-card .card-status.sold { background: rgba(156,163,175,0.2); color: #9ca3af; }
+        
+        /* ========== 提示卡片 ========== */
+        .tips-card {
+            background: transparent;
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border: 1px solid rgba(192,132,252,0.25);
+            border-radius: 16px;
+            padding: 16px;
+            margin-bottom: 20px;
+        }
+        
+        .tips-card h4 {
+            margin: 0 0 12px 0;
+            font-size: 14px;
+            background: transparent;
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        
+        .tips-card ul {
+            margin: 0;
+            padding-left: 20px;
+        }
+        
+        .tips-card li {
+            margin-bottom: 6px;
+            font-size: 13px;
+            color: rgba(255,255,255,0.6);
+            line-height: 1.5;
+        }
+        
+        .tips-card li:last-child {
+            margin-bottom: 0;
+        }
+    
+        /* 页面头部 */
+        .page-header {
+            padding: 80px 20px 20px;
+            text-align: left;
+            max-width: 900px;
+            margin: 0 auto;
+        }
+        .page-header h1 {
+            font-size: 28px;
+            font-weight: 700;
+            margin: 0 0 8px 0;
+            background: linear-gradient(135deg, #fff 0%, #60A5FA 50%, #C084FC 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        .page-header p {
+            font-size: 14px;
+            color: rgba(255,255,255,0.6);
+            margin: 0;
+        }
+        .page-container {
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 0 16px 100px;
+        }
+        </style>
+</head>
+<body>
+    <!-- 返回按钮 -->
+    <a href="explore.html" class="ai-back-btn">← 返回</a>
+    
+    <!-- 页面标题 -->
+    <div class="page-header">
+        <h1>📦 发布闲置</h1>
+        <p>让闲置物品找到新主人，共建校园绿色生活</p>
+    </div>
+    
+    <div class="page-container">
+        <!-- 提示卡片 -->
+        <div class="tips-card">
+            <h4>发布须知</h4>
+            <ul>
+                <li>上传清晰的商品图片，最多9张</li>
+                <li>如实填写商品信息，价格合理</li>
+                <li>选择正确的分类，方便买家查找</li>
+                <li>交易请选择校内安全地点</li>
+            </ul>
+        </div>
+
+        <!-- ========== 翻转卡片样式 ========== -->
+        <style>
+        .flip-card {
+            background-color: transparent;
+            width: 280px;
+            height: 360px;
+            perspective: 1000px;
+            cursor: pointer;
+        }
+        
+        .flip-card-inner {
+            position: relative;
+            width: 100%;
+            height: 100%;
+            text-align: center;
+            transition: transform 0.8s;
+            transform-style: preserve-3d;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+            border-radius: 16px;
+        }
+        
+        .flip-card:hover .flip-card-inner {
+            transform: rotateY(180deg);
+        }
+        
+        .flip-card-front, .flip-card-back {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            -webkit-backface-visibility: hidden;
+            backface-visibility: hidden;
+            border-radius: 16px;
+            overflow: hidden;
+        }
+        
+        .flip-card-front {
+            background: linear-gradient(135deg, rgba(139, 92, 246, 0.9), rgba(59, 130, 246, 0.9));
+            color: white;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+        
+        .flip-card-front .card-image {
+            width: 100%;
+            height: 200px;
+            object-fit: cover;
+            border-radius: 12px;
+            margin-bottom: 15px;
+        }
+        
+        .flip-card-front .card-title {
+            font-size: 18px;
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+        
+        .flip-card-front .card-price {
+            font-size: 24px;
+            color: #fbbf24;
+            font-weight: bold;
+        }
+        
+        .flip-card-front .flip-hint {
+            font-size: 12px;
+            opacity: 0.7;
+            margin-top: 10px;
+        }
+        
+        .flip-card-back {
+            background: linear-gradient(135deg, rgba(30, 30, 50, 0.95), rgba(50, 30, 80, 0.95));
+            color: white;
+            transform: rotateY(180deg);
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+        
+        .flip-card-back .info-row {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 10px;
+            font-size: 14px;
+            border-bottom: 1px solid rgba(255,255,255,0.1);
+            padding-bottom: 8px;
+        }
+        
+        .flip-card-back .info-row .label {
+            color: rgba(255,255,255,0.6);
+        }
+        
+        .flip-card-back .info-row .value {
+            color: #a78bfa;
+            font-weight: 500;
+        }
+        
+        .flip-card-back .card-desc {
+            font-size: 13px;
+            line-height: 1.6;
+            color: rgba(255,255,255,0.8);
+            margin-top: 10px;
+            text-align: left;
+        }
+        
+        .flip-card-back .card-contact {
+            margin-top: auto;
+            padding-top: 15px;
+            border-top: 1px solid rgba(255,255,255,0.1);
+            font-size: 13px;
+        }
+        
+        .flip-card-back .card-contact span {
+            color: #fbbf24;
+        }
+        
+        .flip-card .status-badge {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: bold;
+            z-index: 10;
+        }
+        
+        .status-available { background: #10b981; }
+        .status-reserved { background: #f59e0b; }
+        .status-sold { background: #ef4444; }
+        
+        .publications-grid {
+            display: flex !important;
+            flex-wrap: wrap !important;
+            gap: 20px !important;
+            padding: 20px !important;
+            justify-content: flex-start !important;
+        }
+        
+        .publications-grid .flip-card {
+            flex: 0 0 280px !important;
+            height: 360px !important;
+        }
+        
+
+        </style>
+
+        <!-- 发布表单 -->
+        <div class="form-card">
+            <!-- 商品图片 -->
+            <div class="form-group">
+                <label class="form-label">商品图片</label>
+                <div class="image-upload-area">
+                    <div class="upload-item" onclick="document.getElementById('img0').click()">
+                        <span class="upload-icon">+</span>
+                        <span class="upload-text">添加图片</span>
+                        <button class="upload-remove" onclick="removeImage(event, 0)">×</button>
+                    </div>
+                    <input type="file" id="img0" accept="image/*" style="display:none" onchange="previewImage(this, 0)">
+                </div>
+            </div>
+
+            <!-- 商品名称 -->
+            <div class="form-group">
+                <label class="form-label">商品名称</label>
+                <input type="text" class="form-input" id="goodsName" placeholder="请输入商品名称" maxlength="50">
+            </div>
+
+            <!-- 商品分类 -->
+            <div class="form-group">
+                <label class="form-label">商品分类</label>
+                <select class="form-select" id="goodsCategory">
+                    <option value="">请选择分类</option>
+                    <option value="数码">📱 数码电子</option>
+                    <option value="书籍">📚 图书教材</option>
+                    <option value="衣物">👕 服饰鞋包</option>
+                    <option value="生活">🏠 生活用品</option>
+                    <option value="美妆">💄 护肤美妆</option>
+                    <option value="运动">⚽ 运动户外</option>
+                    <option value="文具">✏️ 文具办公</option>
+                    <option value="其他">📦 其他物品</option>
+                </select>
+            </div>
+
+            <!-- 商品描述 -->
+            <div class="form-group">
+                <label class="form-label">商品描述</label>
+                <textarea class="form-textarea" id="goodsDesc" placeholder="请详细描述商品的状况、成色、使用情况等信息..."></textarea>
+            </div>
+
+            <!-- 价格 -->
+            <div class="form-group">
+                <label class="form-label">出售价格</label>
+                <div class="price-input-wrapper">
+                    <span class="price-symbol">¥</span>
+                    <input type="number" class="form-input price-input" id="goodsPrice" placeholder="0.00" min="0" step="0.01">
+                    <span class="price-unit">元</span>
+                </div>
+            </div>
+
+            <!-- 新旧程度 -->
+            <div class="form-group">
+                <label class="form-label">新旧程度</label>
+                <select class="form-select" id="goodsCondition">
+                    <option value="">请选择</option>
+                    <option value="全新">✨ 全新未使用</option>
+                    <option value="几乎全新">💫 几乎全新</option>
+                    <option value="轻微使用">🌟 轻微使用痕迹</option>
+                    <option value="正常使用">📖 正常使用痕迹</option>
+                    <option value="较旧">🕐 较旧</option>
+                </select>
+            </div>
+
+            <!-- 交易方式 -->
+            <div class="form-group">
+                <label class="form-label">交易方式</label>
+                <select class="form-select" id="goodsTradeType">
+                    <option value="校内">🏫 仅限校内交易</option>
+                    <option value="线上">📦 支持邮寄</option>
+                    <option value="都行">🤝 校内或邮寄均可</option>
+                </select>
+            </div>
+
+            <!-- 联系方式 -->
+            <div class="form-group">
+                <label class="form-label">联系方式</label>
+                <input type="text" class="form-input" id="goodsContact" placeholder="请输入手机号或微信" maxlength="30">
+            </div>
+
+            <!-- 提交按钮 -->
+            <button type="button" class="submit-btn" id="submitBtn" onclick="submitGoods()">
+                🚀 发布闲置
+            </button>
+        </div>
+        
+        <!-- 我的发布区域 -->
+        <div class="my-publications" id="myPublicationsSection" style="display: flex; flex-direction: column; gap: 20px;">
+            <div class="publications-header">
+                <h2>📦 我的发布</h2>
+            </div>
+            <div class="publications-container" id="myPublicationsContainer" style="display: flex; flex-wrap: wrap; gap: 20px; justify-content: flex-start;">
+                <div class="loading">加载中...</div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let imageCount = 0;
+        
+        function previewImage(input, index) {
+            if (input.files && input.files[0]) {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    const item = input.parentElement;
+                    item.classList.add('has-image');
+                    item.innerHTML = `
+                        <img src="${e.target.result}" alt="商品图片">
+                        <button class="upload-remove" onclick="removeImage(event, ${index})">×</button>
+                    `;
+                    
+                    // 添加新的上传项
+                    if (imageCount < 8) {
+                        imageCount++;
+                        const area = document.querySelector('.image-upload-area');
+                        const newItem = document.createElement('div');
+                        newItem.className = 'upload-item';
+                        newItem.onclick = function() { document.getElementById('img' + imageCount).click(); };
+                        newItem.innerHTML = `
+                            <span class="upload-icon">+</span>
+                            <span class="upload-text">添加图片</span>
+                            <button class="upload-remove" onclick="removeImage(event, ${imageCount})">×</button>
+                        `;
+                        area.appendChild(newItem);
+                        
+                        const newInput = document.createElement('input');
+                        newInput.type = 'file';
+                        newInput.id = 'img' + imageCount;
+                        newInput.accept = 'image/*';
+                        newInput.style.display = 'none';
+                        newInput.onchange = function() { previewImage(this, imageCount); };
+                        document.querySelector('.image-upload-area').appendChild(newInput);
+                    }
+                };
+                reader.readAsDataURL(input.files[0]);
+            }
+        }
+        
+        // ========== 图片预览 ==========
+        function previewImage(input, index) {
+            console.log('[Release] previewImage被调用, index:', index);
+            
+            if (input.files && input.files[0]) {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    console.log('[Release] 图片读取完成');
+                    
+                    const area = document.querySelector('.image-upload-area');
+                    const items = area.querySelectorAll('.upload-item');
+                    const item = items[index];
+                    
+                    if (item) {
+                        item.innerHTML = `
+                            <img src="${e.target.result}" alt="商品图片" style="width:100%;height:100%;object-fit:cover;border-radius:8px;">
+                            <button class="upload-remove" onclick="removeImage(event, ${index})">×</button>
+                        `;
+                        console.log('[Release] 图片预览已添加到DOM');
+                    }
+                    
+                    // 添加新的上传项
+                    if (imageCount < 7) {
+                        imageCount++;
+                        const newItem = document.createElement('div');
+                        newItem.className = 'upload-item';
+                        newItem.onclick = function() { document.getElementById('img' + imageCount).click(); };
+                        newItem.innerHTML = `
+                            <span class="upload-icon">+</span>
+                            <span class="upload-text">添加图片</span>
+                            <button class="upload-remove" onclick="removeImage(event, ${imageCount})">×</button>
+                        `;
+                        area.appendChild(newItem);
+                        
+                        const newInput = document.createElement('input');
+                        newInput.type = 'file';
+                        newInput.id = 'img' + imageCount;
+                        newInput.accept = 'image/*';
+                        newInput.style.display = 'none';
+                        newInput.onchange = function() { previewImage(this, imageCount); };
+                        area.appendChild(newInput);
+                    }
+                };
+                reader.readAsDataURL(input.files[0]);
+            }
+        }
+        
+        function removeImage(event, index) {
+            event.stopPropagation();
+            const item = event.target.parentElement;
+            item.remove();
+        }
+        
+        // ========== 获取当前用户 ==========
+        function getCurrentUser() {
+            console.log('[Release] 获取当前用户...');
+            
+            // 1. 先检查 Auth 系统
+            const loginState = Auth.getLoginState();
+            if (loginState.isLogin && loginState.curUser) {
+                console.log('[Release] 从 Auth 系统获取用户:', loginState.curUser);
+                return {
+                    id: 'user_' + loginState.curUser,
+                    name: loginState.curUser
+                };
+            }
+            
+            // 2. 检查 hnau_current_user
+            const savedUser = localStorage.getItem('hnau_current_user');
+            if (savedUser) {
+                try {
+                    const user = JSON.parse(savedUser);
+                    console.log('[Release] 从 hnau_current_user 获取用户:', user);
+                    return user;
+                } catch(e) {}
+            }
+            
+            // 3. 检查旧系统
+            const userData = localStorage.getItem('currentUser');
+            if (userData) {
+                try {
+                    const user = JSON.parse(userData);
+                    console.log('[Release] 从 currentUser 获取用户:', user);
+                    return { id: user.id || user.username, name: user.username || user.name };
+                } catch(e) {}
+            }
+            
+            console.log('[Release] 未找到登录用户');
+            return null;
+        }
+        
+        // ========== 提交发布 ==========
+        function submitGoods() {
+            console.log('[Release] 开始提交发布...');
+            
+            // 获取表单数据
+            const goodsName = document.getElementById('goodsName').value.trim();
+            const goodsCategory = document.getElementById('goodsCategory').value;
+            const goodsDesc = document.getElementById('goodsDesc').value.trim();
+            const goodsPrice = document.getElementById('goodsPrice').value;
+            const goodsCondition = document.getElementById('goodsCondition').value;
+            const goodsTradeType = document.getElementById('goodsTradeType').value;
+            const goodsContact = document.getElementById('goodsContact').value.trim();
+            
+            // 验证必填项
+            if (!goodsName) { alert('请输入商品名称'); return; }
+            if (!goodsCategory) { alert('请选择商品分类'); return; }
+            if (!goodsDesc) { alert('请输入商品描述'); return; }
+            if (!goodsPrice || parseFloat(goodsPrice) <= 0) { alert('请输入有效的出售价格'); return; }
+            if (!goodsCondition) { alert('请选择新旧程度'); return; }
+            if (!goodsContact) { alert('请输入联系方式'); return; }
+            
+            console.log('[Release] 表单验证通过');
+            
+            // 获取当前用户
+            const user = getCurrentUser();
+            if (!user) {
+                alert('请先登录后再发布');
+                window.location.href = 'user_login.html';
+                return;
+            }
+            
+            console.log('[Release] 当前用户:', user);
+            
+            // 获取图片
+            const images = [];
+            const uploadItems = document.querySelectorAll('.image-upload-area .upload-item');
+            console.log('[Release] 找到上传项数量:', uploadItems.length);
+            uploadItems.forEach((item, index) => {
+                const img = item.querySelector('img');
+                if (img) {
+                    console.log('[Release] 图片' + index + ':', img.src.substring(0, 50) + '...');
+                    images.push(img.src);
+                }
+            });
+            console.log('[Release] 获取到的图片数量:', images.length);
+            console.log('[Release] 图片列表:', images);
+            
+            // 确认图片
+            if (images.length === 0) {
+                alert('⚠️ 警告：没有检测到图片！\n请先上传商品图片后再发布。');
+                return;
+            }
+            alert('✅ 检测到 ' + images.length + ' 张图片，可以发布了！');
+            
+            // 生成商品ID
+            const goodsId = 'goods_' + Date.now();
+            
+            // 创建商品对象
+            const goods = {
+                id: goodsId,
+                name: goodsName,
+                category: goodsCategory,
+                description: goodsDesc,
+                price: parseFloat(goodsPrice),
+                condition: goodsCondition,
+                tradeType: goodsTradeType,
+                contact: goodsContact,
+                images: images,
+                publisher: user,
+                publisherId: user.id || (user.name ? 'user_' + user.name : user.username),
+                status: 'selling',
+                createTime: new Date().toISOString()
+            };
+            
+            console.log('[Release] 创建商品对象:', goods);
+            console.log('[Release] 商品图片数量:', goods.images.length);
+            console.log('[Release] 第一张图片:', goods.images[0] ? goods.images[0].substring(0, 100) + '...' : '无');
+            
+            // 同时保存到管理员待审核列表（只保存基本信息，不保存图片节省空间）
+            const ADMIN_KEY = 'hnau_admin_pending_goods';
+            let adminList = [];
+            try {
+                const adminSaved = localStorage.getItem(ADMIN_KEY);
+                if (adminSaved) {
+                    adminList = JSON.parse(adminSaved);
+                }
+            } catch(e) {}
+            
+            // 只保存商品基本信息，不保存图片
+            const adminItem = {
+                id: goods.id,
+                name: goods.name,
+                category: goods.category,
+                price: goods.price,
+                condition: goods.condition,
+                tradeType: goods.tradeType,
+                publisher: goods.publisher,
+                status: 'pending',
+                time: goods.time,
+                hasImages: goods.images && goods.images.length > 0
+            };
+            
+            adminList.push(adminItem);
+            
+            // 限制管理员列表长度
+            if (adminList.length > 100) {
+                adminList = adminList.slice(-99);
+            }
+            
+            localStorage.setItem(ADMIN_KEY, JSON.stringify(adminList));
+            console.log('[Release] 已同步到管理员待审核列表，长度:', adminList.length);
+            
+            // 保存到 localStorage
+            const STORAGE_KEY = 'hnau_goods_list';
+            let goodsList = [];
+            try {
+                const saved = localStorage.getItem(STORAGE_KEY);
+                if (saved) {
+                    goodsList = JSON.parse(saved);
+                }
+            } catch(e) {
+                console.log('[Release] 解析商品列表失败:', e);
+            }
+            
+            // 限制列表长度，最多保存50条，清理旧数据
+            if (goodsList.length >= 50) {
+                goodsList = goodsList.slice(-49);
+                console.log('[Release] 已清理旧数据，当前数量:', goodsList.length);
+            }
+            
+            goodsList.push(goods);
+            localStorage.setItem(STORAGE_KEY, JSON.stringify(goodsList));
+            
+            console.log('[Release] 已保存商品列表，长度:', goodsList.length);
+            console.log('[Release] 已保存商品:', goods);
+            
+            // 显示成功提示
+            alert('发布成功！');
+            
+            // 清空表单
+            document.getElementById('goodsName').value = '';
+            document.getElementById('goodsCategory').value = '';
+            document.getElementById('goodsDesc').value = '';
+            document.getElementById('goodsPrice').value = '';
+            document.getElementById('goodsCondition').value = '';
+            document.getElementById('goodsTradeType').value = '校内';
+            document.getElementById('goodsContact').value = '';
+            
+            // 重置图片
+            const imageArea = document.querySelector('.image-upload-area');
+            imageArea.innerHTML = `
+                <div class="upload-item" onclick="document.getElementById('img0').click()">
+                    <span class="upload-icon">+</span>
+                    <span class="upload-text">添加图片</span>
+                    <button class="upload-remove" onclick="removeImage(event, 0)">×</button>
+                </div>
+                <input type="file" id="img0" accept="image/*" style="display:none" onchange="previewImage(this, 0)">
+            `;
+            imageCount = 0;
+            
+            // 刷新我的发布列表
+            loadMyPublications();
+        }
+        
+        // ========== 加载我的发布 ==========
+        function loadMyPublications() {
+            console.log('[Release] === 开始加载我的发布 ===');
+            
+            const container = document.getElementById('myPublicationsContainer');
+            if (!container) {
+                console.log('[Release] 容器不存在');
+                return;
+            }
+            
+            container.innerHTML = '<div class="loading">加载中...</div>';
+            
+            // 获取当前用户
+            const user = getCurrentUser();
+            if (!user) {
+                container.innerHTML = '<div class="empty">请先登录后再查看</div>';
+                console.log('[Release] 用户未登录');
+                return;
+            }
+            
+            console.log('[Release] 当前用户:', user);
+            console.log('[Release] 当前用户ID:', user.id);
+            
+            // 获取商品列表
+            const STORAGE_KEY = 'hnau_goods_list';
+            let allGoods = [];
+            try {
+                const saved = localStorage.getItem(STORAGE_KEY);
+                if (saved) {
+                    allGoods = JSON.parse(saved);
+                }
+            } catch(e) {
+                console.log('[Release] 解析商品列表失败:', e);
+            }
+            
+            console.log('[Release] 全部商品数量:', allGoods.length);
+            
+            // 筛选当前用户的商品
+            const myGoods = allGoods.filter(item => {
+                console.log('[Release] 检查商品:', item.name, '| images:', item.images, '| images长度:', item.images ? item.images.length : 0);
+                console.log('[Release] 发布者ID:', item.publisherId, '当前用户ID:', user.id, '匹配:', item.publisherId === user.id);
+                return item.publisherId === user.id;
+            });
+            
+            console.log('[Release] 筛选后我的发布数量:', myGoods.length);
+            
+            if (myGoods.length === 0) {
+                container.innerHTML = '<div class="empty">暂无发布的闲置物品</div>';
+                return;
+            }
+            
+            // 按时间倒序排列
+            myGoods.sort((a, b) => new Date(b.createTime) - new Date(a.createTime));
+            
+            // 渲染翻转卡片
+            const gridHtml = `
+                <div class="publications-grid" style="display: flex; flex-wrap: wrap; gap: 20px; justify-content: flex-start;">
+                    ${myGoods.map(item => {
+                        const statusMap = {
+                            'selling': { text: '出售中', class: 'status-available' },
+                            'reserved': { text: '已预定', class: 'status-reserved' },
+                            'sold': { text: '已售出', class: 'status-sold' }
+                        };
+                        const status = statusMap[item.status] || statusMap['selling'];
+                        const image = item.images && item.images[0] ? item.images[0] : 'data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 200 140%22><rect fill=%22%23374151%22 width=%22200%22 height=%22140%22/><text x=%22100%22 y=%2270%22 text-anchor=%22middle%22 fill=%22%239ca3af%22 font-size=%2240%22>📦</text></svg>';
+                        
+                        const conditionMap = {
+                            '全新': '✨ 全新',
+                            '几乎全新': '💫 几乎全新',
+                            '轻微使用': '🌟 轻微使用',
+                            '正常使用': '📖 正常使用',
+                            '较旧': '🕐 较旧'
+                        };
+                        const tradeMap = {
+                            '校内': '🏫 校内',
+                            '线上': '📦 邮寄',
+                            '都行': '🤝 校内/邮寄'
+                        };
+                        
+                        return `
+                            <div class="flip-card" style="flex: 0 0 260px; height: 340px; position: relative; margin: 0;">
+                                <span class="status-badge ${status.class}">${status.text}</span>
+                                <div class="flip-card-inner">
+                                    <div class="flip-card-front">
+                                        <img src="${image}" alt="${item.name}" class="card-image" onerror="this.src='data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 200 140%22><rect fill=%22%23374151%22 width=%22200%22 height=%22140%22/><text x=%22100%22 y=%2270%22 text-anchor=%22middle%22 fill=%22%239ca3af%22 font-size=%2240%22>📦</text></svg>'">
+                                        <div class="card-title">${item.name}</div>
+                                        <div class="card-price">¥${item.price.toFixed(2)}</div>
+                                        <div class="flip-hint">👆 悬停查看详情</div>
+                                    </div>
+                                    <div class="flip-card-back">
+                                        <div class="info-row">
+                                            <span class="label">分类</span>
+                                            <span class="value">${item.category}</span>
+                                        </div>
+                                        <div class="info-row">
+                                            <span class="label">成色</span>
+                                            <span class="value">${conditionMap[item.condition] || item.condition}</span>
+                                        </div>
+                                        <div class="info-row">
+                                            <span class="label">交易</span>
+                                            <span class="value">${tradeMap[item.tradeType] || item.tradeType}</span>
+                                        </div>
+                                        <div class="info-row">
+                                            <span class="label">发布时间</span>
+                                            <span class="value">${new Date(item.createTime).toLocaleDateString()}</span>
+                                        </div>
+                                        <div class="card-desc">${item.description || '暂无描述'}</div>
+                                        <div class="card-contact">
+                                            📞 联系: <span>${item.contact}</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        `;
+                    }).join('')}
+                </div>
+            `;
+            
+            // 添加调试信息
+            console.log('[Release] 生成HTML长度:', gridHtml.length);
+            console.log('[Release] 包含publications-grid:', gridHtml.includes('class="publications-grid"'));
+            console.log('[Release] 包含flip-card:', gridHtml.includes('class="flip-card"'));
+            console.log('[Release] HTML预览:', gridHtml.substring(0, 500));
+            
+            // 设置innerHTML
+            container.innerHTML = gridHtml;
+            
+            // 检查DOM是否正确设置
+            const grid = document.querySelector('.publications-grid');
+            console.log('[Release] DOM查询结果:', grid ? '找到publications-grid' : '未找到publications-grid');
+            
+            // 检查CSS样式
+            if (grid) {
+                const style = window.getComputedStyle(grid);
+                console.log('[Release] display:', style.display);
+                console.log('[Release] flex-wrap:', style.flexWrap);
+                console.log('[Release] justify-content:', style.justifyContent);
+            }
+            
+            console.log('[Release] 渲染完成，共', myGoods.length, '条');
+        }
+        
+        // ========== 页面加载时加载我的发布 ==========
+        document.addEventListener('DOMContentLoaded', function() {
+            console.log('[Release] 页面加载完成，开始加载我的发布...');
+            loadMyPublications();
+        });
+        
+
+    </script>
+</body>
+</html>

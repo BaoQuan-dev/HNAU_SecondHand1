@@ -1,0 +1,1019 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <title>探索 - 农大闲置</title>
+    <link rel="stylesheet" href="style/main.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'PingFang SC', 'Microsoft YaHei', sans-serif;
+            /* 使用全局星空背景 */
+            min-height: 100vh;
+            overflow: hidden;
+            color: #fff;
+        }
+
+        /* 星空背景 */
+        .star-bg {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 0;
+        }
+
+        .star {
+            position: absolute;
+            background: #fff;
+            border-radius: 50%;
+            animation: twinkle 2s infinite;
+        }
+
+        @keyframes twinkle {
+            0%, 100% { opacity: 0.3; }
+            50% { opacity: 1; }
+        }
+
+        /* 麦穗装饰 */
+        .wheat-decor {
+            position: fixed;
+            font-size: 60px;
+            opacity: 0.15;
+            animation: float 6s ease-in-out infinite;
+            z-index: 1;
+            pointer-events: none;
+        }
+
+        .wheat-1 { top: 10%; left: 5%; animation-delay: 0s; }
+        .wheat-2 { top: 20%; right: 8%; animation-delay: 1s; }
+        .wheat-3 { bottom: 15%; left: 10%; animation-delay: 2s; }
+        .wheat-4 { bottom: 25%; right: 5%; animation-delay: 3s; }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0) rotate(0deg); }
+            50% { transform: translateY(-20px) rotate(5deg); }
+        }
+
+        /* 顶部标题 */
+        .header {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 100;
+            padding: 20px;
+            text-align: center;
+        }
+
+        .header h1 {
+            font-size: 28px;
+            font-weight: 700;
+            background: linear-gradient(135deg, #f5d742, #f5a623, #f5d742);
+            background-size: 200% 200%;
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            animation: gradientFlow 3s ease infinite;
+        }
+
+        @keyframes gradientFlow {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+
+        .header .subtitle {
+            font-size: 12px;
+            color: rgba(255,255,255,0.5);
+            margin-top: 5px;
+            letter-spacing: 2px;
+        }
+
+        /* 返回按钮 */
+        .back-btn {
+            position: fixed;
+            top: 20px;
+            left: 20px;
+            z-index: 101;
+            width: 44px;
+            height: 44px;
+            background: rgba(255,255,255,0.1);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255,255,255,0.2);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .back-btn:hover {
+            background: rgba(255,255,255,0.2);
+            transform: scale(1.1);
+        }
+
+        .back-btn svg {
+            width: 20px;
+            height: 20px;
+            fill: none;
+            stroke: #fff;
+            stroke-width: 2;
+        }
+
+        /* 中心麦穗 */
+
+
+        @keyframes sway {
+            0%, 100% { transform: translate(-50%, -50%) rotate(-5deg); }
+            50% { transform: translate(-50%, -50%) rotate(5deg); }
+        }
+
+        /* 轮播容器 */
+        .carousel-container {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 100%;
+            height: 100%;
+            z-index: 50;
+        }
+
+        .carousel-track {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            height: 100%;
+            transition: transform 0.5s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+        }
+
+        /* 模块卡片 - 玻璃拟态风格 */
+        .module-card {
+            flex-shrink: 0;
+            width: 320px;
+            height: 620px;
+            margin: 0 20px;
+            background: linear-gradient(135deg, rgba(255,255,255,0.12) 0%, rgba(255,255,255,0.06) 100%);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border: 1px solid rgba(255,255,255,0.15);
+            border-radius: 20px;
+            padding: 30px;
+            display: flex;
+            flex-direction: column;
+            opacity: 0.5;
+            transform: scale(0.85);
+            transition: all 0.5s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+            cursor: pointer;
+            position: relative;
+            overflow: hidden;
+            box-shadow: 0 8px 32px rgba(0,0,0,0.15);
+        }
+
+        .module-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 3px;
+            background: linear-gradient(90deg, var(--card-color), rgba(255,255,255,0.5), var(--card-color));
+            opacity: 0.8;
+        }
+
+        .module-card.active {
+            opacity: 1;
+            transform: scale(1);
+            border-color: rgba(255,255,255,0.25);
+            box-shadow: 0 12px 48px rgba(0,0,0,0.2), 0 0 40px rgba(var(--card-color-rgb), 0.15);
+            background: linear-gradient(135deg, rgba(255,255,255,0.15) 0%, rgba(255,255,255,0.08) 100%);
+        }
+
+        .module-card:hover {
+            transform: scale(1.05);
+            box-shadow: 0 16px 48px rgba(0,0,0,0.25);
+            border-color: rgba(255,255,255,0.2);
+        }
+
+        .module-card.active:hover {
+            transform: scale(1.08);
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3), 0 0 50px rgba(var(--card-color-rgb), 0.2);
+        }
+
+        /* 卡片头部 */
+        .card-header {
+            display: flex;
+            align-items: center;
+            margin-bottom: 25px;
+        }
+
+        .card-icon {
+            width: 56px;
+            height: 56px;
+            border-radius: 16px;
+            background: linear-gradient(135deg, var(--card-color), rgba(var(--card-color-rgb), 0.5));
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 28px;
+            margin-right: 16px;
+        }
+
+        .card-title {
+            font-size: 22px;
+            font-weight: 700;
+            color: #fff;
+        }
+
+        .card-subtitle {
+            font-size: 12px;
+            color: rgba(255,255,255,0.5);
+            margin-top: 4px;
+        }
+
+        /* 统计数据 */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 15px;
+            margin-bottom: 25px;
+        }
+
+        .stat-item {
+            background: rgba(255,255,255,0.05);
+            border-radius: 16px;
+            padding: 18px;
+            text-align: center;
+        }
+
+        .stat-value {
+            font-size: 28px;
+            font-weight: 700;
+            color: var(--card-color);
+        }
+
+        .stat-label {
+            font-size: 12px;
+            color: rgba(255,255,255,0.6);
+            margin-top: 5px;
+        }
+
+        /* 功能列表 */
+        .feature-list {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .feature-item {
+            display: flex;
+            align-items: center;
+            padding: 14px 16px;
+            background: rgba(255,255,255,0.05);
+            border-radius: 12px;
+            transition: all 0.3s;
+        }
+
+        .feature-item:hover {
+            background: rgba(255,255,255,0.1);
+            transform: translateX(5px);
+        }
+
+        .feature-icon {
+            font-size: 20px;
+            margin-right: 12px;
+        }
+
+        .feature-text {
+            font-size: 14px;
+            color: #fff;
+        }
+
+        .feature-tag {
+            margin-left: auto;
+            font-size: 11px;
+            padding: 4px 10px;
+            background: rgba(var(--card-color-rgb), 0.2);
+            color: var(--card-color);
+            border-radius: 20px;
+        }
+
+        /* 进入按钮 */
+        .enter-btn {
+            margin-top: auto;
+            padding: 16px;
+            background: var(--card-color, #3b82f6) !important;
+            border: none !important;
+            border-radius: 14px;
+            font-size: 16px;
+            font-weight: 600;
+            color: #fff !important;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            transition: all 0.3s;
+            text-shadow: 0 1px 3px rgba(0,0,0,0.5);
+            box-shadow: 0 4px 15px rgba(59, 130, 246, 0.4) !important;
+            position: relative;
+            z-index: 10;
+        }
+
+        .enter-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 25px rgba(59, 130, 246, 0.6) !important;
+            background: var(--card-color, #60a5fa) !important;
+        }
+
+        .enter-btn svg {
+            width: 18px;
+            height: 18px;
+            fill: none;
+            stroke: currentColor;
+            stroke-width: 2;
+        }
+
+        /* 底部指示器 */
+        .indicators {
+            position: fixed;
+            bottom: 75px;
+            left: 50%;
+            transform: translateX(-50%);
+            z-index: 100;
+            display: flex;
+            gap: 12px;
+            padding: 10px 20px;
+            background: rgba(15, 15, 30, 0.7);
+            border-radius: 25px;
+            backdrop-filter: blur(10px);
+        }
+
+        .indicator {
+            width: 10px;
+            height: 10px;
+            border-radius: 5px;
+            background: rgba(255, 255, 255, 0.4);
+            cursor: pointer;
+            transition: all 0.3s;
+            border: 1px solid rgba(255, 255, 255, 0.3);
+        }
+
+        .indicator.active {
+            width: 30px;
+            background: linear-gradient(135deg, #60a5fa, #3b82f6);
+            box-shadow: 0 0 10px rgba(96, 165, 250, 0.5);
+        }
+
+        .indicator:hover {
+            background: rgba(255, 255, 255, 0.6);
+        }
+
+        /* 拖拽提示 */
+        .drag-hint {
+            position: fixed;
+            bottom: 110px;
+            left: 50%;
+            transform: translateX(-50%);
+            z-index: 100;
+            font-size: 13px;
+            color: rgba(255, 255, 255, 0.6);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 8px 16px;
+            background: rgba(15, 15, 30, 0.6);
+            border-radius: 20px;
+            backdrop-filter: blur(10px);
+        }
+
+        .drag-hint svg {
+            width: 16px;
+            height: 16px;
+            fill: none;
+            stroke: currentColor;
+            stroke-width: 2;
+            animation: swipe 2s ease-in-out infinite;
+        }
+
+        @keyframes swipe {
+            0%, 100% { transform: translateX(-5px); }
+            50% { transform: translateX(5px); }
+        }
+
+        /* 移动端适配 */
+        @media (max-width: 768px) {
+            .module-card {
+                width: 280px;
+                height: 560px;
+                margin: 0 15px;
+            }
+
+            .card-icon {
+                width: 48px;
+                height: 48px;
+                font-size: 24px;
+            }
+
+            .card-title {
+                font-size: 18px;
+            }
+
+            .stat-value {
+                font-size: 22px;
+            }
+
+            .arrow-nav {
+                display: none;
+            }
+        }
+        /* 管理员入口按钮 */
+        .admin-entry-btn {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            z-index: 150;
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            border-radius: 20px;
+            padding: 8px 16px;
+            font-size: 12px;
+            color: rgba(255, 255, 255, 0.5);
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-decoration: none;
+        }
+
+        .admin-entry-btn:hover {
+            background: rgba(255, 255, 255, 0.15);
+            color: rgba(255, 255, 255, 0.8);
+            border-color: rgba(255, 255, 255, 0.3);
+            transform: scale(1.05);
+        }
+
+        /* 认证提示弹窗 */
+        .auth-tip-modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.6);
+            backdrop-filter: blur(5px);
+            -webkit-backdrop-filter: blur(5px);
+            z-index: 1000;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+        .auth-tip-modal.show {
+            opacity: 1;
+        }
+        .auth-tip-content {
+            background: linear-gradient(135deg, rgba(255,255,255,0.15), rgba(255,255,255,0.08));
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border: 1px solid rgba(255,255,255,0.2);
+            border-radius: 20px;
+            padding: 40px;
+            text-align: center;
+            max-width: 320px;
+            position: relative;
+            box-shadow: 0 8px 32px rgba(0,0,0,0.3);
+        }
+        .auth-tip-icon {
+            font-size: 50px;
+            margin-bottom: 15px;
+        }
+        .auth-tip-content h3 {
+            color: #fff;
+            margin: 0 0 10px 0;
+            font-size: 20px;
+        }
+        .auth-tip-content p {
+            color: rgba(255,255,255,0.7);
+            margin: 0 0 25px 0;
+            font-size: 14px;
+        }
+        .auth-tip-btns {
+            display: flex;
+            gap: 12px;
+            justify-content: center;
+        }
+        .tip-btn {
+            padding: 12px 24px;
+            border-radius: 25px;
+            font-size: 14px;
+            text-decoration: none;
+            transition: all 0.3s ease;
+        }
+        .tip-btn.primary {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: #fff;
+            border: none;
+        }
+        .tip-btn.primary:hover {
+            transform: scale(1.05);
+            box-shadow: 0 5px 20px rgba(102, 126, 234, 0.4);
+        }
+        .tip-btn.secondary {
+            background: transparent;
+            color: rgba(255,255,255,0.8);
+            border: 1px solid rgba(255,255,255,0.3);
+        }
+        .tip-btn.secondary:hover {
+            background: rgba(255,255,255,0.1);
+        }
+        .tip-close {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            background: none;
+            border: none;
+            color: rgba(255,255,255,0.5);
+            font-size: 24px;
+            cursor: pointer;
+            width: 30px;
+            height: 30px;
+            line-height: 1;
+        }
+        .tip-close:hover {
+            color: #fff;
+        }
+    </style>
+</head>
+<body style="background: url('images/bg-explore.jpg') center/cover no-repeat fixed !important;">
+    <!-- 管理员入口 -->
+    <a href="manage_admin.html" class="admin-entry-btn">⚙️ 管理员</a>
+
+    <!-- 星空背景 -->
+    <div class="star-bg" id="starBg"></div>
+
+    <!-- 麦穗装饰 -->
+    <div class="wheat-decor wheat-1">🌾</div>
+    <div class="wheat-decor wheat-2">🌾</div>
+    <div class="wheat-decor wheat-3">🌾</div>
+    <div class="wheat-decor wheat-4">🌾</div>
+
+    <!-- 顶部标题 -->
+    <div class="header">
+        <h1>🌾 农大闲置 🌾</h1>
+        <div class="subtitle">探索校园闲置 · 开启蓝色循环</div>
+    </div>
+
+    <!-- 返回按钮 -->
+    <a href="starfield.html" class="back-btn">
+        <svg viewBox="0 0 24 24"><path d="M15 18l-6-6 6-6"/></svg>
+    </a>
+
+    <!-- 中心麦穗 -->
+    <!-- 轮播容器 -->
+    <div class="carousel-container" id="carousel">
+        <div class="carousel-track" id="track">
+            <!-- 发布闲置 -->
+            <div class="module-card" style="--card-color: #3b82f6; --card-color-rgb: 59, 130, 246;" data-index="0" data-page="release_goods.html">
+                <div class="card-header">
+                    <div class="card-icon">📦</div>
+                    <div>
+                        <div class="card-title">发布闲置</div>
+                        <div class="card-subtitle">闲置好物，快速发布</div>
+                    </div>
+                </div>
+                <div class="stats-grid">
+                    <div class="stat-item">
+                        <div class="stat-value">128</div>
+                        <div class="stat-label">今日发布</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-value">89%</div>
+                        <div class="stat-label">成交率</div>
+                    </div>
+                </div>
+                <div class="feature-list">
+                    <div class="feature-item">
+                        <span class="feature-icon">📷</span>
+                        <span class="feature-text">拍照上传</span>
+                        <span class="feature-tag">便捷</span>
+                    </div>
+                    <div class="feature-item">
+                        <span class="feature-icon">🏷️</span>
+                        <span class="feature-text">分类标签</span>
+                        <span class="feature-tag">精准</span>
+                    </div>
+                    <div class="feature-item">
+                        <span class="feature-icon">💰</span>
+                        <span class="feature-text">价格设置</span>
+                        <span class="feature-tag">灵活</span>
+                    </div>
+                </div>
+                <button class="enter-btn">
+                    立即发布
+                    <svg viewBox="0 0 24 24"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+                </button>
+            </div>
+
+            <!-- 公益转赠 -->
+            <div class="module-card" style="--card-color: #8b5cf6; --card-color-rgb: 139, 92, 246;" data-index="1" data-page="donation_publish.html">
+                <div class="card-header">
+                    <div class="card-icon">💝</div>
+                    <div>
+                        <div class="card-title">公益转赠</div>
+                        <div class="card-subtitle">传递爱心，闲置重生</div>
+                    </div>
+                </div>
+                <div class="stats-grid">
+                    <div class="stat-item">
+                        <div class="stat-value">56</div>
+                        <div class="stat-label">转赠物品</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-value">32</div>
+                        <div class="stat-label">受益同学</div>
+                    </div>
+                </div>
+                <div class="feature-list">
+                    <div class="feature-item">
+                        <span class="feature-icon">🎁</span>
+                        <span class="feature-text">免费转赠</span>
+                        <span class="feature-tag">公益</span>
+                    </div>
+                    <div class="feature-item">
+                        <span class="feature-icon">♻️</span>
+                        <span class="feature-text">环保理念</span>
+                        <span class="feature-tag" style="background: #3b82f6;">蓝色</span>
+                    </div>
+                    <div class="feature-item">
+                        <span class="feature-icon">🤝</span>
+                        <span class="feature-text">爱心传递</span>
+                        <span class="feature-tag">互助</span>
+                    </div>
+                </div>
+                <button class="enter-btn">
+                    浏览转赠
+                    <svg viewBox="0 0 24 24"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+                </button>
+            </div>
+
+            <!-- 需求广场 -->
+            <div class="module-card" style="--card-color: #3b82f6; --card-color-rgb: 59, 130, 246;" data-index="2" data-page="demand_board.html">
+                <div class="card-header">
+                    <div class="card-icon">🔍</div>
+                    <div>
+                        <div class="card-title">需求广场</div>
+                        <div class="card-subtitle">发布需求，快速匹配</div>
+                    </div>
+                </div>
+                <div class="stats-grid">
+                    <div class="stat-item">
+                        <div class="stat-value">234</div>
+                        <div class="stat-label">需求总数</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-value">156</div>
+                        <div class="stat-label">已匹配</div>
+                    </div>
+                </div>
+                <div class="feature-list">
+                    <div class="feature-item">
+                        <span class="feature-icon">📝</span>
+                        <span class="feature-text">发布需求</span>
+                        <span class="feature-tag">求购</span>
+                    </div>
+                    <div class="feature-item">
+                        <span class="feature-icon">🔎</span>
+                        <span class="feature-text">快速搜索</span>
+                        <span class="feature-tag">智能</span>
+                    </div>
+                    <div class="feature-item">
+                        <span class="feature-icon">💬</span>
+                        <span class="feature-text">在线沟通</span>
+                        <span class="feature-tag">便捷</span>
+                    </div>
+                </div>
+                <button class="enter-btn">
+                    查看需求
+                    <svg viewBox="0 0 24 24"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+                </button>
+            </div>
+
+            <!-- 碳足迹 -->
+            <div class="module-card" style="--card-color: #3b82f6; --card-color-rgb: 59, 130, 246;" data-index="3" data-page="carbon_ai.html">
+                <div class="card-header">
+                    <div class="card-icon">🌱</div>
+                    <div>
+                        <div class="card-title">碳足迹</div>
+                        <div class="card-subtitle">蓝色生活，减排记录</div>
+                    </div>
+                </div>
+                <div class="stats-grid">
+                    <div class="stat-item">
+                        <div class="stat-value">1.2t</div>
+                        <div class="stat-label">减排总量</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-value">TOP5</div>
+                        <div class="stat-label">校园排名</div>
+                    </div>
+                </div>
+                <div class="feature-list">
+                    <div class="feature-item">
+                        <span class="feature-icon">📊</span>
+                        <span class="feature-text">数据统计</span>
+                        <span class="feature-tag">全面</span>
+                    </div>
+                    <div class="feature-item">
+                        <span class="feature-icon">🏆</span>
+                        <span class="feature-text">排行榜</span>
+                        <span class="feature-tag">激励</span>
+                    </div>
+                    <div class="feature-item">
+                        <span class="feature-icon">🎖️</span>
+                        <span class="feature-text">徽章系统</span>
+                        <span class="feature-tag">荣誉</span>
+                    </div>
+                </div>
+                <button class="enter-btn">
+                    查看碳足迹
+                    <svg viewBox="0 0 24 24"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+                </button>
+            </div>
+
+            <!-- 个人中心 -->
+            <div class="module-card" style="--card-color: #6366f1; --card-color-rgb: 99, 102, 241;" data-index="4" data-page="user_center.html">
+                <div class="card-header">
+                    <div class="card-icon">👤</div>
+                    <div>
+                        <div class="card-title">个人中心</div>
+                        <div class="card-subtitle">管理信息，查看数据</div>
+                    </div>
+                </div>
+                <div class="stats-grid">
+                    <div class="stat-item">
+                        <div class="stat-value">12</div>
+                        <div class="stat-label">发布物品</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-value">8</div>
+                        <div class="stat-label">交易成功</div>
+                    </div>
+                </div>
+                <div class="feature-list">
+                    <div class="feature-item">
+                        <span class="feature-icon">📋</span>
+                        <span class="feature-text">认证管理</span>
+                        <span class="feature-tag">校园认证</span>
+                    </div>
+                    <div class="feature-item">
+                        <span class="feature-icon">📦</span>
+                        <span class="feature-text">我的发布</span>
+                        <span class="feature-tag">管理</span>
+                    </div>
+                    <div class="feature-item">
+                        <span class="feature-icon">❤️</span>
+                        <span class="feature-text">我的收藏</span>
+                        <span class="feature-tag">关注</span>
+                    </div>
+                </div>
+                <button class="enter-btn">
+                    进入中心
+                    <svg viewBox="0 0 24 24"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- 拖拽提示 -->
+    <div class="drag-hint">
+        <svg viewBox="0 0 24 24"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+        左右滑动切换
+    </div>
+
+    <!-- 底部指示器 -->
+    <div class="indicators" id="indicators"></div>
+
+    <script>
+        // 星空背景
+        function createStars() {
+            const bg = document.getElementById('starBg');
+            for (let i = 0; i < 100; i++) {
+                const star = document.createElement('div');
+                star.className = 'star';
+                star.style.left = Math.random() * 100 + '%';
+                star.style.top = Math.random() * 100 + '%';
+                star.style.width = star.style.height = Math.random() * 3 + 1 + 'px';
+                star.style.animationDelay = Math.random() * 2 + 's';
+                bg.appendChild(star);
+            }
+        }
+        createStars();
+
+        // 轮播逻辑
+        const track = document.getElementById('track');
+        const cards = document.querySelectorAll('.module-card');
+        const indicators = document.getElementById('indicators');
+        const prevBtn = document.getElementById('prevBtn');
+        const nextBtn = document.getElementById('nextBtn');
+
+        let currentIndex = 2; // 默认显示中间卡片
+        const totalCards = cards.length;
+
+        // 创建指示器
+        cards.forEach((_, i) => {
+            const dot = document.createElement('div');
+            dot.className = 'indicator' + (i === currentIndex ? ' active' : '');
+            dot.addEventListener('click', () => goToCard(i));
+            indicators.appendChild(dot);
+        });
+
+        function updateCarousel() {
+            const offset = currentIndex - 2;
+            track.style.transform = `translateX(${offset * -340}px)`;
+
+            cards.forEach((card, i) => {
+                card.classList.remove('active');
+                if (i === currentIndex) {
+                    card.classList.add('active');
+                }
+            });
+
+            document.querySelectorAll('.indicator').forEach((dot, i) => {
+                dot.classList.toggle('active', i === currentIndex);
+            });
+        }
+
+        function goToCard(index) {
+            currentIndex = Math.max(0, Math.min(totalCards - 1, index));
+            updateCarousel();
+        }
+
+        function nextCard() {
+            goToCard((currentIndex + 1) % totalCards);
+        }
+
+        function prevCard() {
+            goToCard((currentIndex - 1 + totalCards) % totalCards);
+        }
+
+        // ========== 用户状态检查 ==========
+        // 用户状态管理
+        const UserState = {
+            get() {
+                // 尝试从 Auth 类获取最新的登录状态
+                const loginState = (typeof Auth !== 'undefined') ? Auth.getLoginState() : { isLogin: false };
+                const isLoggedIn = localStorage.getItem('isLoggedIn') === 'true' || loginState.isLogin;
+                const username = localStorage.getItem('username') || (loginState.curUser || '用户');
+
+                // 如果已登录，同步认证状态
+                let isCertified = localStorage.getItem('isCertified') === 'true';
+                if (isLoggedIn && typeof Auth !== 'undefined') {
+                    const authStatus = Auth.getUserAuthStatus(username === '用户' ? loginState.curUser : username);
+                    isCertified = authStatus === 'approved';
+                }
+
+                return {
+                    isLoggedIn: isLoggedIn,
+                    isCertified: isCertified,
+                    username: username
+                };
+            },
+            setLoggedIn(username) {
+                localStorage.setItem('isLoggedIn', 'true');
+                localStorage.setItem('username', username);
+            },
+            setCertified() {
+                localStorage.setItem('isCertified', 'true');
+            },
+            logout() {
+                localStorage.removeItem('isLoggedIn');
+                localStorage.removeItem('isCertified');
+                localStorage.removeItem('username');
+            }
+        };
+
+        // 检查并提示
+        function checkAndNavigate(targetPage) {
+            const state = UserState.get();
+            
+            // 如果目标是登录/注册/认证页面，直接跳转
+            if (['user_login.html', 'user_register.html', 'stu_check.html'].includes(targetPage)) {
+                window.location.href = targetPage;
+                return;
+            }
+            
+            // 检查登录状态
+            if (!state.isLoggedIn) {
+                showAuthTip('login');
+                return;
+            }
+            
+            // 检查认证状态
+            if (!state.isCertified) {
+                showAuthTip('cert');
+                return;
+            }
+            
+            // 全部通过，跳转目标页面
+            window.location.href = targetPage;
+        }
+
+        // 显示认证提示
+        function showAuthTip(type) {
+            // 移除已存在的提示
+            const existing = document.querySelector('.auth-tip-modal');
+            if (existing) existing.remove();
+            
+            const state = UserState.get();
+            const isPending = localStorage.getItem('isPending') === 'true';
+            
+            const modal = document.createElement('div');
+            modal.className = 'auth-tip-modal';
+            
+            let icon, title, message, buttons;
+            
+            if (type === 'login') {
+                icon = '🔐';
+                title = '请先登录';
+                message = '登录后可使用更多功能';
+                buttons = `
+                    <a href="user_login.html" class="tip-btn primary">去登录</a>
+                    <a href="user_register.html" class="tip-btn secondary">注册账号</a>
+                `;
+            } else if (isPending) {
+                icon = '⏳';
+                title = '认证待审核';
+                message = '您的认证申请已提交，请等待管理员审核通过';
+                buttons = `
+                    <a href="stu_check.html" class="tip-btn secondary">查看认证状态</a>
+                `;
+            } else {
+                icon = '📋';
+                title = '请先完成校园认证';
+                message = '完成认证审核后即可使用所有功能';
+                buttons = `
+                    <a href="stu_check.html" class="tip-btn primary">去认证</a>
+                `;
+            }
+            
+            modal.innerHTML = `
+                <div class="auth-tip-content">
+                    <div class="auth-tip-icon">${icon}</div>
+                    <h3>${title}</h3>
+                    <p>${message}</p>
+                    <div class="auth-tip-btns">${buttons}</div>
+                    <button class="tip-close" onclick="this.closest('.auth-tip-modal').remove()">×</button>
+                </div>
+            `;
+            document.body.appendChild(modal);
+            // 动画显示
+            requestAnimationFrame(() => modal.classList.add('show'));
+        }
+
+        // 触摸滑动
+        let startX = 0;
+        let isDragging = false;
+
+        // 点击卡片进入
+        cards.forEach(card => {
+            card.addEventListener('click', (e) => {
+                if (e.target.closest('.enter-btn')) {
+                    // 使用状态检查函数
+                    checkAndNavigate(card.dataset.page);
+                } else {
+                    goToCard(parseInt(card.dataset.index));
+                }
+            });
+        });
+
+        // 自动轮播
+        let autoPlayInterval = setInterval(nextCard, 5000);
+
+        document.addEventListener('visibilitychange', () => {
+            if (document.hidden) {
+                clearInterval(autoPlayInterval);
+            } else {
+                autoPlayInterval = setInterval(nextCard, 5000);
+            }
+        });
+
+        // 初始化
+        updateCarousel();
+    </script>
+
+    <!-- 引入公共脚本 -->
+    <script src="./script/common.js"></script>
+</body>
+</html>

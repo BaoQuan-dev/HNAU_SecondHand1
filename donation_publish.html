@@ -1,0 +1,1344 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>发布公益转赠 - 农大闲置</title>
+    <link rel="stylesheet" href="./style/main.css">
+    <style>
+        /* ========== 内嵌星空背景 ========== */
+        body { position: relative; }
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
+            z-index: -1;
+            background: url('./images/bg-starry.jpg') center center / cover no-repeat;
+        }
+        /* ========== 星空背景 ========== */
+        body { position: relative; }
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
+            z-index: -1;
+            background: url('./images/bg-starry.jpg') center center / cover no-repeat;
+        }
+        /* ========== 公益转赠发布页样式 ========== */
+        body {
+            background: transparent;
+            min-height: 100vh;
+        }
+        
+        .page-header {
+            background: transparent;
+            color: #fff;
+            padding: 80px 20px 10px;
+            text-align: center;
+        }
+        
+        .page-header h1 {
+            margin: 0 0 8px 0;
+            font-size: 1.6rem;
+        }
+        
+        .page-header p {
+            margin: 0;
+            opacity: 0.9;
+            font-size: 0.95rem;
+        }
+        
+        .donation-container {
+            max-width: 600px;
+            margin: 20px auto;
+            padding: 0 16px 40px;
+        }
+        
+        /* 返回按钮 - 玻璃拟态风格 */
+        .ai-back-btn {
+            position: fixed;
+            top: 20px;
+            left: 16px;
+            background: rgba(255,255,255,0.05);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            color: #fff;
+            border: 1px solid rgba(255,255,255,0.15);
+            padding: 10px 16px;
+            border-radius: 25px;
+            font-weight: 600;
+            cursor: pointer;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.3);
+            z-index: 100;
+            text-decoration: none;
+            transition: all 0.3s ease;
+        }
+        
+        .ai-back-btn:hover {
+            background: rgba(255,255,255,0.1);
+            transform: translateY(-2px);
+            box-shadow: 0 6px 25px rgba(96,165,250,0.3);
+        }
+        
+        .donation-form {
+            background: transparent;
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(255,255,255,0.15);
+            border-radius: 16px;
+            box-shadow: 0 8px 32px rgba(0,0,0,0.2);
+            border-radius: 16px;
+            padding: 24px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+        }
+        
+        .form-section {
+            margin-bottom: 24px;
+        }
+        
+        .form-section-title {
+            font-size: 1rem;
+            font-weight: bold;
+            background: transparent;
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 16px;
+            padding-bottom: 8px;
+            border-bottom: 2px solid #3b82f6;
+        }
+        
+        .form-group {
+            margin-bottom: 16px;
+        }
+        
+        .form-label {
+            display: block;
+            font-size: 0.9rem;
+            color: rgba(255,255,255,0.8);
+            margin-bottom: 6px;
+        }
+        
+        .form-label .required {
+            color: #f44336;
+        }
+        
+        .form-input,
+        .form-select,
+        .form-textarea {
+            width: 100%;
+            padding: 12px 14px;
+            border: 2px solid #0f172a;
+            border-radius: 10px;
+            font-size: 1rem;
+            box-sizing: border-box;
+            transition: border-color 0.2s;
+        }
+        
+        .form-input:focus,
+        .form-select:focus,
+        .form-textarea:focus {
+            outline: none;
+            border-color: #2563eb;
+        }
+        
+        .form-textarea {
+            resize: vertical;
+            min-height: 100px;
+        }
+        
+        .form-hint {
+            font-size: 0.8rem;
+            color: rgba(255,255,255,0.5);
+            margin-top: 4px;
+        }
+        
+        .donation-target-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 10px;
+        }
+        
+        .target-option {
+            position: relative;
+        }
+        
+        .target-option input {
+            position: absolute;
+            opacity: 0;
+            width: 0;
+            height: 0;
+        }
+        
+        .target-option label {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 16px 10px;
+            background: #1e293b;
+            border: 2px solid #e0e0e0;
+            border-radius: 12px;
+            cursor: pointer;
+            transition: all 0.2s;
+            text-align: center;
+        }
+        
+        .target-option input:checked + label {
+            background: #0f172a;
+            border-color: #2563eb;
+            background: transparent;
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        
+        .target-option label:hover {
+            border-color: #2563eb;
+        }
+        
+        .target-icon {
+            font-size: 1.8rem;
+            margin-bottom: 6px;
+        }
+        
+        .target-name {
+            font-size: 0.85rem;
+            font-weight: bold;
+        }
+        
+        .price-display {
+            background: #0f172a;
+            padding: 16px;
+            border-radius: 10px;
+            text-align: center;
+            border: 2px dashed #2563eb;
+        }
+        
+        .price-display .price {
+            font-size: 1.8rem;
+            font-weight: bold;
+            background: transparent;
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        
+        .price-display .price-label {
+            font-size: 0.9rem;
+            color: rgba(255,255,255,0.8);
+            margin-top: 4px;
+        }
+        
+        .image-upload-area {
+            border: 2px dashed #3b82f6;
+            border-radius: 12px;
+            padding: 30px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.2s;
+            background: #fafafa;
+        }
+        
+        .image-upload-area:hover {
+            border-color: #2563eb;
+            background: #1e293b;
+        }
+        
+        .image-upload-icon {
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+        }
+        
+        .image-upload-text {
+            color: rgba(255,255,255,0.8);
+            font-size: 0.95rem;
+        }
+        
+        .image-preview-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 10px;
+            margin-top: 16px;
+        }
+        
+        .image-preview {
+            aspect-ratio: 1;
+            border-radius: 8px;
+            overflow: hidden;
+            background: #f0f0f0;
+        }
+        
+        .image-preview img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+        
+        .submit-btn {
+            width: 100%;
+            padding: 14px;
+            background: transparent;
+            color: #fff;
+            border: none;
+            border-radius: 25px;
+            font-size: 1.1rem;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.2s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+        
+        .submit-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(67, 160, 71, 0.4);
+        }
+        
+        .submit-btn:active {
+            transform: translateY(0);
+        }
+        
+        .submit-btn:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+            transform: none;
+        }
+        
+        .charity-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+            background: #0f172a;
+            background: transparent;
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            padding: 4px 10px;
+            border-radius: 12px;
+            font-size: 0.8rem;
+        }
+        
+        @media (max-width: 480px) {
+            .donation-target-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .image-preview-grid {
+                grid-template-columns: repeat(3, 1fr);
+            }
+        }
+    
+        /* 页面头部 */
+        .page-header {
+            padding: 80px 20px 20px;
+            text-align: left;
+            max-width: 900px;
+            margin: 0 auto;
+        }
+        .page-header h1 {
+            font-size: 28px;
+            font-weight: 700;
+            margin: 0 0 8px 0;
+            background: linear-gradient(135deg, #fff 0%, #60A5FA 50%, #C084FC 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        .page-header p {
+            font-size: 14px;
+            color: rgba(255,255,255,0.6);
+            margin: 0;
+        }
+        .page-container {
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 0 16px 100px;
+        }
+        </style>
+</head>
+<body style="background: transparent;">
+    <div class="cosmos-bg">
+        <div class="cosmos-stars"></div>
+        <div class="cosmos-nebula"></div>
+    </div>
+    
+    <!-- 返回按钮 -->
+    <a href="explore.html" class="ai-back-btn">← 返回</a>
+    
+    <!-- 页面头部 -->
+    <div class="page-header">
+        <h1>📦 发布公益转赠</h1>
+        <p>让闲置物品继续传递温暖与价值</p>
+    </div>
+    
+    <!-- 发布表单 -->
+    <div class="donation-container">
+        <form class="donation-form" id="donationForm">
+            <!-- 基本信息 -->
+            <div class="form-section">
+                <div class="form-section-title">
+                    <span class="charity-badge">📋</span> 基本信息
+                </div>
+                
+                <div class="form-group">
+                    <label class="form-label">
+                        转赠物品名称 <span class="required">*</span>
+                    </label>
+                    <input type="text" class="form-input" id="itemName" placeholder="请输入物品名称" required maxlength="50">
+                </div>
+                
+                <div class="form-group">
+                    <label class="form-label">
+                        物品分类 <span class="required">*</span>
+                    </label>
+                    <select class="form-select" id="category" required>
+                        <option value="">请选择分类</option>
+                        <option value="教材">📚 教材图书</option>
+                        <option value="电子产品">📱 电子产品</option>
+                        <option value="衣物">👕 衣物鞋帽</option>
+                        <option value="日用品">🧸 生活用品</option>
+                        <option value="运动">⚽ 运动用品</option>
+                        <option value="文具">✏️ 文具办公</option>
+                        <option value="其他">📦 其他物品</option>
+                    </select>
+                </div>
+            </div>
+            
+            <!-- 转赠对象 -->
+            <div class="form-section">
+                <div class="form-section-title">
+                    <span class="charity-badge">🎯</span> 转赠对象
+                </div>
+                
+                <div class="donation-target-grid">
+                    <div class="target-option">
+                        <input type="radio" name="targetType" id="targetClub" value="club" required>
+                        <label for="targetClub">
+                            <span class="target-icon">🏛️</span>
+                            <span class="target-name">公益社团</span>
+                        </label>
+                    </div>
+                    <div class="target-option">
+                        <input type="radio" name="targetType" id="targetWork" value="work">
+                        <label for="targetWork">
+                            <span class="target-icon">💼</span>
+                            <span class="target-name">勤工助学点</span>
+                        </label>
+                    </div>
+                    <div class="target-option">
+                        <input type="radio" name="targetType" id="targetPersonal" value="personal">
+                        <label for="targetPersonal">
+                            <span class="target-icon">👤</span>
+                            <span class="target-name">个人定向</span>
+                        </label>
+                    </div>
+                </div>
+                
+                <div class="form-group" style="margin-top: 16px;">
+                    <label class="form-label">
+                        转赠说明 <span class="required">*</span>
+                    </label>
+                    <textarea class="form-textarea" id="description" placeholder="请描述物品的使用状况、转赠原因或对接收者的期望..." required maxlength="500"></textarea>
+                    <div class="form-hint">建议包含：物品新旧程度、功能完好情况、使用建议等</div>
+                </div>
+            </div>
+            
+            <!-- 价格提示 -->
+            <div class="form-section">
+                <div class="form-section-title">
+                    <span class="charity-badge">💚</span> 转赠价格
+                </div>
+                <div class="price-display">
+                    <div class="price">¥0.00</div>
+                    <div class="price-label">公益转赠，无需支付 · 爱心传递</div>
+                </div>
+            </div>
+            
+            <!-- 图片上传 -->
+            <div class="form-section">
+                <div class="form-section-title">
+                    <span class="charity-badge">📷</span> 物品图片
+                </div>
+                <div class="image-upload-area" id="imageUploadArea">
+                    <div class="image-upload-icon">📷</div>
+                    <div class="image-upload-text">点击上传物品图片（最多4张）</div>
+                </div>
+                <input type="file" id="imageInput" accept="image/*" multiple style="display: none;">
+                <div class="image-preview-grid" id="imagePreview"></div>
+            </div>
+            
+            <!-- 提交按钮 -->
+            <button type="submit" class="submit-btn" id="submitBtn">
+                <span>🌟</span>
+                <span>发布公益转赠</span>
+            </button>
+            
+            <!-- 删除按钮 -->
+            <button type="button" class="delete-btn" id="deleteBtn" style="display: none;">
+                <span>🗑️</span>
+                <span>删除发布</span>
+            </button>
+        </form>
+        
+        <!-- 我的发布区域 -->
+        <div class="my-publications" id="myPublicationsSection">
+            <div class="publications-header">
+                <h2>📦 我的发布</h2>
+            </div>
+            <div class="publications-container" id="myPublicationsContainer" style="display: flex; flex-wrap: wrap; gap: 20px; justify-content: flex-start;">
+                <div class="loading">加载中...</div>
+            </div>
+        </div>
+        
+        <!-- 翻转卡片样式 -->
+        <style>
+        .flip-card {
+            background-color: transparent;
+            width: 260px;
+            height: 340px;
+            perspective: 1000px;
+            cursor: pointer;
+        }
+        .flip-card-inner {
+            position: relative;
+            width: 100%;
+            height: 100%;
+            text-align: center;
+            transition: transform 0.8s;
+            transform-style: preserve-3d;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.3);
+            border-radius: 12px;
+        }
+        .flip-card:hover .flip-card-inner {
+            transform: rotateY(180deg);
+        }
+        .flip-card-front, .flip-card-back {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            -webkit-backface-visibility: hidden;
+            backface-visibility: hidden;
+            border-radius: 12px;
+            overflow: hidden;
+        }
+        .flip-card-front {
+            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+        }
+        .flip-card-back {
+            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+            transform: rotateY(180deg);
+        }
+        .status-tag {
+            padding: 3px 10px;
+            border-radius: 12px;
+            font-size: 11px;
+            font-weight: bold;
+        }
+        .status-available {
+            background: linear-gradient(135deg, #00b894 0%, #00cec9 100%);
+            color: white;
+        }
+        .status-claimed {
+            background: linear-gradient(135deg, #636e72 0%, #b2bec3 100%);
+            color: white;
+        }
+        </style>
+    </div>
+    
+    <!-- 删除确认弹窗 -->
+    <div class="delete-modal-overlay" id="deleteModal">
+        <div class="delete-modal">
+            <div class="delete-modal-icon">⚠️</div>
+            <div class="delete-modal-header">确认删除</div>
+            <div class="delete-modal-content">
+                确定要删除这条转赠发布吗？<br>
+                <span id="deleteItemName"></span>
+            </div>
+            <div class="delete-modal-footer">
+                <button class="cancel-btn" id="cancelDeleteBtn">取消</button>
+                <button class="confirm-btn" id="confirmDeleteBtn">确认删除</button>
+            </div>
+        </div>
+    </div>
+    
+    <!-- 删除按钮和弹窗样式 -->
+    <style>
+        /* ========== 内嵌星空背景 ========== */
+        body { position: relative; }
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
+            z-index: -1;
+            background: url('./images/bg-starry.jpg') center center / cover no-repeat;
+        }
+        /* ========== 星空背景 ========== */
+        body { position: relative; }
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
+            z-index: -1;
+            background: url('./images/bg-starry.jpg') center center / cover no-repeat;
+        }
+        .delete-btn {
+            width: 100%;
+            padding: 14px 20px;
+            background: transparent;
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(255,255,255,0.15);
+            border-radius: 16px;
+            box-shadow: 0 8px 32px rgba(0,0,0,0.2);
+            border: 2px solid #e74c3c;
+            border-radius: 12px;
+            color: #e74c3c;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            margin-top: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            transition: all 0.3s;
+        }
+        .delete-btn:hover {
+            background: #e74c3c;
+            color: #fff;
+        }
+        .delete-btn:active {
+            transform: scale(0.98);
+        }
+        
+        /* 我的发布区域样式 */
+        .my-publications {
+            margin-top: 40px;
+            padding-top: 30px;
+            border-top: 1px solid rgba(255,255,255,0.1);
+        }
+        .publications-header h2 {
+            font-size: 20px;
+            color: #fff;
+            margin: 0 0 20px 0;
+        }
+        .publications-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+            gap: 16px;
+        }
+        .publication-card {
+            background: rgba(255,255,255,0.05);
+            border: 1px solid rgba(255,255,255,0.1);
+            border-radius: 12px;
+            overflow: hidden;
+            transition: all 0.3s;
+        }
+        .publication-card:hover {
+            transform: translateY(-4px);
+            border-color: rgba(96, 165, 250, 0.5);
+            box-shadow: 0 8px 24px rgba(0,0,0,0.2);
+        }
+        .pub-image {
+            width: 100%;
+            height: 160px;
+            object-fit: cover;
+            background: rgba(255,255,255,0.05);
+        }
+        .pub-info {
+            padding: 12px;
+        }
+        .pub-name {
+            font-size: 15px;
+            color: #fff;
+            font-weight: 500;
+            margin-bottom: 8px;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+        .pub-meta {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 8px;
+        }
+        .pub-category {
+            font-size: 12px;
+            color: rgba(255,255,255,0.6);
+            background: rgba(255,255,255,0.1);
+            padding: 2px 8px;
+            border-radius: 4px;
+        }
+        .pub-status {
+            font-size: 12px;
+            padding: 2px 8px;
+            border-radius: 4px;
+        }
+        .status-available {
+            color: #10b981;
+            background: rgba(16, 185, 129, 0.2);
+        }
+        .status-claimed {
+            color: #f59e0b;
+            background: rgba(245, 158, 11, 0.2);
+        }
+        .pub-time {
+            font-size: 11px;
+            color: rgba(255,255,255,0.4);
+        }
+        .empty-state {
+            grid-column: 1 / -1;
+            text-align: center;
+            padding: 40px;
+            color: rgba(255,255,255,0.5);
+            font-size: 14px;
+        }
+        .loading {
+            grid-column: 1 / -1;
+            text-align: center;
+            padding: 20px;
+            color: rgba(255,255,255,0.5);
+        }
+        
+        .delete-modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.5);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 10001;
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.3s;
+        }
+        .delete-modal-overlay.active {
+            opacity: 1;
+            visibility: visible;
+        }
+        .delete-modal {
+            background: transparent;
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(255,255,255,0.15);
+            border-radius: 16px;
+            box-shadow: 0 8px 32px rgba(0,0,0,0.2);
+            border-radius: 16px;
+            padding: 24px;
+            width: 85%;
+            max-width: 320px;
+            text-align: center;
+        }
+        .delete-modal-icon {
+            font-size: 3rem;
+            margin-bottom: 12px;
+        }
+        .delete-modal-header {
+            font-size: 18px;
+            font-weight: 600;
+            color: #fff;
+            margin-bottom: 8px;
+        }
+        .delete-modal-content {
+            font-size: 14px;
+            color: rgba(255,255,255,0.8);
+            margin-bottom: 20px;
+            line-height: 1.5;
+        }
+        .delete-modal-footer {
+            display: flex;
+            gap: 12px;
+        }
+        .delete-modal-footer .cancel-btn {
+            flex: 1;
+            padding: 12px;
+            background: #1e293b;
+            border: none;
+            border-radius: 8px;
+            color: rgba(255,255,255,0.8);
+            font-size: 15px;
+            cursor: pointer;
+        }
+        .delete-modal-footer .confirm-btn {
+            flex: 1;
+            padding: 12px;
+            background: #e74c3c;
+            border: none;
+            border-radius: 8px;
+            color: #fff;
+            font-size: 15px;
+            cursor: pointer;
+        }
+    
+        /* 页面头部 */
+        .page-header {
+            padding: 80px 20px 20px;
+            text-align: left;
+            max-width: 900px;
+            margin: 0 auto;
+        }
+        .page-header h1 {
+            font-size: 28px;
+            font-weight: 700;
+            margin: 0 0 8px 0;
+            background: linear-gradient(135deg, #fff 0%, #60A5FA 50%, #C084FC 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        .page-header p {
+            font-size: 14px;
+            color: rgba(255,255,255,0.6);
+            margin: 0;
+        }
+        .page-container {
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 0 16px 100px;
+        }
+        </style>
+    
+    <!-- 成功弹窗 -->
+    <div class="hnau-modal-overlay" id="successModal">
+        <div class="hnau-modal">
+            <div class="hnau-modal-icon" style="text-align: center; font-size: 3rem; margin-bottom: 16px;">🎉</div>
+            <div class="hnau-modal-header" style="text-align: center;">发布成功</div>
+            <div class="hnau-modal-content" style="text-align: center;">
+                您的公益转赠已发布！<br>
+                感谢您的爱心，让闲置继续传递温暖 🌟
+            </div>
+            <div class="hnau-modal-footer">
+                <button class="hnau-modal-btn" id="successBtn">查看我的转赠</button>
+            </div>
+        </div>
+    </div>
+    
+    <!-- 弹窗样式（内联） -->
+    <style>
+        /* ========== 内嵌星空背景 ========== */
+        body { position: relative; }
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
+            z-index: -1;
+            background: url('./images/bg-starry.jpg') center center / cover no-repeat;
+        }
+        /* ========== 星空背景 ========== */
+        body { position: relative; }
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
+            z-index: -1;
+            background: url('./images/bg-starry.jpg') center center / cover no-repeat;
+        }
+        .hnau-modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.5);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 10000;
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.3s ease;
+        }
+        
+        .hnau-modal-overlay.active {
+            opacity: 1;
+            visibility: visible;
+        }
+        
+        .hnau-modal {
+            background: transparent;
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(255,255,255,0.15);
+            border-radius: 16px;
+            box-shadow: 0 8px 32px rgba(0,0,0,0.2);
+            border-radius: 16px;
+            padding: 24px;
+            max-width: 320px;
+            width: 90%;
+            transform: translateY(20px);
+            transition: transform 0.3s ease;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.15);
+        }
+        
+        .hnau-modal-overlay.active .hnau-modal {
+            transform: translateY(0);
+        }
+        
+        .hnau-modal-header {
+            font-size: 1.1rem;
+            font-weight: bold;
+            background: transparent;
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 16px;
+        }
+        
+        .hnau-modal-content {
+            color: rgba(255,255,255,0.8);
+            font-size: 0.95rem;
+            line-height: 1.8;
+            margin-bottom: 20px;
+        }
+        
+        .hnau-modal-footer {
+            text-align: center;
+        }
+        
+        .hnau-modal-btn {
+            background: transparent;
+            color: #fff;
+            border: none;
+            padding: 12px 32px;
+            border-radius: 25px;
+            font-size: 1rem;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        
+        .hnau-modal-btn:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 4px 12px rgba(67, 160, 71, 0.3);
+        }
+    
+        /* 页面头部 */
+        .page-header {
+            padding: 80px 20px 20px;
+            text-align: left;
+            max-width: 900px;
+            margin: 0 auto;
+        }
+        .page-header h1 {
+            font-size: 28px;
+            font-weight: 700;
+            margin: 0 0 8px 0;
+            background: linear-gradient(135deg, #fff 0%, #60A5FA 50%, #C084FC 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        .page-header p {
+            font-size: 14px;
+            color: rgba(255,255,255,0.6);
+            margin: 0;
+        }
+        .page-container {
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 0 16px 100px;
+        }
+        </style>
+    
+    <script>
+    (function() {
+        'use strict';
+        
+        // ========== 公益转赠存储键 ==========
+        var STORAGE_KEY = 'hnau_admin_pending_donations';
+        var USER_KEY = 'hnau_current_user';
+        
+        // ========== 编辑模式 ==========
+        var editId = null;
+        var deleteModal = null;
+        
+        // ========== DOM ==========
+        var form = document.getElementById('donationForm');
+        var imageUploadArea = document.getElementById('imageUploadArea');
+        var imageInput = document.getElementById('imageInput');
+        var imagePreview = document.getElementById('imagePreview');
+        var submitBtn = document.getElementById('submitBtn');
+        var successModal = document.getElementById('successModal');
+        var successBtn = document.getElementById('successBtn');
+        deleteModal = document.getElementById('deleteModal');
+        
+        // ========== 检查编辑模式 ==========
+        function checkEditMode() {
+            var urlParams = new URLSearchParams(window.location.search);
+            editId = urlParams.get('editId');
+            if (editId) {
+                loadEditData();
+            }
+        }
+        
+        // ========== 加载编辑数据 ==========
+        function loadEditData() {
+            var list = getDonationList();
+            var item = list.find(function(d) { return d.id === editId; });
+            if (item) {
+                document.getElementById('itemName').value = item.itemName || '';
+                document.getElementById('category').value = item.category || '';
+                document.getElementById('description').value = item.description || '';
+                if (item.targetType) {
+                    var radio = document.querySelector('input[name="targetType"][value="' + item.targetType + '"]');
+                    if (radio) radio.checked = true;
+                }
+                uploadedImages = item.images || [];
+                renderImagePreviews();
+                
+                // 切换到编辑模式标题
+                var titleEl = document.querySelector('.page-title');
+                if (titleEl) titleEl.textContent = '编辑转赠';
+                
+                // 显示删除按钮
+                var deleteBtn = document.getElementById('deleteBtn');
+                if (deleteBtn) deleteBtn.style.display = 'flex';
+                
+                // 修改按钮文字
+                submitBtn.textContent = '保存修改';
+            }
+        }
+        
+        // ========== 删除确认弹窗 ==========
+        function showDeleteConfirm() {
+            if (deleteModal) {
+                deleteModal.classList.add('active');
+            }
+        }
+        
+        function hideDeleteConfirm() {
+            if (deleteModal) {
+                deleteModal.classList.remove('active');
+            }
+        }
+        
+        function confirmDelete() {
+            var list = getDonationList();
+            var newList = list.filter(function(d) { return d.id !== editId; });
+            localStorage.setItem(STORAGE_KEY, JSON.stringify(newList));
+            hideDeleteConfirm();
+            Toast.show('删除成功', 'success');
+            setTimeout(function() {
+                window.location.href = 'donation_my.html';
+            }, 1000);
+        }
+        
+        // 绑定删除按钮事件
+        document.addEventListener('DOMContentLoaded', function() {
+            var deleteBtn = document.getElementById('deleteBtn');
+            var cancelDeleteBtn = document.getElementById('cancelDeleteBtn');
+            var confirmDeleteBtn = document.getElementById('confirmDeleteBtn');
+            
+            if (deleteBtn) {
+                deleteBtn.addEventListener('click', showDeleteConfirm);
+            }
+            if (cancelDeleteBtn) {
+                cancelDeleteBtn.addEventListener('click', hideDeleteConfirm);
+            }
+            if (confirmDeleteBtn) {
+                confirmDeleteBtn.addEventListener('click', confirmDelete);
+            }
+            if (deleteModal) {
+                deleteModal.addEventListener('click', function(e) {
+                    if (e.target === deleteModal) {
+                        hideDeleteConfirm();
+                    }
+                });
+            }
+        });
+        
+        // ========== 图片预览 ==========
+        var uploadedImages = [];
+        
+        imageUploadArea.addEventListener('click', function() {
+            imageInput.click();
+        });
+        
+        imageInput.addEventListener('change', function(e) {
+            var files = Array.from(e.target.files);
+            if (uploadedImages.length + files.length > 4) {
+                alert('最多只能上传4张图片');
+                return;
+            }
+            
+            files.forEach(function(file) {
+                var reader = new FileReader();
+                reader.onload = function(event) {
+                    uploadedImages.push(event.target.result);
+                    renderImagePreviews();
+                };
+                reader.readAsDataURL(file);
+            });
+        });
+        
+        function renderImagePreviews() {
+            imagePreview.innerHTML = uploadedImages.map(function(img, index) {
+                return '<div class="image-preview">' +
+                       '<img src="' + img + '" alt="预览' + (index + 1) + '">' +
+                       '</div>';
+            }).join('');
+        }
+        
+        // ========== 表单提交 ==========
+        form.addEventListener('submit', function(e) {
+            e.preventDefault();
+            console.log('[Donation] 表单提交开始');
+            
+            // 获取表单数据
+            var formData = {
+                id: 'D' + Date.now(),
+                itemName: document.getElementById('itemName').value.trim(),
+                category: document.getElementById('category').value,
+                targetType: document.querySelector('input[name="targetType"]:checked')?.value,
+                description: document.getElementById('description').value.trim(),
+                images: uploadedImages,
+                price: 0,
+                status: 'pending', // pending | receiving | completed | cancelled
+                publishTime: new Date().toISOString(),
+                publisher: getCurrentUser(),
+                receiver: null,
+                confirmTime: null,
+                feedback: null
+            };
+            
+            // 验证
+            if (!formData.targetType) {
+                console.log('[Donation] 未选择转赠对象类型');
+                alert('请选择转赠对象类型');
+                return;
+            }
+            
+            console.log('[Donation] 开始保存数据:', formData);
+            
+            // 保存到localStorage
+            try {
+                var list = getDonationList();
+                
+                if (editId) {
+                    // 编辑模式：更新现有项
+                    for (var i = 0; i < list.length; i++) {
+                        if (list[i].id === editId) {
+                            formData.id = editId;
+                            formData.publishTime = list[i].publishTime;
+                            list[i] = formData;
+                            break;
+                        }
+                    }
+                } else {
+                    // 新增模式
+                    list.unshift(formData);
+                }
+                
+                localStorage.setItem(STORAGE_KEY, JSON.stringify(list));
+                console.log('[Donation] 保存成功，列表长度:', list.length);
+                
+                // ========== 同步到管理员待审核列表 ==========
+                try {
+                    var ADMIN_DONATION_KEY = 'hnau_admin_pending_donations';
+                    var adminList = JSON.parse(localStorage.getItem(ADMIN_DONATION_KEY) || '[]');
+                    // 只保存基本信息，不保存图片
+                    var adminItem = {
+                        id: formData.id,
+                        itemName: formData.itemName,
+                        category: formData.category,
+                        condition: formData.condition,
+                        tradeType: formData.tradeType,
+                        publisher: formData.publisher,
+                        publisherId: formData.publisherId,
+                        status: formData.status,
+                        publishTime: formData.publishTime
+                    };
+                    // 检查是否已存在
+                    var exists = adminList.some(function(item) { return item.id === adminItem.id; });
+                    if (!exists) {
+                        adminList.unshift(adminItem);
+                        // 限制数量
+                        if (adminList.length > 50) {
+                            adminList = adminList.slice(0, 50);
+                        }
+                        localStorage.setItem(ADMIN_DONATION_KEY, JSON.stringify(adminList));
+                        console.log('[Donation] 已同步到管理员待审核列表');
+                    }
+                } catch (e) {
+                    console.error('[Donation] 同步管理员失败:', e);
+                }
+            } catch (err) {
+                console.error('[Donation] 保存失败:', err);
+                alert('存储失败，请清理浏览器缓存后重试');
+                return;
+            }
+            
+            console.log('[Donation] 显示成功弹窗');
+            // 显示成功弹窗
+            successModal.classList.add('active');
+            
+            // 禁用按钮
+            submitBtn.disabled = true;
+            console.log('[Donation] 表单提交完成');
+        });
+        
+        // ========== 页面加载时检查编辑模式 ==========
+        checkEditMode();
+        
+        // ========== 页面加载时显示我的发布 ==========
+        loadMyPublications();
+        
+        // ========== 成功弹窗 ==========
+        successBtn.addEventListener('click', function() {
+            // 关闭弹窗
+            successModal.classList.remove('active');
+            // 刷新我的发布列表
+            loadMyPublications();
+            // 不跳转，直接在当前页面显示
+            // window.location.href = 'donation_my.html';
+            console.log('[Donation] 已刷新我的发布列表');
+        });
+        
+        // ========== 获取当前用户 ==========
+        function getCurrentUser() {
+            console.log('[Donation] 开始获取当前用户...');
+            
+            // 优先使用 Auth 系统的用户数据
+            var username = localStorage.getItem('username');
+            if (username) {
+                console.log('[Donation] 从 Auth 系统获取用户:', username);
+                return {
+                    id: 'user_' + username,
+                    name: username,
+                    studentId: '',
+                    college: ''
+                };
+            }
+            
+            // 其次使用 hnau_current_user
+            var userStr = localStorage.getItem('hnau_current_user');
+            if (userStr) {
+                console.log('[Donation] 从 hnau_current_user 获取用户');
+                return JSON.parse(userStr);
+            }
+            
+            // 最后使用 USER_KEY
+            var legacyUser = localStorage.getItem(USER_KEY);
+            if (legacyUser) {
+                console.log('[Donation] 从 USER_KEY 获取用户');
+                return JSON.parse(legacyUser);
+            }
+            
+            // 没有用户数据
+            console.log('[Donation] 未找到用户数据!');
+            return null;
+        }
+        
+        // ========== 获取转赠列表 ==========
+        function getDonationList() {
+            var listStr = localStorage.getItem(STORAGE_KEY);
+            return listStr ? JSON.parse(listStr) : [];
+        }
+        
+        // ========== 加载我的发布 ==========
+        function loadMyPublications() {
+            console.log('[Donation] === 开始加载我的发布 ===');
+            var currentUser = getCurrentUser();
+            console.log('[Donation] 当前用户:', currentUser);
+            
+            // 如果用户未登录
+            if (!currentUser) {
+                var container = document.getElementById('myPublicationsContainer');
+                if (container) {
+                    container.innerHTML = '<div class="empty-state">请先登录后再查看发布记录</div>';
+                }
+                return;
+            }
+            
+            var allList = getDonationList();
+            console.log('[Donation] 全部发布列表数量:', allList.length);
+            console.log('[Donation] 当前用户ID:', currentUser.id);
+            
+            // 筛选当前用户的发布（publisher 是对象，包含 id 属性）
+            var myList = allList.filter(function(item) {
+                var pubId = item.publisher && item.publisher.id ? item.publisher.id : (item.publisherId || '');
+                console.log('[Donation] 检查项目:', item.itemName, '发布者ID:', pubId, '当前用户ID:', currentUser.id, '匹配:', pubId === currentUser.id);
+                return pubId === currentUser.id;
+            });
+            console.log('[Donation] 筛选后我的发布数量:', myList.length);
+            
+            // 获取容器
+            var container = document.getElementById('myPublicationsContainer');
+            if (!container) {
+                console.log('[Donation] 未找到myPublicationsContainer');
+                return;
+            }
+            console.log('[Donation] 找到容器，准备渲染');
+            
+            // 渲染列表
+            if (myList.length === 0) {
+                container.innerHTML = '<div class="empty-state">暂无发布的转赠物品</div>';
+            } else {
+                // 按时间倒序排列
+                myList.sort(function(a, b) { return new Date(b.time) - new Date(a.time); });
+                
+                var html = '';
+                myList.forEach(function(item) {
+                    var images = item.images || [];
+                    var firstImage = images.length > 0 ? images[0] : '';
+                    
+                    html += '<div class="flip-card" style="flex: 0 0 260px; height: 340px; position: relative; margin: 0;">' +
+                        '<div class="flip-card-inner">' +
+                        // 正面
+                        '<div class="flip-card-front">' +
+                        (firstImage ? '<img src="' + firstImage + '" alt="' + item.itemName + '" style="width: 100%; height: 100%; object-fit: cover;">' : '<div style="width: 100%; height: 100%; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); display: flex; align-items: center; justify-content: center; flex-direction: column; color: white;"><span style="font-size: 48px;">🎁</span><span style="margin-top: 10px;">暂无图片</span></div>') +
+                        '<div class="price-tag" style="position: absolute; bottom: 60px; left: 10px; background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%); padding: 4px 12px; border-radius: 20px; font-size: 14px; font-weight: bold; color: white;">免费转赠</div>' +
+                        '<div class="card-title" style="position: absolute; bottom: 15px; left: 10px; right: 10px; text-align: center; font-weight: bold; color: white; text-shadow: 0 2px 4px rgba(0,0,0,0.5); font-size: 14px;">' + item.itemName + '</div>' +
+                        '</div>' +
+                        // 背面
+                        '<div class="flip-card-back" style="padding: 15px; color: white; display: flex; flex-direction: column; justify-content: space-between; height: 100%; box-sizing: border-box;">' +
+                        '<div>' +
+                        '<h3 style="margin: 0 0 10px 0; font-size: 16px; color: #f093fb;">' + item.itemName + '</h3>' +
+                        '<p style="margin: 5px 0; font-size: 12px; color: #a0a0a0;"><strong>📂 分类：</strong>' + (item.category || '未填写') + '</p>' +
+                        '<p style="margin: 5px 0; font-size: 12px; color: #a0a0a0;"><strong>🚚 交易：</strong>' + (item.targetType || '未填写') + '</p>' +
+                        '<p style="margin: 5px 0; font-size: 12px; color: #a0a0a0;"><strong>📅 时间：</strong>' + (item.publishTime ? new Date(item.publishTime).toLocaleDateString() : '') + '</p>' +
+                        '<p style="margin: 5px 0; font-size: 12px; color: #a0a0a0; word-break: break-all;"><strong>📝 描述：</strong>' + (item.description || '暂无描述') + '</p>' +
+                        '</div>' +
+                        '<div style="margin-top: 10px; padding-top: 10px; border-top: 1px solid rgba(255,255,255,0.2);">' +
+                        '<p style="margin: 0; font-size: 12px; color: #f5576c;"><strong>📞</strong> 发布者: ' + (item.publisher ? item.publisher.name : '未知') + '</p>' +
+                        '</div>' +
+                        '</div>' +
+                        '</div>' +
+                        // 状态标签
+                        '<span class="status-tag status-' + item.status + '" style="position: absolute; top: 10px; right: 10px; padding: 3px 10px; border-radius: 12px; font-size: 11px; font-weight: bold; z-index: 5;">' + item.status + '</span>' +
+                        // 悬停提示
+                        '<div style="position: absolute; bottom: 0; left: 0; right: 0; text-align: center; padding: 5px; background: rgba(0,0,0,0.6); font-size: 11px; color: #a0a0a0;">🖱️ 悬停查看详情</div>' +
+                        '</div>';
+                });
+                container.innerHTML = html;
+                console.log('[Donation] 渲染完成，共' + myList.length + '条');
+            }
+        }
+        
+        // ========== 移动端菜单 ==========
+        var navbarToggle = document.getElementById('navbarToggle');
+        if (navbarToggle) {
+            navbarToggle.addEventListener('click', function() {
+                var menu = document.getElementById('mobileMenu');
+                if (menu) {
+                    menu.classList.toggle('active');
+                }
+            });
+        }
+        
+        // ========== 页面加载时加载我的发布 ==========
+        loadMyPublications();
+        
+        console.log('[HNAU Donation] 公益转赠发布页已加载');
+    })();
+    </script>
+</body>
+</html>

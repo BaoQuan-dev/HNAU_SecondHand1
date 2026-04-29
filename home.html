@@ -1,0 +1,1806 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="refresh" content="0;url=starfield.html">
+    <title>跳转中...</title>
+    <script>window.location.href='starfield.html';</script>
+</head>
+<body style="background: linear-gradient(135deg, #0a0a1a 0%, #1a1a2e 50%, #0f0f23 100%) !important;">
+    <p>正在跳转到新首页... <a href="starfield.html">点击这里</a></p>
+</body>
+</html>
+<body style="background: linear-gradient(135deg, #0a0a1a 0%, #1a1a2e 50%, #0f0f23 100%) !important;">
+    <!-- 导航栏 -->
+    <nav class="navbar">
+        <div class="navbar-container">
+            <!-- Logo -->
+            <a href="home.html" class="navbar-brand">
+                <img src="./images/logo.png" alt="农大闲置" class="navbar-logo" onerror="this.style.display='none'">
+                <span>🌟 农大闲置</span>
+            </a>
+
+            <!-- 导航菜单（PC端） -->
+            <ul class="navbar-menu">
+                <li class="navbar-menu-item">
+                    <a href="home.html" class="navbar-menu-link active">首页</a>
+                </li>
+                <li class="navbar-menu-item">
+                    <a href="javascript:void(0)" class="navbar-menu-link" id="releaseBtn">发布闲置</a>
+                </li>
+                <li class="navbar-menu-item">
+                    <a href="stu_check.html" class="navbar-menu-link">校园认证</a>
+                </li>
+                <li class="navbar-menu-item">
+                    <a href="user_center.html" class="navbar-menu-link">个人中心</a>
+                </li>
+                <li class="navbar-menu-item">
+                    <a href="carbon_ai.html" class="navbar-menu-link">🤖 碳足迹AI助手</a>
+                </li>
+                <li class="navbar-menu-item">
+                    <a href="donation_list.html" class="navbar-menu-link">🌟 公益转赠通道</a>
+                </li>
+                <li class="navbar-menu-item">
+                    <a href="demand_board.html" class="navbar-menu-link">📋 需求公告板</a>
+                </li>
+                <li class="navbar-menu-item">
+                    <a href="manage_admin.html" class="navbar-menu-link">管理员</a>
+                </li>
+            </ul>
+
+            <!-- 用户操作 -->
+            <div class="navbar-actions">
+                <!-- JS渲染 -->
+            </div>
+
+            <!-- 汉堡菜单按钮（移动端） -->
+            <button class="navbar-hamburger" aria-label="菜单">
+                <span class="navbar-hamburger-line"></span>
+                <span class="navbar-hamburger-line"></span>
+                <span class="navbar-hamburger-line"></span>
+            </button>
+        </div>
+
+        <!-- 移动端菜单 -->
+        <div class="navbar-mobile-menu">
+            <a href="home.html" class="navbar-mobile-menu-item active">首页</a>
+            <a href="javascript:void(0)" class="navbar-mobile-menu-item" id="mobileReleaseBtn">发布闲置</a>
+            <a href="stu_check.html" class="navbar-mobile-menu-item">校园认证</a>
+            <a href="user_center.html" class="navbar-mobile-menu-item">个人中心</a>
+            <a href="carbon_ai.html" class="navbar-mobile-menu-item">🤖 碳足迹AI助手</a>
+            <a href="donation_list.html" class="navbar-mobile-menu-item">🌟 公益转赠通道</a>
+            <a href="demand_board.html" class="navbar-mobile-menu-item">📋 需求公告板</a>
+            <a href="manage_admin.html" class="navbar-mobile-menu-item">管理员</a>
+            <div class="navbar-mobile-actions">
+                <!-- JS渲染 -->
+            </div>
+        </div>
+
+        <!-- 遮罩层 -->
+        <div class="navbar-overlay"></div>
+    </nav>
+
+    <!-- 主内容区域 -->
+    <main class="main-content" id="homeContent">
+        <!-- 搜索筛选区 -->
+        <section class="container" style="padding-top: 30px; padding-bottom: 20px;">
+            <div class="card">
+                <div class="search-bar">
+                    <!-- 搜索框 -->
+                    <div class="search-input-wrapper">
+                        <span class="search-icon">🔍</span>
+                        <input type="text" id="searchInput" class="search-input" 
+                               placeholder="搜索商品名称..." autocomplete="off">
+                        <div class="search-suggestions" id="searchSuggestions"></div>
+                    </div>
+                    <button class="btn btn-primary" id="searchBtn">搜索</button>
+                </div>
+
+                <!-- 筛选条件 -->
+                <div class="d-flex gap-md flex-wrap" style="margin-top: 15px;">
+                    <div class="filter-group">
+                        <label class="filter-label">校区：</label>
+                        <select id="filterCampus" class="filter-select">
+                            <option value="">全部校区</option>
+                            <option value="郑州龙子湖">郑州龙子湖</option>
+                            <option value="郑州文化路">郑州文化路</option>
+                            <option value="郑州桃李园">郑州桃李园</option>
+                            <option value="许昌">许昌</option>
+                        </select>
+                    </div>
+                    <div class="filter-group">
+                        <label class="filter-label">分类：</label>
+                        <select id="filterCategory" class="filter-select">
+                            <option value="">全部分类</option>
+                            <option value="农业书籍">农业书籍</option>
+                            <option value="实验器材">实验器材</option>
+                            <option value="教材资料">教材资料</option>
+                            <option value="宿舍用品">宿舍用品</option>
+                            <option value="数码电子">数码电子</option>
+                            <option value="生活日化">生活日化</option>
+                            <option value="体育用品">体育用品</option>
+                            <option value="其他">其他</option>
+                        </select>
+                    </div>
+                    <button class="btn btn-outline btn-sm" id="clearFilterBtn">清除筛选</button>
+                </div>
+            </div>
+        </section>
+
+        <!-- 商品展示区 -->
+        <section class="container" style="padding-top: 0; padding-bottom: 30px;">
+            <div class="goods-grid" id="goodsGrid">
+                <!-- JS渲染 -->
+            </div>
+        </section>
+        
+        <!-- ========== 碳足迹模块 ========== -->
+        <section class="carbon-home-section">
+            <div class="container">
+                <!-- 碳足迹Banner -->
+                <div class="carbon-banner">
+                    <div class="carbon-banner-content">
+                        <h2>🌍 碳足迹 · 蓝色校园</h2>
+                        <p>每一次闲置交易，都是一次碳减排行动</p>
+                        <div class="carbon-banner-stats">
+                            <div class="carbon-banner-stat">
+                                <span class="stat-value" id="homeTotalCarbon">0</span>
+                                <span class="stat-label">kg CO₂减排</span>
+                            </div>
+                            <div class="carbon-banner-stat">
+                                <span class="stat-value" id="homeTotalTrees">0</span>
+                                <span class="stat-label">棵树等效</span>
+                            </div>
+                            <div class="carbon-banner-stat">
+                                <span class="stat-value" id="homeTotalTrades">0</span>
+                                <span class="stat-label">蓝色交易</span>
+                            </div>
+                        </div>
+                        <a href="user_center.html" class="carbon-banner-btn">查看我的碳足迹 →</a>
+                    </div>
+                    <div class="carbon-banner-visual" id="carbonVisualContainer">
+                        <div class="carbon-circle carbon-circle-1"></div>
+                        <div class="carbon-circle carbon-circle-2"></div>
+                        <div class="carbon-circle carbon-circle-3"></div>
+                        <!-- 可拖动小猫咪 -->
+                        <div class="carbon-cat-wrapper" id="carbonCatWrapper">
+                            <div class="carbon-cat" id="carbonCat">
+                                <svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+                                    <!-- 身体 -->
+                                    <ellipse cx="50" cy="65" rx="28" ry="22" fill="#81C784"/>
+                                    <ellipse cx="50" cy="65" rx="24" ry="18" fill="#A5D6A7"/>
+                                    <!-- 头部 -->
+                                    <circle cx="50" cy="38" r="24" fill="#81C784"/>
+                                    <circle cx="50" cy="40" r="20" fill="#A5D6A7"/>
+                                    <!-- 耳朵 -->
+                                    <path d="M30 25 L36 38 L24 35 Z" fill="#81C784"/>
+                                    <path d="M32 28 L36 36 L27 34 Z" fill="#F8BBD9"/>
+                                    <path d="M70 25 L64 38 L76 35 Z" fill="#81C784"/>
+                                    <path d="M68 28 L64 36 L73 34 Z" fill="#F8BBD9"/>
+                                    <!-- 腮红 -->
+                                    <ellipse cx="32" cy="45" rx="6" ry="4" fill="#F8BBD9" opacity="0.6"/>
+                                    <ellipse cx="68" cy="45" rx="6" ry="4" fill="#F8BBD9" opacity="0.6"/>
+                                    <!-- 眼睛 -->
+                                    <ellipse cx="40" cy="36" rx="6" ry="7" fill="#3B82F6"/>
+                                    <ellipse cx="60" cy="36" rx="6" ry="7" fill="#3B82F6"/>
+                                    <ellipse cx="41" cy="35" rx="3" ry="4" fill="#1B5E20"/>
+                                    <ellipse cx="61" cy="35" rx="3" ry="4" fill="#1B5E20"/>
+                                    <!-- 眼睛高光 -->
+                                    <circle cx="38" cy="33" r="2" fill="#fff"/>
+                                    <circle cx="58" cy="33" r="2" fill="#fff"/>
+                                    <circle cx="42" cy="37" r="1" fill="#fff" opacity="0.7"/>
+                                    <circle cx="62" cy="37" r="1" fill="#fff" opacity="0.7"/>
+                                    <!-- 鼻子 -->
+                                    <ellipse cx="50" cy="44" rx="3" ry="2" fill="#F48FB1"/>
+                                    <!-- 嘴巴 -->
+                                    <path d="M47 46 Q50 49 53 46" stroke="#F48FB1" stroke-width="1.5" fill="none" stroke-linecap="round"/>
+                                    <!-- 胡须 -->
+                                    <line x1="22" y1="42" x2="34" y2="44" stroke="#3B82F6" stroke-width="1" opacity="0.7"/>
+                                    <line x1="22" y1="46" x2="34" y2="46" stroke="#3B82F6" stroke-width="1" opacity="0.7"/>
+                                    <line x1="66" y1="44" x2="78" y2="42" stroke="#3B82F6" stroke-width="1" opacity="0.7"/>
+                                    <line x1="66" y1="46" x2="78" y2="46" stroke="#3B82F6" stroke-width="1" opacity="0.7"/>
+                                    <!-- 小爪子 -->
+                                    <ellipse cx="35" cy="82" rx="8" ry="5" fill="#81C784"/>
+                                    <ellipse cx="65" cy="82" rx="8" ry="5" fill="#81C784"/>
+                                    <!-- 尾巴 -->
+                                    <path d="M78 60 Q95 55 90 70 Q85 80 78 75" fill="#81C784" stroke="#60A5FA" stroke-width="1"/>
+                                    <!-- 头顶叶子装饰 -->
+                                    <ellipse cx="50" cy="18" rx="8" ry="4" fill="#3B82F6" transform="rotate(-30 50 18)"/>
+                                    <line x1="50" y1="18" x2="50" y2="10" stroke="#60A5FA" stroke-width="1.5"/>
+                                </svg>
+                            </div>
+                            <div class="carbon-cat-hint">拖我呀~</div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- 碳排行版 -->
+                <div class="carbon-leaderboard">
+                    <h3>🏆 碳减排排行榜</h3>
+                    <div class="carbon-leaderboard-tabs">
+                        <button class="carbon-tab active" data-type="college">学院排行</button>
+                        <button class="carbon-tab" data-type="school">全校排行</button>
+                    </div>
+                    <div class="carbon-leaderboard-list" id="carbonLeaderboardList">
+                        <div class="carbon-leader-item">
+                            <span class="leader-rank leader-rank-1">🥇</span>
+                            <span class="leader-name">农学院</span>
+                            <span class="leader-carbon">285.6 kg</span>
+                        </div>
+                        <div class="carbon-leader-item">
+                            <span class="leader-rank">🥈</span>
+                            <span class="leader-name">林学院</span>
+                            <span class="leader-carbon">241.3 kg</span>
+                        </div>
+                        <div class="carbon-leader-item">
+                            <span class="leader-rank">🥉</span>
+                            <span class="leader-name">园艺学院</span>
+                            <span class="leader-carbon">198.7 kg</span>
+                        </div>
+                        <div class="carbon-leader-item">
+                            <span class="leader-rank">4</span>
+                            <span class="leader-name">动物医学院</span>
+                            <span class="leader-carbon">156.2 kg</span>
+                        </div>
+                        <div class="carbon-leader-item">
+                            <span class="leader-rank">5</span>
+                            <span class="leader-name">机电工程学院</span>
+                            <span class="leader-carbon">132.8 kg</span>
+                        </div>
+                    </div>
+                    <p class="carbon-leaderboard-tip">💡 排行榜数据每周更新，展示各学院碳减排贡献</p>
+                </div>
+                
+                <!-- AI碳助手入口 -->
+                <div class="carbon-ai-entrance">
+                    <div class="carbon-ai-icon">🤖</div>
+                    <div class="carbon-ai-content">
+                        <h3>AI碳足迹助手</h3>
+                        <p>获取个性化环保建议，了解闲置背后的碳价值</p>
+                    </div>
+                    <button id="openCarbonAI" class="carbon-ai-btn">咨询AI</button>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- 页脚 -->
+    <footer class="footer">
+        <div class="container">
+            <p class="footer-text">🌟 河南农业大学·星空校园闲置循环平台 | 践行双碳目标，共建星空校园</p>
+        </div>
+    </footer>
+
+    <!-- 脚本 -->
+    <script src="./script/common.js"></script>
+    <script src="./script/home.js"></script>
+    <script src="./script/carbon.js"></script>
+    
+    <!-- 碳足迹样式 -->
+    <style>
+        .carbon-home-section {
+            background: linear-gradient(180deg, #0a0a1a 0%, #0f172a 100%);
+            padding: 40px 0;
+            margin-top: 40px;
+        }
+        
+        .carbon-banner {
+            background: linear-gradient(135deg, #1e40af, #2563eb);
+            border-radius: 20px;
+            padding: 30px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            color: #fff;
+            margin-bottom: 30px;
+            overflow: hidden;
+            position: relative;
+        }
+        
+        .carbon-banner-content { flex: 1; z-index: 2; }
+        .carbon-banner h2 { margin: 0 0 8px 0; font-size: 1.8rem; }
+        .carbon-banner p { margin: 0 0 20px 0; opacity: 0.9; }
+        
+        .carbon-banner-stats { display: flex; gap: 30px; margin-bottom: 20px; }
+        .carbon-banner-stat { text-align: center; }
+        .carbon-banner-stat .stat-value { display: block; font-size: 2rem; font-weight: bold; }
+        .carbon-banner-stat .stat-label { font-size: 0.85rem; opacity: 0.8; }
+        
+        .carbon-banner-btn {
+            display: inline-block;
+            background: #fff;
+            color: #1e40af;
+            padding: 10px 24px;
+            border-radius: 25px;
+            text-decoration: none;
+            font-weight: bold;
+            transition: all 0.3s;
+        }
+        
+        .carbon-banner-btn:hover { transform: translateY(-2px); box-shadow: 0 4px 15px rgba(0,0,0,0.2); }
+        
+        .carbon-banner-visual { position: relative; width: 150px; height: 150px; overflow: visible; }
+        .carbon-circle { position: absolute; border-radius: 50%; border: 2px solid rgba(255,255,255,0.3); }
+        .carbon-circle-1 { width: 150px; height: 150px; top: 0; right: 0; animation: carbon-pulse 3s ease-in-out infinite; }
+        .carbon-circle-2 { width: 100px; height: 100px; top: 25px; right: 25px; animation: carbon-pulse 3s ease-in-out infinite 0.5s; }
+        .carbon-circle-3 { width: 60px; height: 60px; top: 45px; right: 45px; background: rgba(255,255,255,0.1); animation: carbon-pulse 3s ease-in-out infinite 1s; }
+        
+        /* 可拖动小猫咪样式 */
+        .carbon-cat-wrapper {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            cursor: grab;
+            user-select: none;
+            touch-action: none;
+            z-index: 10;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        
+        .carbon-cat {
+            width: 80px;
+            height: 80px;
+            filter: drop-shadow(0 4px 8px rgba(30, 64, 175, 0.3));
+            transition: transform 0.2s ease, filter 0.2s ease;
+            animation: cat-bounce 2s ease-in-out infinite;
+        }
+        
+        .carbon-cat svg {
+            width: 100%;
+            height: 100%;
+        }
+        
+        .carbon-cat-hint {
+            font-size: 0.7rem;
+            color: rgba(255,255,255,0.8);
+            margin-top: 4px;
+            animation: hint-pulse 1.5s ease-in-out infinite;
+            text-shadow: 0 1px 2px rgba(0,0,0,0.2);
+        }
+        
+        /* 拖动中状态 */
+        .carbon-cat-wrapper.dragging {
+            cursor: grabbing;
+        }
+        
+        .carbon-cat-wrapper.dragging .carbon-cat {
+            transform: scale(1.1);
+            filter: drop-shadow(0 8px 16px rgba(30, 64, 175, 0.4));
+            animation: none;
+        }
+        
+        .carbon-cat-wrapper.dragging .carbon-cat-hint {
+            opacity: 0;
+        }
+        
+        /* 悬停状态 */
+        .carbon-cat-wrapper:hover .carbon-cat {
+            transform: scale(1.05);
+            filter: drop-shadow(0 6px 12px rgba(30, 64, 175, 0.35));
+            animation-play-state: paused;
+        }
+        
+        .carbon-cat-wrapper:hover .carbon-cat-hint {
+            color: #fff;
+        }
+        
+        @keyframes cat-bounce {
+            0%, 100% { transform: translateY(0) rotate(-2deg); }
+            50% { transform: translateY(-5px) rotate(2deg); }
+        }
+        
+        @keyframes hint-pulse {
+            0%, 100% { opacity: 0.6; transform: scale(1); }
+            50% { opacity: 1; transform: scale(1.1); }
+        }
+        
+        @keyframes carbon-pulse { 0%, 100% { transform: scale(1); opacity: 0.3; } 50% { transform: scale(1.05); opacity: 0.6; } }
+        
+        /* 回弹动画 */
+        .carbon-cat-wrapper.settling {
+            transition: left 0.4s cubic-bezier(0.34, 1.56, 0.64, 1), top 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+        }
+        
+        .carbon-leaderboard { background: #fff; border-radius: 16px; padding: 24px; margin-bottom: 30px; border: 1px solid #3b82f6; }
+        .carbon-leaderboard h3 { color: #1e40af; margin: 0 0 16px 0; }
+        .carbon-leaderboard-tabs { display: flex; gap: 10px; margin-bottom: 16px; }
+        .carbon-tab { padding: 8px 20px; border: none; background: #0f172a; color: #cbd5e1; border-radius: 20px; cursor: pointer; transition: all 0.3s; }
+        .carbon-tab.active { background: #2563eb; color: #fff; }
+        .carbon-leaderboard-list { margin-bottom: 12px; }
+        .carbon-leader-item { display: flex; align-items: center; padding: 12px; border-bottom: 1px solid #1e293b; }
+        .carbon-leader-item:hover { background: #f9f9f9; }
+        .carbon-leader-item:last-child { border-bottom: none; }
+        .leader-rank { width: 40px; font-size: 1.2rem; }
+        .leader-rank-1 { color: #f9a825; }
+        .leader-name { flex: 1; color: #e2e8f0; }
+        .leader-carbon { color: #2563eb; font-weight: bold; }
+        .carbon-leaderboard-tip { color: #999; font-size: 0.85rem; text-align: center; margin: 0; }
+        
+        .carbon-ai-entrance { background: linear-gradient(135deg, #0f172a, #3b82f6); border-radius: 16px; padding: 20px; display: flex; align-items: center; gap: 16px; border: 1px solid #2563eb; }
+        .carbon-ai-icon { font-size: 3rem; }
+        .carbon-ai-content { flex: 1; }
+        .carbon-ai-content h3 { color: #1e40af; margin: 0 0 4px 0; }
+        .carbon-ai-content p { color: #cbd5e1; margin: 0; font-size: 0.9rem; }
+        .carbon-ai-btn { background: linear-gradient(135deg, #60a5fa, #2563eb); color: #fff; border: none; padding: 12px 24px; border-radius: 25px; font-weight: bold; cursor: pointer; transition: all 0.3s; }
+        .carbon-ai-btn:hover { transform: translateY(-2px); box-shadow: 0 4px 15px rgba(67, 160, 71, 0.4); }
+        
+        @media (max-width: 768px) {
+            .carbon-banner { flex-direction: column; text-align: center; }
+            .carbon-banner-visual { display: none; }
+            .carbon-banner-stats { justify-content: center; }
+            .carbon-ai-entrance { flex-direction: column; text-align: center; }
+        }
+    </style>
+    
+    <!-- 碳足迹逻辑 -->
+    <script>
+    (function() {
+        'use strict';
+        
+        function updateHomeCarbonStats() {
+            var stats = HNAU_Carbon.getStats();
+            document.getElementById('homeTotalCarbon').textContent = stats.totalSaved.toFixed(1);
+            document.getElementById('homeTotalTrees').textContent = stats.treesEquivalent.toFixed(1);
+            document.getElementById('homeTotalTrades').textContent = stats.tradeCount;
+        }
+        
+        function initCarbonSync() {
+            // 【新增】初始化碳足迹数据同步
+            if (window.HNAU_Carbon && typeof HNAU_Carbon.initSync === 'function') {
+                HNAU_Carbon.initSync();
+                HNAU_Carbon.addChangeListener(function(stats) {
+                    updateHomeCarbonStats();
+                });
+            }
+            
+            // 【新增】监听页面可见性变化，当页面从后台切换回来时强制刷新
+            document.addEventListener('visibilitychange', function() {
+                if (!document.hidden) {
+                    console.log('[首页] 页面恢复可见，刷新碳足迹数据');
+                    updateHomeCarbonStats();
+                }
+            });
+        }
+        
+        function bindLeaderboardTabs() {
+            var tabs = document.querySelectorAll('.carbon-tab');
+            tabs.forEach(function(tab) {
+                tab.addEventListener('click', function() {
+                    tabs.forEach(function(t) { t.classList.remove('active'); });
+                    this.classList.add('active');
+                });
+            });
+        }
+        
+        function bindAIEntrance() {
+            var aiBtn = document.getElementById('openCarbonAI');
+            if (aiBtn) {
+                aiBtn.addEventListener('click', function() {
+                    // 直接跳转到本地AI对话页面
+                    window.location.href = 'carbon_ai.html';
+                });
+            }
+        }
+        
+        // 小猫咪拖动功能
+        function initCatDrag() {
+            var wrapper = document.getElementById('carbonCatWrapper');
+            var container = document.getElementById('carbonVisualContainer');
+            
+            if (!wrapper || !container) return;
+            
+            var isDragging = false;
+            var startX, startY, initialLeft, initialTop;
+            var containerRect, wrapperWidth, wrapperHeight;
+            
+            function getContainerBounds() {
+                containerRect = container.getBoundingClientRect();
+                wrapperWidth = wrapper.offsetWidth;
+                wrapperHeight = wrapper.offsetHeight;
+            }
+            
+            function initPosition() {
+                getContainerBounds();
+                // 居中位置
+                var centerX = (containerRect.width - wrapperWidth) / 2;
+                var centerY = (containerRect.height - wrapperHeight) / 2;
+                wrapper.style.left = centerX + 'px';
+                wrapper.style.top = centerY + 'px';
+            }
+            
+            function clampPosition(x, y) {
+                getContainerBounds();
+                var minX = 0;
+                var minY = 0;
+                var maxX = containerRect.width - wrapperWidth;
+                var maxY = containerRect.height - wrapperHeight;
+                
+                return {
+                    x: Math.max(minX, Math.min(maxX, x)),
+                    y: Math.max(minY, Math.min(maxY, y))
+                };
+            }
+            
+            // 鼠标事件
+            wrapper.addEventListener('mousedown', function(e) {
+                isDragging = true;
+                wrapper.classList.add('dragging');
+                wrapper.classList.remove('settling');
+                
+                startX = e.clientX;
+                startY = e.clientY;
+                initialLeft = wrapper.offsetLeft;
+                initialTop = wrapper.offsetTop;
+                
+                e.preventDefault();
+            });
+            
+            document.addEventListener('mousemove', function(e) {
+                if (!isDragging) return;
+                
+                var deltaX = e.clientX - startX;
+                var deltaY = e.clientY - startY;
+                
+                var newX = initialLeft + deltaX;
+                var newY = initialTop + deltaY;
+                
+                var clamped = clampPosition(newX, newY);
+                wrapper.style.left = clamped.x + 'px';
+                wrapper.style.top = clamped.y + 'px';
+            });
+            
+            document.addEventListener('mouseup', function() {
+                if (!isDragging) return;
+                isDragging = false;
+                wrapper.classList.remove('dragging');
+                // 添加回弹动画
+                setTimeout(function() {
+                    wrapper.classList.add('settling');
+                    var currentLeft = wrapper.offsetLeft;
+                    var currentTop = wrapper.offsetTop;
+                    var clamped = clampPosition(currentLeft, currentTop);
+                    wrapper.style.left = clamped.x + 'px';
+                    wrapper.style.top = clamped.y + 'px';
+                    setTimeout(function() {
+                        wrapper.classList.remove('settling');
+                    }, 400);
+                }, 50);
+            });
+            
+            // 触摸事件
+            wrapper.addEventListener('touchstart', function(e) {
+                isDragging = true;
+                wrapper.classList.add('dragging');
+                wrapper.classList.remove('settling');
+                
+                var touch = e.touches[0];
+                startX = touch.clientX;
+                startY = touch.clientY;
+                initialLeft = wrapper.offsetLeft;
+                initialTop = wrapper.offsetTop;
+                
+                e.preventDefault();
+            }, { passive: false });
+            
+            document.addEventListener('touchmove', function(e) {
+                if (!isDragging) return;
+                
+                var touch = e.touches[0];
+                var deltaX = touch.clientX - startX;
+                var deltaY = touch.clientY - startY;
+                
+                var newX = initialLeft + deltaX;
+                var newY = initialTop + deltaY;
+                
+                var clamped = clampPosition(newX, newY);
+                wrapper.style.left = clamped.x + 'px';
+                wrapper.style.top = clamped.y + 'px';
+                
+                e.preventDefault();
+            }, { passive: false });
+            
+            document.addEventListener('touchend', function() {
+                if (!isDragging) return;
+                isDragging = false;
+                wrapper.classList.remove('dragging');
+                // 添加回弹动画
+                setTimeout(function() {
+                    wrapper.classList.add('settling');
+                    var currentLeft = wrapper.offsetLeft;
+                    var currentTop = wrapper.offsetTop;
+                    var clamped = clampPosition(currentLeft, currentTop);
+                    wrapper.style.left = clamped.x + 'px';
+                    wrapper.style.top = clamped.y + 'px';
+                    setTimeout(function() {
+                        wrapper.classList.remove('settling');
+                    }, 400);
+                }, 50);
+            });
+            
+            // 初始化位置
+            initPosition();
+            
+            // 窗口大小变化时重新调整
+            window.addEventListener('resize', function() {
+                if (!isDragging) {
+                    var clamped = clampPosition(wrapper.offsetLeft, wrapper.offsetTop);
+                    wrapper.style.left = clamped.x + 'px';
+                    wrapper.style.top = clamped.y + 'px';
+                }
+            });
+        }
+        
+        if (document.readyState === 'loading') {
+            document.addEventListener('DOMContentLoaded', function() {
+                updateHomeCarbonStats();
+                initCarbonSync();  // 【新增】初始化碳足迹跨标签页同步
+                bindLeaderboardTabs();
+                bindAIEntrance();
+                initCatDrag();
+            });
+        } else {
+            updateHomeCarbonStats();
+            bindLeaderboardTabs();
+            bindAIEntrance();
+            initCatDrag();
+        }
+    })();
+    </script>
+    
+    <script>
+        // 移动端发布按钮
+        document.addEventListener('DOMContentLoaded', function() {
+            var mobileReleaseBtn = document.getElementById('mobileReleaseBtn');
+            if (mobileReleaseBtn) {
+                mobileReleaseBtn.addEventListener('click', function() {
+                    Auth.requireReleasePermission(function() {
+                        Utils.跳转('release_goods.html');
+                    });
+                });
+            }
+        });
+    </script>
+
+    <!-- ========== Three.js 3D全息宠物猫组件 ========== -->
+    <div id="hnau-cat-box" style="
+        position: fixed;
+        bottom: 25px;
+        right: 25px;
+        width: 200px;
+        height: 280px;
+        z-index: 100;
+        pointer-events: auto;
+        cursor: pointer;
+        transform-origin: center bottom;
+        transform: translateZ(0);
+    ">
+        <!-- 气泡层 -->
+        <div id="hnau-cat-bubble" class="hnau-cat-bubble" style="display:none; pointer-events: auto;">
+            <div class="hnau-cat-bubble-txt"></div>
+        </div>
+        
+        <!-- Three.js渲染画布 - 设置pointer-events:none让事件穿透 -->
+        <canvas id="hnau-cat-three" style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none;"></canvas>
+        
+        <!-- 透明事件捕获层 - 在canvas上方接收所有鼠标事件 -->
+        <div id="hnau-cat-overlay" style="
+            position: absolute;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
+            pointer-events: auto;
+            z-index: 10;
+        "></div>
+        
+        <!-- 状态指示 -->
+        <div class="hnau-cat-status">
+            <span class="hnau-cat-dot"></span>
+            <span class="hnau-cat-stxt">在线</span>
+        </div>
+    </div>
+    
+    <!-- 组件样式 -->
+    <style id="hnau-cat-style">
+        #hnau-cat-box, #hnau-cat-box * {
+            box-sizing: border-box !important;
+            margin: 0 !important;
+            padding: 0 !important;
+        }
+
+        #hnau-cat-box {
+            will-change: transform;
+            backface-visibility: hidden;
+            transition: transform 0.15s ease;
+        }
+
+        #hnau-cat-box:active {
+            cursor: grabbing;
+        }
+        
+        .hnau-cat-bubble {
+            position: absolute;
+            top: -50px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: linear-gradient(135deg, #0a2015 0%, #1a3525 100%);
+            border: 1px solid #40ffaa;
+            border-radius: 10px;
+            padding: 8px 14px;
+            max-width: 180px;
+            box-shadow: 0 0 15px rgba(64, 255, 170, 0.3);
+            z-index: 20;
+            animation: hnau-cat-bi 0.3s ease;
+            pointer-events: auto;
+        }
+        
+        .hnau-cat-bubble::after {
+            content: '';
+            position: absolute;
+            bottom: -7px;
+            left: 50%;
+            transform: translateX(-50%);
+            border-left: 7px solid transparent;
+            border-right: 7px solid transparent;
+            border-top: 7px solid #1a3525;
+        }
+        
+        .hnau-cat-bubble-txt {
+            color: #40ffaa;
+            font-size: 11px;
+            text-align: center;
+            line-height: 1.4;
+            pointer-events: none;
+        }
+        
+        @keyframes hnau-cat-bi {
+            from { opacity: 0; transform: translateX(-50%) translateY(8px); }
+            to { opacity: 1; transform: translateX(-50%) translateY(0); }
+        }
+        
+        .hnau-cat-status {
+            position: absolute;
+            bottom: -22px;
+            left: 50%;
+            transform: translateX(-50%);
+            display: flex;
+            align-items: center;
+            gap: 4px;
+            background: rgba(10, 32, 21, 0.9);
+            padding: 3px 8px;
+            border-radius: 8px;
+            border: 1px solid rgba(64, 255, 170, 0.3);
+            pointer-events: none;
+        }
+        
+        .hnau-cat-dot {
+            width: 5px; height: 5px;
+            background: #40ffaa;
+            border-radius: 50%;
+            animation: hnau-cat-blink 1s ease-in-out infinite;
+        }
+        
+        @keyframes hnau-cat-blink {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.4; }
+        }
+        
+        .hnau-cat-stxt { font-size: 9px; color: #78909c; }
+        
+        @media (max-width: 768px) {
+            #hnau-cat-box { width: 150px !important; height: 210px !important; bottom: 85px !important; right: 10px !important; }
+            .hnau-cat-bubble { max-width: 140px; }
+            .hnau-cat-bubble-txt { font-size: 10px; }
+        }
+    </style>
+    
+    <!-- Three.js库 -->
+    <script src="https://cdn.jsdelivr.net/npm/three@0.157.0/build/three.min.js"></script>
+    
+    <!-- 组件脚本 -->
+    <script>
+    (function() {
+        'use strict';
+        
+        // ===== 配置 =====
+        var CONFIG = {
+            enableSound: false,           // 音效开关
+            bubbleDuration: 3000,          // 气泡时长
+            productBubbleText: '今日有新闲置上架啦',
+            clickBubbleTexts: [           // 点击气泡随机短句
+                '今天看看有什么好闲置吧~',
+                '校园好物，等你来淘',
+                '闲置循环，蓝色校园',
+                '点击发布，闲置快出手',
+                '优质二手，省钱环保'
+            ],
+            jumpDelay: 2500,               // 页面加载后触发跳跃延迟
+            // 心情气泡
+            moodBubbles: {
+                happy: ['喵呜~你好呀!', '今天也要开心哦!', '一起来环保吧~'],
+                excited: ['太开心啦!喵!', '好喜欢和你玩!', '再来一次!'],
+                sleepy: ['有点困了呢...', '喵~好想睡觉', '晚安~'],
+                sleeping: ['zzZ...', '(呼噜呼噜)', '梦里见~']
+            },
+            // 问候语
+            greetings: [
+                { hour: [5, 9], text: '早安!新的一天从闲置开始~' },
+                { hour: [9, 12], text: '上午好!今天有什么好物?' },
+                { hour: [12, 14], text: '中午好~记得吃午饭哦' },
+                { hour: [14, 18], text: '下午好!继续淘好物吧' },
+                { hour: [18, 22], text: '晚上好~闲置循环更环保' },
+                { hour: [22, 5], text: '夜深了~明天再来看看吧' }
+            ]
+        };
+        
+        // ===== DOM =====
+        var box = document.getElementById('hnau-cat-box');
+        var overlay = document.getElementById('hnau-cat-overlay');
+        var threeCanvas = document.getElementById('hnau-cat-three');
+        var bubble = document.getElementById('hnau-cat-bubble');
+        var bubbleTxt = bubble.querySelector('.hnau-cat-bubble-txt');
+        
+        // ===== Three.js 场景 =====
+        var scene, camera, renderer, catGroup, particles;
+        var mouseX = 0, mouseY = 0;
+        var targetRotX = 0, targetRotY = 0;
+        var currentRotX = 0, currentRotY = 0;
+        var isHover = false, isClick = false;
+        var isJumping = false;
+        var jumpVelocity = 0;
+        var catY = 0;
+        
+        // ===== 表情系统 =====
+        var MOOD = { HAPPY: 'happy', EXCITED: 'excited', SLEEPY: 'sleepy', SLEEPING: 'sleeping' };
+        var currentMood = MOOD.HAPPY;
+        var moodLevel = 0;  // 心情等级 0-100
+        var lastInteraction = Date.now();
+        var idleThreshold = 30000;  // 30秒不互动进入困倦
+        var sleepThreshold = 120000;  // 2分钟不互动进入睡眠
+        var clickCount = 0;
+        var clickTimer = null;
+        var isExcited = false;
+        var excitedTimer = null;
+        
+        // ===== 眼睛追踪 =====
+        var pupilL = null, pupilR = null;
+        var eyeL = null, eyeR = null;
+        var targetPupilX = 0, targetPupilY = 0;
+        var currentPupilX = 0, currentPupilY = 0;
+        var blinkTimer = null;
+        var isBlinking = false;
+        var blinkProgress = 0;
+        
+        // ===== 亮度状态（用于渐变过渡）=====
+        var glowIntensity = 0.3;
+        var targetGlow = 0.3;
+        var clickGlow = 0;
+        
+        // ===== 所有可发光部件 =====
+        var glowParts = [];
+        
+        // ===== 气泡 =====
+        var bubbleTimer = null;
+        
+        function showBubble(text, duration) {
+            if (bubbleTimer) clearTimeout(bubbleTimer);
+            bubbleTxt.textContent = text;
+            bubble.style.display = 'block';
+            bubbleTimer = setTimeout(function() { bubble.style.display = 'none'; }, duration || CONFIG.bubbleDuration);
+        }
+        
+        function hideBubble() {
+            if (bubbleTimer) clearTimeout(bubbleTimer);
+            bubble.style.display = 'none';
+        }
+        
+        // ===== 获取当前问候语 =====
+        function getGreeting() {
+            // 检查登录状态
+            const isLoggedIn = localStorage.getItem('isLoggedIn') === 'true';
+            const username = localStorage.getItem('username');
+
+            if (isLoggedIn && username) {
+                // 已登录，显示个性化问候
+                return '欢迎回来，' + username + '!';
+            }
+
+            // 未登录，使用时间问候
+            var hour = new Date().getHours();
+            for (var i = 0; i < CONFIG.greetings.length; i++) {
+                var g = CONFIG.greetings[i];
+                if (hour >= g.hour[0] && hour < g.hour[1]) {
+                    return g.text;
+                }
+            }
+            return '你好呀!';
+        }
+        
+        // ===== 表情系统 =====
+        function setExpression(type) {
+            if (!catGroup) return;
+            
+            var eyeGeo, eyeScaleX, eyeScaleY;
+            var pupilScaleX, pupilScaleY;
+            
+            switch(type) {
+                case 'happy':  // 开心 - 眯眼笑
+                    eyeScaleX = 1.6; eyeScaleY = 0.3;
+                    pupilScaleX = 1.5; pupilScaleY = 1;
+                    break;
+                case 'excited':  // 兴奋 - 星星眼
+                    eyeScaleX = 1.2; eyeScaleY = 1.2;
+                    pupilScaleX = 0.8; pupilScaleY = 0.8;
+                    break;
+                case 'sleepy':  // 困倦 - 半闭眼
+                    eyeScaleX = 1.4; eyeScaleY = 0.4;
+                    pupilScaleX = 1; pupilScaleY = 2;
+                    break;
+                case 'sleeping':  // 睡眠 - 完全闭眼
+                    eyeScaleX = 1.4; eyeScaleY = 0.1;
+                    pupilScaleX = 1; pupilScaleY = 0.1;
+                    break;
+                default:  // 正常
+                    eyeScaleX = 1.4; eyeScaleY = 0.7;
+                    pupilScaleX = 1; pupilScaleY = 2.5;
+            }
+            
+            if (eyeL) { eyeL.scale.set(eyeScaleX, eyeScaleY, 0.6); }
+            if (eyeR) { eyeR.scale.set(eyeScaleX, eyeScaleY, 0.6); }
+            if (pupilL) { pupilL.scale.set(pupilScaleX, pupilScaleY, 0.5); }
+            if (pupilR) { pupilR.scale.set(pupilScaleX, pupilScaleY, 0.5); }
+        }
+        
+        // ===== 心情系统 =====
+        function updateMood() {
+            var now = Date.now();
+            var idle = now - lastInteraction;
+            
+            if (idle > sleepThreshold) {
+                if (currentMood !== MOOD.SLEEPING) {
+                    currentMood = MOOD.SLEEPING;
+                    showMoodBubble();
+                }
+            } else if (idle > idleThreshold) {
+                if (currentMood !== MOOD.SLEEPY && currentMood !== MOOD.SLEEPING) {
+                    currentMood = MOOD.SLEEPY;
+                    showMoodBubble();
+                }
+            } else if (currentMood === MOOD.SLEEPY || currentMood === MOOD.SLEEPING) {
+                // 被唤醒
+                currentMood = moodLevel > 70 ? MOOD.EXCITED : MOOD.HAPPY;
+                showMoodBubble();
+            }
+        }
+        
+        function showMoodBubble() {
+            var bubbles = CONFIG.moodBubbles[currentMood];
+            if (bubbles && bubbles.length > 0) {
+                var text = bubbles[Math.floor(Math.random() * bubbles.length)];
+                showBubble(text, CONFIG.bubbleDuration);
+            }
+        }
+        
+        function recordInteraction() {
+            lastInteraction = Date.now();
+            moodLevel = Math.min(100, moodLevel + 10);
+            
+            if (currentMood === MOOD.SLEEPING || currentMood === MOOD.SLEEPY) {
+                currentMood = moodLevel > 70 ? MOOD.EXCITED : MOOD.HAPPY;
+            }
+        }
+        
+        // ===== 兴奋状态 =====
+        function triggerExcited() {
+            if (excitedTimer) clearTimeout(excitedTimer);
+            isExcited = true;
+            currentMood = MOOD.EXCITED;
+            moodLevel = Math.min(100, moodLevel + 20);
+            setExpression('excited');
+            
+            // 尾巴疯狂摇摆
+            if (catGroup) {
+                var tail = catGroup.getObjectByName('tail');
+                if (tail) tail.rotation.z = Math.sin(Date.now() * 0.01) * 0.8;
+            }
+            
+            excitedTimer = setTimeout(function() {
+                isExcited = false;
+                if (currentMood === MOOD.EXCITED) {
+                    currentMood = MOOD.HAPPY;
+                    setExpression('happy');
+                }
+            }, 3000);
+        }
+        
+        // ===== 眨眼系统 =====
+        function startBlink() {
+            if (isBlinking || currentMood === MOOD.SLEEPING) return;
+            isBlinking = true;
+            blinkProgress = 0;
+        }
+        
+        function updateBlink() {
+            if (!isBlinking) {
+                // 随机眨眼
+                if (Math.random() < 0.003 && currentMood !== MOOD.SLEEPING) {
+                    startBlink();
+                }
+            } else {
+                // 眨眼动画
+                blinkProgress += 0.15;
+                var blinkScale = Math.sin(blinkProgress * Math.PI);
+                
+                if (eyeL) eyeL.scale.y = 0.7 * (1 - blinkScale * 0.85);
+                if (eyeR) eyeR.scale.y = 0.7 * (1 - blinkScale * 0.85);
+                
+                if (blinkProgress >= 1) {
+                    isBlinking = false;
+                    if (eyeL) eyeL.scale.y = 0.7;
+                    if (eyeR) eyeR.scale.y = 0.7;
+                }
+            }
+            
+            // 睡眠状态自动闭眼
+            if (currentMood === MOOD.SLEEPING) {
+                setExpression('sleeping');
+            }
+        }
+        
+        // ===== 睡眠震动 =====
+        function updateSleepShake() {
+            if (currentMood === MOOD.SLEEPING && catGroup) {
+                var shake = Math.sin(Date.now() * 0.005) * 0.02;
+                catGroup.position.x = shake;
+            }
+        }
+        
+        // ===== 音效 =====
+        function playTap() {
+            if (!CONFIG.enableSound) return;
+            try {
+                var ac = new (window.AudioContext || window.webkitAudioContext)();
+                var osc = ac.createOscillator();
+                var gain = ac.createGain();
+                osc.connect(gain); gain.connect(ac.destination);
+                osc.frequency.setValueAtTime(800, ac.currentTime);
+                osc.frequency.exponentialRampToValueAtTime(1200, ac.currentTime + 0.08);
+                gain.gain.setValueAtTime(0.06, ac.currentTime);
+                gain.gain.exponentialRampToValueAtTime(0.001, ac.currentTime + 0.12);
+                osc.start(ac.currentTime); osc.stop(ac.currentTime + 0.12);
+            } catch(e) {}
+        }
+        
+        // ===== 跳跃 =====
+        function doJump(callback) {
+            if (isJumping) return;
+            isJumping = true;
+            jumpVelocity = 0.12;
+            
+            function jumpFrame() {
+                catY += jumpVelocity;
+                jumpVelocity -= 0.006;
+                if (catY <= 0) { catY = 0; isJumping = false; }
+                else requestAnimationFrame(jumpFrame);
+            }
+            requestAnimationFrame(jumpFrame);
+        }
+        
+        // ===== 3D猫模型 =====
+        function createCat() {
+            catGroup = new THREE.Group();
+            
+            // 蓝色全息材质（统一色调）
+            var holoColor = 0x40ffaa;  // 柔和蓝色
+            
+            function createGlowMat(opacity) {
+                return new THREE.MeshBasicMaterial({
+                    color: holoColor,
+                    transparent: true,
+                    opacity: opacity || 0.35,
+                    wireframe: true
+                });
+            }
+            
+            function createSolidMat(opacity) {
+                return new THREE.MeshBasicMaterial({
+                    color: holoColor,
+                    transparent: true,
+                    opacity: opacity || 0.7
+                });
+            }
+            
+            // ===== 头部（椭圆形，更自然）=====
+            var headGeo = new THREE.SphereGeometry(0.48, 20, 16);
+            var head = new THREE.Mesh(headGeo, createGlowMat(0.3));
+            head.scale.set(1.1, 0.95, 0.9);  // 宽一点，更像猫头
+            head.position.y = 1.75;
+            head.name = 'head';
+            glowParts.push(head);
+            catGroup.add(head);
+            
+            // 头顶小角（装饰，替代全息光晕）
+            var hornGeo = new THREE.ConeGeometry(0.06, 0.15, 6);
+            var horn = new THREE.Mesh(hornGeo, createSolidMat(0.6));
+            horn.position.set(0, 2.25, 0);
+            horn.name = 'horn';
+            glowParts.push(horn);
+            catGroup.add(horn);
+            
+            // ===== 耳朵（三角形，更尖锐）=====
+            var earGeo = new THREE.ConeGeometry(0.16, 0.4, 4);
+            var earL = new THREE.Mesh(earGeo, createGlowMat(0.3));
+            earL.position.set(-0.32, 2.15, 0.05);
+            earL.rotation.z = 0.25;
+            earL.rotation.x = 0.1;
+            earL.name = 'earL';
+            glowParts.push(earL);
+            catGroup.add(earL);
+            
+            var earR = new THREE.Mesh(earGeo, createGlowMat(0.3));
+            earR.position.set(0.32, 2.15, 0.05);
+            earR.rotation.z = -0.25;
+            earR.rotation.x = 0.1;
+            earR.name = 'earR';
+            glowParts.push(earR);
+            catGroup.add(earR);
+            
+            // ===== 脸部轮廓（椭圆形眼窝）=====
+            // 左眼窝
+            var eyeSocketGeo = new THREE.SphereGeometry(0.16, 12, 8);
+            var eyeSocket = new THREE.Mesh(eyeSocketGeo, createSolidMat(0.15));
+            eyeSocket.position.set(-0.2, 1.78, 0.38);
+            eyeSocket.scale.set(1.3, 0.8, 0.5);
+            catGroup.add(eyeSocket);
+            
+            // 右眼窝
+            var eyeSocket2 = eyeSocket.clone();
+            eyeSocket2.position.set(0.2, 1.78, 0.38);
+            catGroup.add(eyeSocket2);
+            
+            // ===== 眼睛（猫眼形状 - 椭圆形）=====
+            var eyeGeo = new THREE.SphereGeometry(0.1, 12, 8);
+            var eyeMat = createSolidMat(0.9);
+            
+            eyeL = new THREE.Mesh(eyeGeo, eyeMat.clone());
+            eyeL.scale.set(1.4, 0.7, 0.6);  // 椭圆形
+            eyeL.position.set(-0.2, 1.78, 0.4);
+            eyeL.name = 'eyeL';
+            glowParts.push(eyeL);
+            catGroup.add(eyeL);
+            
+            eyeR = new THREE.Mesh(eyeGeo, eyeMat.clone());
+            eyeR.scale.set(1.4, 0.7, 0.6);
+            eyeR.position.set(0.2, 1.78, 0.4);
+            eyeR.name = 'eyeR';
+            glowParts.push(eyeR);
+            catGroup.add(eyeR);
+            
+            // 瞳孔（细长）- 保存为全局变量用于追踪
+            var pupilGeo = new THREE.SphereGeometry(0.04, 6, 4);
+            var pupilMat = new THREE.MeshBasicMaterial({ color: 0x003322, transparent: true, opacity: 0.8 });
+            
+            pupilL = new THREE.Mesh(pupilGeo, pupilMat);
+            pupilL.scale.set(1, 2.5, 0.5);
+            pupilL.position.set(-0.2, 1.78, 0.46);
+            pupilL.name = 'pupilL';
+            catGroup.add(pupilL);
+            
+            pupilR = new THREE.Mesh(pupilGeo, pupilMat.clone());
+            pupilR.scale.set(1, 2.5, 0.5);
+            pupilR.position.set(0.2, 1.78, 0.46);
+            pupilR.name = 'pupilR';
+            catGroup.add(pupilR);
+            
+            // ===== 鼻子（倒三角，更像猫）=====
+            var noseGeo = new THREE.ConeGeometry(0.06, 0.08, 3);
+            var noseMat = new THREE.MeshBasicMaterial({ color: holoColor, transparent: true, opacity: 0.9 });
+            var nose = new THREE.Mesh(noseGeo, noseMat);
+            nose.rotation.x = Math.PI;
+            nose.position.set(0, 1.62, 0.45);
+            catGroup.add(nose);
+            
+            // ===== 嘴巴（倒V形）=====
+            var mouthCurve = new THREE.QuadraticBezierCurve3(
+                new THREE.Vector3(-0.12, 1.55, 0.42),
+                new THREE.Vector3(0, 1.52, 0.44),
+                new THREE.Vector3(0.12, 1.55, 0.42)
+            );
+            var mouthGeo = new THREE.TubeGeometry(mouthCurve, 8, 0.012, 4, false);
+            var mouth = new THREE.Mesh(mouthGeo, createSolidMat(0.5));
+            catGroup.add(mouth);
+            
+            // ===== 胡须（6根）=====
+            var whiskerMat = createSolidMat(0.35);
+            
+            // 左胡须
+            for (var i = 0; i < 3; i++) {
+                var wGeo = new THREE.CylinderGeometry(0.006, 0.003, 0.25, 4);
+                var wL = new THREE.Mesh(wGeo, whiskerMat.clone());
+                wL.position.set(-0.22 - i * 0.03, 1.58 - (i - 1) * 0.04, 0.4);
+                wL.rotation.z = Math.PI / 2 + (i - 1) * 0.15;
+                catGroup.add(wL);
+            }
+            
+            // 右胡须
+            for (var i = 0; i < 3; i++) {
+                var wGeo = new THREE.CylinderGeometry(0.006, 0.003, 0.25, 4);
+                var wR = new THREE.Mesh(wGeo, whiskerMat.clone());
+                wR.position.set(0.22 + i * 0.03, 1.58 - (i - 1) * 0.04, 0.4);
+                wR.rotation.z = Math.PI / 2 - (i - 1) * 0.15;
+                catGroup.add(wR);
+            }
+            
+            // ===== 身体（椭圆形卧姿）=====
+            var bodyGeo = new THREE.SphereGeometry(0.52, 16, 12);
+            var body = new THREE.Mesh(bodyGeo, createGlowMat(0.28));
+            body.scale.set(0.95, 0.85, 0.8);  // 扁圆形
+            body.position.y = 0.95;
+            body.name = 'body';
+            glowParts.push(body);
+            catGroup.add(body);
+            
+            // 肚子（略亮）
+            var bellyGeo = new THREE.SphereGeometry(0.35, 12, 8);
+            var belly = new THREE.Mesh(bellyGeo, createSolidMat(0.2));
+            belly.scale.set(0.8, 0.6, 0.5);
+            belly.position.set(0, 0.88, 0.28);
+            catGroup.add(belly);
+            
+            // ===== 前爪（收在身前）=====
+            var pawGeo = new THREE.CapsuleGeometry(0.08, 0.15, 4, 8);
+            var pawMat = createSolidMat(0.5);
+            
+            var pawL = new THREE.Mesh(pawGeo, pawMat.clone());
+            pawL.position.set(-0.22, 0.6, 0.3);
+            pawL.rotation.x = Math.PI / 2;
+            pawL.rotation.z = 0.3;
+            pawL.name = 'pawL';
+            glowParts.push(pawL);
+            catGroup.add(pawL);
+            
+            var pawR = new THREE.Mesh(pawGeo, pawMat.clone());
+            pawR.position.set(0.22, 0.6, 0.3);
+            pawR.rotation.x = Math.PI / 2;
+            pawR.rotation.z = -0.3;
+            pawR.name = 'pawR';
+            glowParts.push(pawR);
+            catGroup.add(pawR);
+            
+            // ===== 后腿（卧姿弯曲）=====
+            var legGeo = new THREE.CapsuleGeometry(0.1, 0.2, 4, 8);
+            
+            var legL = new THREE.Mesh(legGeo, createGlowMat(0.3));
+            legL.position.set(-0.35, 0.5, -0.1);
+            legL.rotation.x = 0.8;
+            legL.rotation.z = 0.4;
+            glowParts.push(legL);
+            catGroup.add(legL);
+            
+            var legR = new THREE.Mesh(legGeo, createGlowMat(0.3));
+            legR.position.set(0.35, 0.5, -0.1);
+            legR.rotation.x = 0.8;
+            legR.rotation.z = -0.4;
+            glowParts.push(legR);
+            catGroup.add(legR);
+            
+            // ===== 尾巴（卷曲上扬）=====
+            var tailCurve = new THREE.CatmullRomCurve3([
+                new THREE.Vector3(0, 0.7, -0.35),
+                new THREE.Vector3(-0.15, 0.5, -0.5),
+                new THREE.Vector3(-0.2, 0.85, -0.4),
+                new THREE.Vector3(-0.1, 1.15, -0.25),
+                new THREE.Vector3(0.05, 1.35, -0.2)
+            ]);
+            var tailGeo = new THREE.TubeGeometry(tailCurve, 16, 0.07, 8, false);
+            var tail = new THREE.Mesh(tailGeo, createGlowMat(0.35));
+            tail.name = 'tail';
+            glowParts.push(tail);
+            catGroup.add(tail);
+            
+            // 尾巴尖
+            var tailTipGeo = new THREE.SphereGeometry(0.08, 8, 6);
+            var tailTip = new THREE.Mesh(tailTipGeo, createSolidMat(0.6));
+            tailTip.position.set(0.05, 1.35, -0.2);
+            glowParts.push(tailTip);
+            catGroup.add(tailTip);
+            
+            // ===== 底座光环（简化）=====
+            var ringGeo = new THREE.TorusGeometry(0.55, 0.02, 8, 32);
+            var ringMat = createSolidMat(0.4);
+            var ring = new THREE.Mesh(ringGeo, ringMat);
+            ring.rotation.x = Math.PI / 2;
+            ring.position.y = 0.12;
+            ring.name = 'ring';
+            glowParts.push(ring);
+            catGroup.add(ring);
+            
+            // 发光圆盘
+            var discGeo = new THREE.CircleGeometry(0.45, 32);
+            var discMat = createSolidMat(0.1);
+            discMat.side = THREE.DoubleSide;
+            var disc = new THREE.Mesh(discGeo, discMat);
+            disc.rotation.x = -Math.PI / 2;
+            disc.position.y = 0.13;
+            disc.name = 'disc';
+            glowParts.push(disc);
+            catGroup.add(disc);
+            
+            // 数据粒子
+            createParticles();
+            
+            scene.add(catGroup);
+        }
+        
+        // ===== 粒子系统 =====
+        function createParticles() {
+            var geo = new THREE.BufferGeometry();
+            var count = 80;  // 粒子数量
+            var positions = new Float32Array(count * 3);
+            var colors = new Float32Array(count * 3);
+            
+            for (var i = 0; i < count; i++) {
+                positions[i * 3] = (Math.random() - 0.5) * 2.5;
+                positions[i * 3 + 1] = Math.random() * 2.5 + 0.3;
+                positions[i * 3 + 2] = (Math.random() - 0.5) * 2.5;
+                
+                colors[i * 3] = 0.25; colors[i * 3 + 1] = 1; colors[i * 3 + 2] = 0.67;
+            }
+            
+            geo.setAttribute('position', new THREE.BufferAttribute(positions, 3));
+            geo.setAttribute('color', new THREE.BufferAttribute(colors, 3));
+            
+            var mat = new THREE.PointsMaterial({
+                size: 0.05,
+                vertexColors: true,
+                transparent: true,
+                opacity: 0,
+                blending: THREE.AdditiveBlending
+            });
+            
+            particles = new THREE.Points(geo, mat);
+            particles.name = 'particles';
+            scene.add(particles);
+        }
+        
+        // ===== 粒子动画 =====
+        function updateParticles(time) {
+            if (!particles) return;
+            var positions = particles.geometry.attributes.position.array;
+            var targetOpacity = isHover ? 1 : 0;
+            
+            // 渐变过渡
+            particles.material.opacity += (targetOpacity - particles.material.opacity) * 0.06;
+            
+            // 粒子漂浮
+            for (var i = 0; i < positions.length / 3; i++) {
+                positions[i * 3 + 1] += 0.003;  // 上升
+                if (positions[i * 3 + 1] > 2.8) {
+                    positions[i * 3 + 1] = 0.3;
+                    positions[i * 3] = (Math.random() - 0.5) * 2.5;
+                    positions[i * 3 + 2] = (Math.random() - 0.5) * 2.5;
+                }
+                
+                // 悬浮时额外漂移
+                if (isHover) {
+                    positions[i * 3] += (Math.random() - 0.5) * 0.01;
+                    positions[i * 3 + 2] += (Math.random() - 0.5) * 0.01;
+                }
+            }
+            particles.geometry.attributes.position.needsUpdate = true;
+        }
+        
+        // ===== 发光效果更新 =====
+        function updateGlow(time) {
+            var baseGlow = 0.35;
+            var hoverBoost = isHover ? 0.55 : 0;
+            var clickBoost = clickGlow;
+            
+            // 目标亮度
+            targetGlow = baseGlow + hoverBoost + clickBoost;
+            
+            // 平滑过渡
+            glowIntensity += (targetGlow - glowIntensity) * 0.08;
+            
+            // 点击亮度衰减
+            if (clickGlow > 0) {
+                clickGlow *= 0.92;
+                if (clickGlow < 0.01) clickGlow = 0;
+            }
+            
+            // 更新所有发光部件
+            glowParts.forEach(function(part) {
+                if (part.material) {
+                    var mat = part.material;
+                    var isEye = part.name && part.name.indexOf('eye') === 0;
+                    var isCore = part.name === 'core';
+                    var isRing = part.name && part.name.indexOf('ring') === 0;
+                    
+                    // 眼睛和核心在点击时特别亮
+                    var intensity = glowIntensity;
+                    if (isEye && clickGlow > 0) intensity += 0.6;
+                    if (isCore && clickGlow > 0) intensity += 0.3;
+                    if (isRing) intensity *= 1.2;
+                    
+                    mat.opacity = Math.min(intensity, 1);
+                    
+                    // 点击时颜色变亮
+                    if (clickGlow > 0.3 && isEye) {
+                        mat.color.setHex(0x88ffcc);
+                    } else {
+                        mat.color.setHex(0x40ffaa);
+                    }
+                }
+            });
+            
+            // 全息头冠脉冲
+            var horn = catGroup.getObjectByName('horn');
+            if (horn) {
+                var pulse = 0.5 + Math.sin(time * 0.003) * 0.2;
+                horn.material.opacity = glowIntensity * pulse;
+            }
+        }
+        
+        // ===== 初始化Three.js =====
+        function initThree() {
+            scene = new THREE.Scene();
+            
+            camera = new THREE.PerspectiveCamera(50, box.offsetWidth / box.offsetHeight, 0.1, 100);
+            camera.position.set(0, 1.5, 3.5);
+            camera.lookAt(0, 1, 0);
+            
+            renderer = new THREE.WebGLRenderer({ 
+                canvas: threeCanvas, 
+                alpha: true, 
+                antialias: true 
+            });
+            renderer.setSize(box.offsetWidth, box.offsetHeight);
+            renderer.setPixelRatio(Math.min(window.devicePixelRatio, 1.5));  // 限制像素比，轻量化
+            renderer.setClearColor(0x000000, 0);
+            
+            // 环境光
+            var ambient = new THREE.AmbientLight(0x404040, 0.3);
+            scene.add(ambient);
+            
+            // 点光源
+            var point = new THREE.PointLight(0x40ffaa, 0.8, 10);
+            point.position.set(0, 3, 2);
+            scene.add(point);
+            
+            createCat();
+            animate();
+        }
+        
+        // ===== 动画循环 =====
+        function animate() {
+            requestAnimationFrame(animate);
+            
+            var time = Date.now();
+            
+            if (catGroup) {
+                // 鼠标跟随 - 增强灵敏度
+                if (isHover) {
+                    targetRotY = mouseX * 0.6;
+                    targetRotX = mouseY * 0.35;
+                } else {
+                    targetRotY = Math.sin(time * 0.001) * 0.1;
+                    targetRotX = 0;
+                }
+                
+                // 平滑旋转插值（加快响应速度）
+                currentRotY += (targetRotY - currentRotY) * 0.12;
+                currentRotX += (targetRotX - currentRotX) * 0.12;
+                catGroup.rotation.y = currentRotY;
+                catGroup.rotation.x = currentRotX;
+                
+                // 尾巴摆动（悬浮时幅度更大）
+                var tail = catGroup.getObjectByName('tail');
+                if (tail) {
+                    var tailAmp = isHover ? 0.45 : 0.15;
+                    tail.rotation.z = Math.sin(time * 0.003) * tailAmp;
+                }
+                
+                // 底座旋转（悬浮时更快）
+                var ring = catGroup.getObjectByName('ring');
+                if (ring) {
+                    ring.rotation.z += isHover ? 0.018 : 0.004;
+                }
+                
+                var ring2 = catGroup.getObjectByName('ring2');
+                if (ring2) {
+                    ring2.rotation.z -= isHover ? 0.012 : 0.003;
+                }
+                
+                // 跳跃偏移
+                catGroup.position.y = catY;
+                
+                // 待机浮动
+                if (!isJumping) {
+                    catGroup.position.y += Math.sin(time * 0.002) * 0.025;
+                }
+            }
+            
+            // 更新粒子
+            updateParticles(time);
+            
+            // 更新发光效果
+            updateGlow(time);
+            
+            // ===== 眼睛追踪 =====
+            if (pupilL && pupilR && eyeL && eyeR) {
+                // 睡眠时不追踪
+                if (currentMood !== MOOD.SLEEPING) {
+                    targetPupilX = mouseX * 0.05;
+                    targetPupilY = -mouseY * 0.03;
+                } else {
+                    targetPupilX = 0;
+                    targetPupilY = 0;
+                }
+                
+                // 平滑过渡
+                currentPupilX += (targetPupilX - currentPupilX) * 0.15;
+                currentPupilY += (targetPupilY - currentPupilY) * 0.15;
+                
+                // 应用瞳孔位置
+                pupilL.position.x = -0.2 + currentPupilX;
+                pupilL.position.y = 1.78 + currentPupilY;
+                pupilR.position.x = 0.2 + currentPupilX;
+                pupilR.position.y = 1.78 + currentPupilY;
+            }
+            
+            // ===== 眨眼 =====
+            updateBlink();
+            
+            // ===== 睡眠震动 =====
+            updateSleepShake();
+            
+            // ===== 心情更新（每帧检查）=====
+            if (time % 5000 < 20) {  // 每5秒检查一次
+                updateMood();
+            }
+            
+            // ===== 心情等级衰减 =====
+            if (time % 10000 < 20 && moodLevel > 0) {
+                moodLevel = Math.max(0, moodLevel - 1);
+            }
+            
+            renderer.render(scene, camera);
+        }
+        
+        // ===== 事件 - 使用overlay捕获鼠标事件 =====
+        function onMouseMove(e) {
+            // 使用clientX/Y计算相对位置
+            var rect = box.getBoundingClientRect();
+            var x = e.clientX || (e.touches && e.touches[0] ? e.touches[0].clientX : 0);
+            var y = e.clientY || (e.touches && e.touches[0] ? e.touches[0].clientY : 0);
+            mouseX = ((x - rect.left) / rect.width - 0.5) * 2;
+            mouseY = -((y - rect.top) / rect.height - 0.5) * 2;
+        }
+        
+        // 悬浮进入
+        overlay.addEventListener('mouseenter', function(e) {
+            isHover = true;
+            targetGlow = 0.8;
+        });
+        
+        // 鼠标移动
+        overlay.addEventListener('mousemove', onMouseMove);
+        
+        // 悬浮离开
+        overlay.addEventListener('mouseleave', function(e) {
+            isHover = false;
+            targetGlow = 0.3;
+            mouseX = 0;
+            mouseY = 0;
+        });
+        
+        // 点击事件
+        overlay.addEventListener('click', function(e) {
+            e.preventDefault();
+            e.stopPropagation();
+            
+            // ===== 连续点击检测 =====
+            clickCount++;
+            if (clickTimer) clearTimeout(clickTimer);
+            clickTimer = setTimeout(function() {
+                // 根据点击次数决定表情
+                if (clickCount >= 5) {
+                    triggerExcited();
+                } else if (clickCount >= 3) {
+                    setExpression('happy');
+                    moodLevel = Math.min(100, moodLevel + 5);
+                }
+                clickCount = 0;
+            }, 500);
+            
+            // 点击反馈
+            isClick = true;
+            clickGlow = 1;
+            playTap();
+            doJump();
+            recordInteraction();
+            
+            // 随机气泡短句
+            var texts = CONFIG.clickBubbleTexts;
+            var text = texts[Math.floor(Math.random() * texts.length)];
+            showBubble(text, CONFIG.bubbleDuration);
+        });
+        
+        // 双击事件 - 触发兴奋状态
+        overlay.addEventListener('dblclick', function(e) {
+            e.preventDefault();
+            e.stopPropagation();
+            
+            triggerExcited();
+            showBubble('喵喵喵~太开心啦!', CONFIG.bubbleDuration);
+        });
+        
+        // ===== 拖动功能 =====
+        var isDragging = false;
+        var dragOffsetX = 0;
+        var dragOffsetY = 0;
+        var catStartLeft = 0;
+        var catStartBottom = 0;
+        
+        function onDragStart(e) {
+            // 如果点击的是气泡，不触发拖动
+            if (e.target.closest('.hnau-cat-bubble')) return;
+            
+            isDragging = true;
+            box.style.transition = 'none';
+            
+            var clientX = e.clientX || (e.touches && e.touches[0] ? e.touches[0].clientX : 0);
+            var clientY = e.clientY || (e.touches && e.touches[0] ? e.touches[0].clientY : 0);
+            
+            var rect = box.getBoundingClientRect();
+            dragOffsetX = clientX - rect.left;
+            dragOffsetY = clientY - rect.top;
+            
+            // 记录初始位置（从bottom和right转换为left和top）
+            catStartLeft = rect.left;
+            catStartBottom = window.innerHeight - rect.bottom;
+            
+            // 按下缩放效果
+            box.style.transform = 'scale(0.95)';
+        }
+        
+        function onDragMove(e) {
+            if (!isDragging) return;
+            
+            var clientX = e.clientX || (e.touches && e.touches[0] ? e.touches[0].clientX : 0);
+            var clientY = e.clientY || (e.touches && e.touches[0] ? e.touches[0].clientY : 0);
+            
+            // 计算新位置
+            var newLeft = clientX - dragOffsetX;
+            var newBottom = window.innerHeight - clientY + dragOffsetY;
+            
+            // 限制在视窗内
+            var maxLeft = window.innerWidth - box.offsetWidth;
+            var maxBottom = window.innerHeight - box.offsetHeight - 10;
+            
+            newLeft = Math.max(0, Math.min(maxLeft, newLeft));
+            newBottom = Math.max(10, Math.min(maxBottom, newBottom));
+            
+            // 应用位置
+            box.style.left = newLeft + 'px';
+            box.style.bottom = 'auto';
+            box.style.top = newBottom + 'px';
+            box.style.right = 'auto';
+            
+            // 移除初始的fixed定位
+            box.style.position = 'absolute';
+            
+            if (e.cancelable) e.preventDefault();
+        }
+        
+        function onDragEnd(e) {
+            if (!isDragging) return;
+            isDragging = false;
+            
+            // 恢复缩放
+            box.style.transform = '';
+        }
+        
+        // 绑定拖动事件（绑定到box本身）
+        box.addEventListener('mousedown', onDragStart);
+        box.addEventListener('touchstart', onDragStart, { passive: false });
+        
+        document.addEventListener('mousemove', onDragMove);
+        document.addEventListener('touchmove', onDragMove, { passive: false });
+        
+        document.addEventListener('mouseup', onDragEnd);
+        document.addEventListener('touchend', onDragEnd);
+        
+        // 触摸支持
+        overlay.addEventListener('touchstart', function(e) {
+            e.preventDefault();
+            isHover = true;
+            targetGlow = 0.8;
+            onMouseMove(e);
+            recordInteraction();
+        }, { passive: false });
+        
+        overlay.addEventListener('touchmove', function(e) {
+            e.preventDefault();
+            onMouseMove(e);
+        }, { passive: false });
+        
+        overlay.addEventListener('touchend', function(e) {
+            e.preventDefault();
+            isHover = false;
+            targetGlow = 0.3;
+            mouseX = 0;
+            mouseY = 0;
+        });
+        
+        // 气泡点击 - 跳转到商品列表
+        bubble.addEventListener('click', function(e) {
+            e.preventDefault();
+            e.stopPropagation();
+            hideBubble();
+            var productArea = document.getElementById('product-list') || document.querySelector('.product-grid') || document.querySelector('.goods-section');
+            if (productArea) productArea.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        });
+        
+        // ===== 项目联动 =====
+        window.addEventListener('storage', function(e) {
+            if (e.key === 'hnau_new_product') {
+                doJump(function() {
+                    showBubble(CONFIG.productBubbleText, CONFIG.bubbleDuration);
+                });
+            }
+        });
+        
+        // ===== 初始化 =====
+        function init() {
+            console.log('[HNAU Cat] 开始初始化3D全息猫...');
+            console.log('[HNAU Cat] 容器尺寸:', box.offsetWidth, 'x', box.offsetHeight);
+            console.log('[HNAU Cat] overlay元素:', overlay ? '存在' : '不存在');
+            
+            initThree();
+            
+            // 测试事件绑定
+            if (overlay) {
+                console.log('[HNAU Cat] 鼠标事件已绑定到overlay');
+            }
+            
+            // 初始化心情等级
+            moodLevel = 60;
+            lastInteraction = Date.now();
+            
+            // 显示问候语气泡
+            setTimeout(function() {
+                showBubble(getGreeting(), CONFIG.bubbleDuration);
+            }, 1000);
+            
+            setTimeout(function() {
+                if (Math.random() < 0.7) {
+                    doJump(function() {
+                        showBubble(CONFIG.productBubbleText, CONFIG.bubbleDuration);
+                    });
+                }
+            }, CONFIG.jumpDelay);
+            
+            console.log('[HNAU Cat] 3D全息猫初始化完成!');
+        }
+        
+        // 响应式
+        window.addEventListener('resize', function() {
+            if (renderer && camera) {
+                renderer.setSize(box.offsetWidth, box.offsetHeight);
+                camera.aspect = box.offsetWidth / box.offsetHeight;
+                camera.updateProjectionMatrix();
+            }
+        });
+        
+        if (document.readyState === 'loading') {
+            document.addEventListener('DOMContentLoaded', init);
+        } else {
+            init();
+        }
+    })();
+    </script>
+
+</body>
+</html>

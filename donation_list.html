@@ -1,0 +1,1234 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>公益转赠通道 - 农大闲置</title>
+    <link rel="stylesheet" href="./style/main.css">
+    <style>
+        /* ========== 内嵌星空背景 ========== */
+        body { position: relative; }
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
+            z-index: -1;
+            background: url('./images/bg-starry.jpg') center center / cover no-repeat;
+        }
+        /* ========== 公益转赠列表页 - 星空玻璃拟态风格 ========== */
+        
+        /* 星空背景 */
+        .cosmos-bg {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+            background: url('./images/bg-starry.jpg') center center / cover no-repeat;
+        }
+        
+        .cosmos-stars {
+            position: absolute;
+            width: 100%;
+            height: 200%;
+            background-image: 
+                radial-gradient(2px 2px at 100px 50px, rgba(255,255,255,0.9), transparent),
+                radial-gradient(3px 3px at 300px 150px, rgba(255,255,255,0.8), transparent),
+                radial-gradient(2px 2px at 500px 80px, rgba(96,165,250,0.9), transparent),
+                radial-gradient(2px 2px at 700px 200px, rgba(255,255,255,0.85), transparent),
+                radial-gradient(3px 3px at 900px 100px, rgba(192,132,252,0.8), transparent),
+                radial-gradient(2px 2px at 1100px 250px, rgba(255,255,255,0.9), transparent),
+                radial-gradient(2px 2px at 200px 350px, rgba(255,255,255,0.7), transparent),
+                radial-gradient(2px 2px at 400px 450px, rgba(52,211,153,0.8), transparent),
+                radial-gradient(1px 1px at 600px 380px, rgba(255,255,255,0.6), transparent),
+                radial-gradient(2px 2px at 800px 500px, rgba(255,255,255,0.75), transparent),
+                radial-gradient(1px 1px at 1000px 420px, rgba(96,165,250,0.7), transparent);
+            background-size: 1200px 600px;
+            animation: starFloat 80s linear infinite;
+        }
+        
+        .cosmos-nebula {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            background: 
+                radial-gradient(ellipse at 20% 30%, rgba(96,165,250,0.15) 0%, transparent 50%),
+                radial-gradient(ellipse at 80% 70%, rgba(192,132,252,0.12) 0%, transparent 50%),
+                radial-gradient(ellipse at 50% 80%, rgba(52,211,153,0.08) 0%, transparent 40%);
+            animation: nebulaGlow 20s ease-in-out infinite;
+        }
+        
+        @keyframes starFloat {
+            from { transform: translateY(0); }
+            to { transform: translateY(-50%); }
+        }
+        
+        @keyframes nebulaGlow {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.7; }
+        }
+        
+        /* 页面头部 - 内嵌标题 */
+        .page-header {
+            background: transparent;
+            padding: 80px 20px 10px;
+            text-align: left;
+            max-width: 900px;
+            margin: 0 auto;
+        }
+        
+        .page-header h1 {
+            font-size: 26px;
+            font-weight: 700;
+            margin: 0 0 6px 0;
+            background: linear-gradient(135deg, #fff 0%, #60A5FA 50%, #C084FC 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        
+        .page-header p {
+            font-size: 13px;
+            color: rgba(255,255,255,0.6);
+            margin: 0;
+        }
+        
+        .page-container {
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 20px 16px 100px;
+        }
+        
+        /* 返回按钮 - 玻璃拟态风格 */
+        .ai-back-btn {
+            position: fixed;
+            top: 20px;
+            left: 16px;
+            background: rgba(255,255,255,0.05);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            color: #fff;
+            border: 1px solid rgba(255,255,255,0.15);
+            padding: 10px 16px;
+            border-radius: 25px;
+            font-weight: 600;
+            cursor: pointer;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.3);
+            z-index: 100;
+            text-decoration: none;
+            transition: all 0.3s ease;
+        }
+        
+        .ai-back-btn:hover {
+            background: rgba(255,255,255,0.1);
+            transform: translateY(-2px);
+            box-shadow: 0 6px 25px rgba(96,165,250,0.3);
+        }
+        
+        /* 玻璃拟态统计卡片 */
+        .stats-row {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 12px;
+            margin-bottom: 20px;
+        }
+        
+        .stat-card {
+            background: linear-gradient(135deg, rgba(255,255,255,0.12) 0%, rgba(255,255,255,0.05) 100%);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border: 1px solid rgba(255,255,255,0.15);
+            border-radius: 16px;
+            padding: 16px;
+            text-align: center;
+            box-shadow: 0 8px 32px rgba(0,0,0,0.3), inset 0 1px 0 rgba(255,255,255,0.1);
+            transition: all 0.3s ease;
+        }
+        
+        .stat-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 12px 40px rgba(96,165,250,0.2);
+        }
+        
+        .stat-icon {
+            font-size: 1.4rem;
+            margin-bottom: 8px;
+        }
+        
+        .stat-value {
+            font-size: 1.4rem;
+            font-weight: bold;
+            background: linear-gradient(135deg, #60A5FA, #C084FC);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        
+        .stat-label {
+            font-size: 0.75rem;
+            color: rgba(255,255,255,0.5);
+            margin-top: 4px;
+        }
+        
+        /* 操作栏 */
+        .action-bar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+        
+        .filter-tabs {
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap;
+        }
+        
+        .filter-tab {
+            padding: 8px 16px;
+            background: rgba(255,255,255,0.08);
+            border: 1px solid rgba(255,255,255,0.15);
+            border-radius: 20px;
+            font-size: 0.85rem;
+            color: rgba(255,255,255,0.7);
+            cursor: pointer;
+            transition: all 0.25s ease;
+        }
+        
+        .filter-tab.active {
+            background: linear-gradient(135deg, rgba(96,165,250,0.4) 0%, rgba(59,130,246,0.4) 100%);
+            border-color: rgba(96,165,250,0.6);
+            color: #fff;
+        }
+        
+        .filter-tab:hover:not(.active) {
+            background: rgba(255,255,255,0.12);
+            border-color: rgba(96,165,250,0.4);
+            color: #fff;
+        }
+        
+        .publish-btn {
+            padding: 10px 20px;
+            background: linear-gradient(135deg, rgba(96,165,250,0.4) 0%, rgba(59,130,246,0.4) 100%);
+            border: 1px solid rgba(96,165,250,0.5);
+            border-radius: 20px;
+            font-size: 0.85rem;
+            font-weight: 600;
+            color: #fff;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            transition: all 0.3s ease;
+        }
+        
+        .publish-btn:hover {
+            transform: translateY(-2px);
+            background: linear-gradient(135deg, rgba(96,165,250,0.6) 0%, rgba(59,130,246,0.6) 100%);
+            box-shadow: 0 8px 24px rgba(96,165,250,0.3);
+        }
+        
+        /* 玻璃拟态物品卡片 */
+        .items-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+            gap: 16px;
+        }
+        
+        .donation-card {
+            background: linear-gradient(135deg, rgba(255,255,255,0.1) 0%, rgba(255,255,255,0.05) 100%);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border: 1px solid rgba(255,255,255,0.12);
+            border-radius: 16px;
+            overflow: hidden;
+            box-shadow: 0 8px 32px rgba(0,0,0,0.2);
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+        
+        .donation-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 16px 48px rgba(96,165,250,0.2);
+            border-color: rgba(96,165,250,0.3);
+        }
+        
+        .donation-card-image {
+            width: 100%;
+            height: 150px;
+            background: linear-gradient(135deg, rgba(96,165,250,0.3) 0%, rgba(192,132,252,0.3) 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 3rem;
+            position: relative;
+        }
+        
+        .donation-card-image img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+        
+        .donation-card-status {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            padding: 4px 10px;
+            border-radius: 12px;
+            font-size: 0.7rem;
+            font-weight: 600;
+            backdrop-filter: blur(10px);
+        }
+        
+        .status-pending {
+            background: rgba(251,146,60,0.3);
+            color: #fb923c;
+            border: 1px solid rgba(251,146,60,0.4);
+        }
+        
+        .status-receiving {
+            background: rgba(96,165,250,0.3);
+            color: #60a5fa;
+            border: 1px solid rgba(96,165,250,0.4);
+        }
+        
+        .status-completed {
+            background: rgba(52,211,153,0.3);
+            color: #34d399;
+            border: 1px solid rgba(52,211,153,0.4);
+        }
+        
+        .donation-card-content {
+            padding: 16px;
+        }
+        
+        .donation-card-title {
+            font-size: 0.95rem;
+            font-weight: 600;
+            color: #fff;
+            margin-bottom: 8px;
+            display: -webkit-box;
+            -webkit-line-clamp: 1;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+        }
+        
+        .donation-card-meta {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            font-size: 0.75rem;
+            color: rgba(255,255,255,0.5);
+            margin-bottom: 12px;
+        }
+        
+        .donation-card-target {
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+            background: rgba(96,165,250,0.15);
+            color: #60a5fa;
+            padding: 4px 10px;
+            border-radius: 12px;
+            font-size: 0.75rem;
+            border: 1px solid rgba(96,165,250,0.2);
+        }
+        
+        .donation-card-footer {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding-top: 12px;
+            border-top: 1px solid rgba(255,255,255,0.08);
+        }
+        
+        .donation-card-publisher {
+            font-size: 0.75rem;
+            color: rgba(255,255,255,0.4);
+        }
+        
+        .donation-card-action {
+            padding: 6px 14px;
+            background: linear-gradient(135deg, rgba(96,165,250,0.4) 0%, rgba(59,130,246,0.4) 100%);
+            border: 1px solid rgba(96,165,250,0.4);
+            border-radius: 14px;
+            font-size: 0.75rem;
+            color: #fff;
+            cursor: pointer;
+            transition: all 0.25s ease;
+        }
+        
+        .donation-card-action:hover {
+            background: linear-gradient(135deg, rgba(96,165,250,0.6) 0%, rgba(59,130,246,0.6) 100%);
+        }
+        
+        .donation-card-action:disabled {
+            background: rgba(255,255,255,0.1);
+            border-color: rgba(255,255,255,0.1);
+            color: rgba(255,255,255,0.4);
+            cursor: not-allowed;
+        }
+        
+        .donation-card-action.applied {
+            background: linear-gradient(135deg, rgba(52,211,153,0.4) 0%, rgba(16,185,129,0.4) 100%);
+            border-color: rgba(52,211,153,0.4);
+        }
+        
+        /* 空状态 */
+        .empty-state {
+            text-align: center;
+            padding: 60px 20px;
+            color: rgba(255,255,255,0.5);
+        }
+        
+        .empty-icon {
+            font-size: 4rem;
+            margin-bottom: 16px;
+            opacity: 0.6;
+        }
+        
+        .empty-text {
+            font-size: 1rem;
+            margin-bottom: 20px;
+            color: rgba(255,255,255,0.6);
+        }
+        
+        /* 详情弹窗 - 玻璃拟态 */
+        .detail-modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0,0,0,0.7);
+            backdrop-filter: blur(8px);
+            z-index: 10000;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.3s;
+        }
+        
+        .detail-modal.active {
+            opacity: 1;
+            visibility: visible;
+        }
+        
+        .detail-content {
+            background: linear-gradient(135deg, rgba(30,41,59,0.95) 0%, rgba(15,23,42,0.95) 100%);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(255,255,255,0.1);
+            border-radius: 20px;
+            max-width: 500px;
+            width: 95%;
+            max-height: 90vh;
+            overflow-y: auto;
+            transform: translateY(20px);
+            transition: transform 0.3s;
+            box-shadow: 0 25px 50px rgba(0,0,0,0.5);
+        }
+        
+        .detail-modal.active .detail-content {
+            transform: translateY(0);
+        }
+        
+        .detail-header {
+            position: relative;
+        }
+        
+        .detail-image {
+            width: 100%;
+            height: 220px;
+            background: linear-gradient(135deg, rgba(96,165,250,0.4) 0%, rgba(192,132,252,0.4) 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 4rem;
+        }
+        
+        .detail-image img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+        
+        .detail-close {
+            position: absolute;
+            top: 12px;
+            right: 12px;
+            width: 36px;
+            height: 36px;
+            background: rgba(0,0,0,0.5);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255,255,255,0.1);
+            border-radius: 50%;
+            color: #fff;
+            font-size: 1.2rem;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.25s ease;
+        }
+        
+        .detail-close:hover {
+            background: rgba(239,68,68,0.6);
+        }
+        
+        .detail-body {
+            padding: 20px;
+        }
+        
+        .detail-title {
+            font-size: 1.2rem;
+            font-weight: 600;
+            color: #fff;
+            margin-bottom: 12px;
+        }
+        
+        .detail-tags {
+            display: flex;
+            gap: 8px;
+            margin-bottom: 16px;
+        }
+        
+        .detail-tag {
+            padding: 4px 10px;
+            background: rgba(96,165,250,0.15);
+            color: #60a5fa;
+            border-radius: 12px;
+            font-size: 0.75rem;
+            border: 1px solid rgba(96,165,250,0.2);
+        }
+        
+        .detail-desc {
+            color: rgba(255,255,255,0.8);
+            font-size: 0.9rem;
+            line-height: 1.7;
+            margin-bottom: 16px;
+            padding: 12px;
+            background: rgba(255,255,255,0.05);
+            border-radius: 12px;
+            border: 1px solid rgba(255,255,255,0.08);
+        }
+        
+        .detail-meta {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 12px;
+            margin-bottom: 20px;
+        }
+        
+        .detail-meta-item {
+            background: rgba(255,255,255,0.05);
+            padding: 12px;
+            border-radius: 12px;
+            border: 1px solid rgba(255,255,255,0.08);
+        }
+        
+        .detail-meta-label {
+            font-size: 0.75rem;
+            color: rgba(255,255,255,0.5);
+            margin-bottom: 4px;
+        }
+        
+        .detail-meta-value {
+            font-size: 0.9rem;
+            color: #fff;
+            font-weight: 600;
+        }
+        
+        .detail-action-area {
+            border-top: 1px solid rgba(255,255,255,0.1);
+            padding-top: 16px;
+        }
+        
+        .apply-btn {
+            width: 100%;
+            padding: 14px;
+            background: linear-gradient(135deg, rgba(96,165,250,0.5) 0%, rgba(59,130,246,0.5) 100%);
+            color: #fff;
+            border: 1px solid rgba(96,165,250,0.4);
+            border-radius: 14px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        .apply-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 24px rgba(96,165,250,0.3);
+        }
+        
+        /* 接收申请弹窗 */
+        .apply-modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0,0,0,0.5);
+            z-index: 11000;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.3s;
+        }
+        
+        .apply-modal.active {
+            opacity: 1;
+            visibility: visible;
+        }
+        
+        .apply-content {
+            background: linear-gradient(135deg, rgba(30,41,59,0.95) 0%, rgba(15,23,42,0.95) 100%);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(255,255,255,0.1);
+            border-radius: 20px;
+            padding: 24px;
+            max-width: 400px;
+            width: 90%;
+            transform: translateY(20px);
+            transition: transform 0.3s;
+            box-shadow: 0 25px 50px rgba(0,0,0,0.5);
+        }
+        
+        .apply-modal.active .apply-content {
+            transform: translateY(0);
+        }
+        
+        .apply-title {
+            font-size: 1.1rem;
+            font-weight: 600;
+            background: linear-gradient(135deg, #60A5FA, #C084FC);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 16px;
+            text-align: center;
+        }
+        
+        .apply-input {
+            width: 100%;
+            padding: 12px 14px;
+            background: rgba(255,255,255,0.08);
+            border: 1px solid rgba(255,255,255,0.15);
+            border-radius: 12px;
+            font-size: 1rem;
+            color: #fff;
+            box-sizing: border-box;
+            margin-bottom: 16px;
+            transition: all 0.25s ease;
+        }
+        
+        .apply-input:focus {
+            outline: none;
+            border-color: rgba(96,165,250,0.6);
+            background: rgba(255,255,255,0.12);
+        }
+        
+        .apply-input::placeholder {
+            color: rgba(255,255,255,0.4);
+        }
+        
+        .apply-btns {
+            display: flex;
+            gap: 12px;
+        }
+        
+        .apply-btn-cancel,
+        .apply-btn-confirm {
+            flex: 1;
+            padding: 12px;
+            border: none;
+            border-radius: 12px;
+            font-size: 0.95rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.25s ease;
+        }
+        
+        .apply-btn-cancel {
+            background: rgba(255,255,255,0.1);
+            color: rgba(255,255,255,0.7);
+            border: 1px solid rgba(255,255,255,0.15);
+        }
+        
+        .apply-btn-cancel:hover {
+            background: rgba(255,255,255,0.15);
+            color: #fff;
+        }
+        
+        .apply-btn-confirm {
+            background: linear-gradient(135deg, rgba(96,165,250,0.5) 0%, rgba(59,130,246,0.5) 100%);
+            color: #fff;
+            border: 1px solid rgba(96,165,250,0.4);
+        }
+        
+        .apply-btn-confirm:hover {
+            background: linear-gradient(135deg, rgba(96,165,250,0.7) 0%, rgba(59,130,246,0.7) 100%);
+            box-shadow: 0 8px 24px rgba(96,165,250,0.3);
+        }
+        
+        @media (max-width: 600px) {
+            .stats-row {
+                grid-template-columns: repeat(2, 1fr);
+            }
+            
+            .action-bar {
+                flex-direction: column;
+                gap: 12px;
+            }
+            
+            .filter-tabs {
+                width: 100%;
+                overflow-x: auto;
+            }
+            
+            .publish-btn {
+                width: 100%;
+                justify-content: center;
+            }
+        }
+    </style>
+</head>
+<body style="background: transparent;">
+    <!-- 星空背景 -->
+    <div class="cosmos-bg">
+        <div class="cosmos-stars"></div>
+        <div class="cosmos-nebula"></div>
+    </div>
+    
+    <!-- 返回按钮 -->
+    <a href="explore.html" class="ai-back-btn">← 返回</a>
+    
+    <!-- 页面标题 -->
+    <div class="page-header">
+        <h1>❤️ 爱心捐赠</h1>
+        <p>将闲置物品转化为爱心力量</p>
+    </div>
+                <li class="navbar-menu-item">
+                    <a href="release_goods.html" class="navbar-menu-link">发布闲置</a>
+                </li>
+                <li class="navbar-menu-item">
+                    <a href="stu_check.html" class="navbar-menu-link">校园认证</a>
+                </li>
+                <li class="navbar-menu-item">
+                    <a href="user_center.html" class="navbar-menu-link">个人中心</a>
+                </li>
+                <li class="navbar-menu-item">
+                    <a href="carbon_ai.html" class="navbar-menu-link">🤖 碳足迹AI助手</a>
+                </li>
+                <li class="navbar-menu-item">
+                    <a href="donation_list.html" class="navbar-menu-link active">🌟 公益转赠通道</a>
+                </li>
+                <li class="navbar-menu-item">
+                    <a href="demand_board.html" class="navbar-menu-link">📋 需求公告板</a>
+                </li>
+                <li class="navbar-menu-item">
+                    <a href="manage_admin.html" class="navbar-menu-link">管理员</a>
+                </li>
+            </ul>
+            <button class="navbar-toggle" id="navbarToggle">☰</button>
+        </div>
+        <div class="navbar-mobile-menu" id="mobileMenu">
+            <a href="starfield.html" class="navbar-mobile-menu-item">首页</a>
+            <a href="release_goods.html" class="navbar-mobile-menu-item">发布闲置</a>
+            <a href="stu_check.html" class="navbar-mobile-menu-item">校园认证</a>
+            <a href="user_center.html" class="navbar-mobile-menu-item">个人中心</a>
+            <a href="carbon_ai.html" class="navbar-mobile-menu-item">🤖 碳足迹AI助手</a>
+            <a href="donation_list.html" class="navbar-mobile-menu-item active">🌟 公益转赠通道</a>
+            <a href="demand_board.html" class="navbar-mobile-menu-item">📋 需求公告板</a>
+            <a href="manage_admin.html" class="navbar-mobile-menu-item">管理员</a>
+        </div>
+    </nav>
+    
+    <div class="page-container">
+        <!-- 统计数据 -->
+        <div class="stats-row">
+            <div class="stat-card">
+                <div class="stat-icon">📦</div>
+                <div class="stat-value" id="totalCount">0</div>
+                <div class="stat-label">全部转赠</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-icon">⏳</div>
+                <div class="stat-value" id="pendingCount">0</div>
+                <div class="stat-label">待转赠</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-icon">✅</div>
+                <div class="stat-value" id="completedCount">0</div>
+                <div class="stat-label">已完成</div>
+            </div>
+        </div>
+        
+        <!-- 操作栏 -->
+        <div class="action-bar glass-card">
+            <div class="filter-tabs">
+                <button class="filter-tab active" data-filter="all">全部</button>
+                <button class="filter-tab" data-filter="pending">待转赠</button>
+                <button class="filter-tab" data-filter="receiving">可申请</button>
+                <button class="filter-tab" data-filter="completed">已完成</button>
+            </div>
+            <button class="publish-btn" id="publishBtn">
+                <span>+</span>
+                <span>发布转赠</span>
+            </button>
+        </div>
+        
+        <!-- 物品列表 -->
+        <div class="items-grid" id="itemsGrid">
+            <!-- 由JS动态生成 -->
+        </div>
+        
+        <!-- 空状态 -->
+        <div class="empty-state" id="emptyState" style="display: none;">
+            <div class="empty-icon">🌟</div>
+            <div class="empty-text">暂无转赠物品</div>
+            <button class="publish-btn" onclick="window.location.href='donation_publish.html'">
+                <span>+</span>
+                <span>发布转赠</span>
+            </button>
+        </div>
+    </div>
+    
+    <!-- 详情弹窗 -->
+    <div class="detail-modal" id="detailModal">
+        <div class="detail-content glass-card">
+            <div class="detail-header">
+                <div class="detail-image" id="detailImage">📦</div>
+                <button class="detail-close" id="detailClose">✕</button>
+            </div>
+            <div class="detail-body">
+                <div class="detail-title" id="detailTitle">物品名称</div>
+                <div class="detail-tags">
+                    <span class="detail-tag" id="detailCategory">分类</span>
+                    <span class="detail-tag" id="detailTarget">转赠对象</span>
+                </div>
+                <div class="detail-desc" id="detailDesc">物品描述</div>
+                <div class="detail-meta">
+                    <div class="detail-meta-item">
+                        <div class="detail-meta-label">发布者</div>
+                        <div class="detail-meta-value" id="detailPublisher">--</div>
+                    </div>
+                    <div class="detail-meta-item">
+                        <div class="detail-meta-label">发布时间</div>
+                        <div class="detail-meta-value" id="detailTime">--</div>
+                    </div>
+                    <div class="detail-meta-item">
+                        <div class="detail-meta-label">转赠价格</div>
+                        <div class="detail-meta-value" style="color: #1e40af;">免费</div>
+                    </div>
+                    <div class="detail-meta-item">
+                        <div class="detail-meta-label">当前状态</div>
+                        <div class="detail-meta-value" id="detailStatus">--</div>
+                    </div>
+                </div>
+                <div class="detail-action-area">
+                    <button class="apply-btn" id="applyBtn">🌟 申请接收</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- 申请弹窗 -->
+    <div class="apply-modal" id="applyModal">
+        <div class="apply-content glass-card">
+            <div class="apply-title">🌟 申请接收转赠</div>
+            <textarea class="apply-input" id="applyReason" rows="4" placeholder="请简单说明您需要这件物品的原因，以及打算如何使用~"></textarea>
+            <div class="apply-btns">
+                <button class="apply-btn-cancel" id="applyCancel">取消</button>
+                <button class="apply-btn-confirm" id="applyConfirm">确认申请</button>
+            </div>
+        </div>
+    </div>
+    
+    <script>
+    (function() {
+        'use strict';
+        
+        // ========== 存储键 ==========
+        var STORAGE_KEY = 'hnau_donation_list';
+        var USER_KEY = 'hnau_current_user';
+        
+        // ========== DOM ==========
+        var itemsGrid = document.getElementById('itemsGrid');
+        var emptyState = document.getElementById('emptyState');
+        var detailModal = document.getElementById('detailModal');
+        var applyModal = document.getElementById('applyModal');
+        var currentItem = null;
+        
+        // ========== 转赠对象名称 ==========
+        var TARGET_NAMES = {
+            club: '🏛️ 公益社团',
+            work: '💼 勤工助学点',
+            personal: '👤 个人定向'
+        };
+        
+        // ========== 状态名称 ==========
+        var STATUS_NAMES = {
+            pending: '待转赠',
+            receiving: '待确认',
+            completed: '已完成',
+            rejected: '已婉拒'
+        };
+        
+        // ========== 申请状态名称 ==========
+        var APPLY_STATUS_NAMES = {
+            none: '未申请',
+            pending: '等待确认',
+            accepted: '已同意',
+            rejected: '已婉拒'
+        };
+        
+        // ========== 分类图标 ==========
+        var CATEGORY_ICONS = {
+            '教材': '📚',
+            '电子产品': '📱',
+            '衣物': '👕',
+            '日用品': '🧸',
+            '运动': '⚽',
+            '文具': '✏️',
+            '其他': '📦'
+        };
+        
+        // ========== 初始化 ==========
+        function init() {
+            updateStats();
+            renderList('all');
+            bindEvents();
+            // 【新增】监听其他页面发布的数据，实时刷新
+            window.addEventListener('storage', function(e) {
+                if (e.key === STORAGE_KEY) {
+                    console.log('[HNAU Donation] 检测到数据变化，刷新列表');
+                    updateStats();
+                    renderList('all');
+                }
+            });
+            console.log('[HNAU Donation] 公益转赠列表页已加载');
+        }
+        
+        // ========== 更新统计 ==========
+        function updateStats() {
+            var list = getDonationList();
+            var total = list.length;
+            var pending = list.filter(function(item) {
+                return item.status === 'pending' || item.status === 'receiving';
+            }).length;
+            var completed = list.filter(function(item) {
+                return item.status === 'completed';
+            }).length;
+            
+            document.getElementById('totalCount').textContent = total;
+            document.getElementById('pendingCount').textContent = pending;
+            document.getElementById('completedCount').textContent = completed;
+        }
+        
+        // ========== 渲染列表 ==========
+        function renderList(filter) {
+            var list = getDonationList();
+            var currentUser = getCurrentUser();
+            
+            // 过滤
+            if (filter !== 'all') {
+                list = list.filter(function(item) {
+                    if (filter === 'pending') {
+                        return item.status === 'pending';
+                    } else if (filter === 'receiving') {
+                        return item.status === 'receiving';
+                    } else if (filter === 'completed') {
+                        return item.status === 'completed';
+                    }
+                    return true;
+                });
+            }
+            
+            // 渲染
+            if (list.length === 0) {
+                itemsGrid.style.display = 'none';
+                emptyState.style.display = 'block';
+                return;
+            }
+            
+            itemsGrid.style.display = 'grid';
+            emptyState.style.display = 'none';
+            
+            itemsGrid.innerHTML = list.map(function(item) {
+                var icon = item.images && item.images[0] 
+                    ? '<img src="' + item.images[0] + '" alt="' + item.itemName + '">' 
+                    : (CATEGORY_ICONS[item.category] || '📦');
+                var statusClass = 'status-' + item.status;
+                var isOwn = item.publisher && item.publisher.id === currentUser.id;
+                
+                // 获取申请状态
+                var applyStatus = getMyApplyStatus(item);
+                var btnText, btnDisabled;
+                
+                if (isOwn) {
+                    btnText = '我的发布';
+                    btnDisabled = 'disabled';
+                } else if (item.status === 'completed') {
+                    btnText = '已完成';
+                    btnDisabled = 'disabled';
+                } else if (applyStatus === 'pending') {
+                    btnText = '等待确认';
+                    btnDisabled = 'disabled';
+                } else if (applyStatus === 'accepted') {
+                    btnText = '已获得';
+                    btnDisabled = 'disabled';
+                } else if (applyStatus === 'rejected') {
+                    btnText = '已婉拒(可重试)';
+                    btnDisabled = '';
+                } else {
+                    btnText = '申请接收';
+                    btnDisabled = '';
+                }
+                
+                return '<div class="donation-card" data-id="' + item.id + '">' +
+                    '<div class="donation-card-image">' +
+                    icon +
+                    '<span class="donation-card-status ' + statusClass + '">' + STATUS_NAMES[item.status] + '</span>' +
+                    '</div>' +
+                    '<div class="donation-card-content">' +
+                    '<div class="donation-card-title">' + item.itemName + '</div>' +
+                    '<div class="donation-card-meta">' +
+                    '<span>' + (item.publisher ? item.publisher.name : '匿名') + '</span>' +
+                    '<span>' + formatTime(item.publishTime) + '</span>' +
+                    '</div>' +
+                    '<div class="donation-card-target">' + TARGET_NAMES[item.targetType] + '</div>' +
+                    '<div class="donation-card-footer">' +
+                    '<span class="donation-card-publisher">查看详情</span>' +
+                    '<button class="donation-card-action ' + (applyStatus === 'pending' || applyStatus === 'accepted' ? 'applied' : '') + '" ' + btnDisabled + '>' + btnText + '</button>' +
+                    '</div>' +
+                    '</div>' +
+                    '</div>';
+            }).join('');
+        }
+        
+        // ========== 绑定事件 ==========
+        function bindEvents() {
+            // 移动端菜单
+            document.getElementById('navbarToggle').addEventListener('click', function() {
+                document.getElementById('mobileMenu').classList.toggle('active');
+            });
+            
+            // 发布按钮
+            document.getElementById('publishBtn').addEventListener('click', function() {
+                window.location.href = 'donation_publish.html';
+            });
+            
+            // 筛选标签
+            document.querySelectorAll('.filter-tab').forEach(function(tab) {
+                tab.addEventListener('click', function() {
+                    document.querySelectorAll('.filter-tab').forEach(function(t) {
+                        t.classList.remove('active');
+                    });
+                    this.classList.add('active');
+                    renderList(this.dataset.filter);
+                });
+            });
+            
+            // 卡片点击
+            itemsGrid.addEventListener('click', function(e) {
+                var card = e.target.closest('.donation-card');
+                if (card) {
+                    var id = card.dataset.id;
+                    showDetail(id);
+                }
+            });
+            
+            // 详情弹窗关闭
+            document.getElementById('detailClose').addEventListener('click', function() {
+                detailModal.classList.remove('active');
+            });
+            
+            detailModal.addEventListener('click', function(e) {
+                if (e.target === detailModal) {
+                    detailModal.classList.remove('active');
+                }
+            });
+            
+            // 申请按钮
+            document.getElementById('applyBtn').addEventListener('click', function() {
+                applyModal.classList.add('active');
+            });
+            
+            // 申请弹窗
+            document.getElementById('applyCancel').addEventListener('click', function() {
+                applyModal.classList.remove('active');
+            });
+            
+            document.getElementById('applyConfirm').addEventListener('click', function() {
+                confirmApply();
+            });
+            
+            applyModal.addEventListener('click', function(e) {
+                if (e.target === applyModal) {
+                    applyModal.classList.remove('active');
+                }
+            });
+        }
+        
+        // ========== 显示详情 ==========
+        function showDetail(id) {
+            var list = getDonationList();
+            currentItem = list.find(function(item) {
+                return item.id === id;
+            });
+            
+            if (!currentItem) return;
+            
+            // 填充数据
+            document.getElementById('detailImage').innerHTML = 
+                currentItem.images && currentItem.images[0] 
+                    ? '<img src="' + currentItem.images[0] + '" alt="">' 
+                    : '📦';
+            document.getElementById('detailTitle').textContent = currentItem.itemName;
+            document.getElementById('detailCategory').textContent = CATEGORY_ICONS[currentItem.category] + ' ' + currentItem.category;
+            document.getElementById('detailTarget').textContent = TARGET_NAMES[currentItem.targetType];
+            document.getElementById('detailDesc').textContent = currentItem.description;
+            document.getElementById('detailPublisher').textContent = currentItem.publisher ? currentItem.publisher.name : '匿名';
+            document.getElementById('detailTime').textContent = formatTime(currentItem.publishTime);
+            document.getElementById('detailStatus').textContent = STATUS_NAMES[currentItem.status];
+            
+            // 申请按钮状态
+            var applyBtn = document.getElementById('applyBtn');
+            var currentUser = getCurrentUser();
+            var isOwn = currentItem.publisher && currentItem.publisher.id === currentUser.id;
+            var applyStatus = getMyApplyStatus(currentItem);
+            
+            if (isOwn) {
+                applyBtn.textContent = '这是您发布的';
+                applyBtn.disabled = true;
+            } else if (currentItem.status === 'completed') {
+                if (currentItem.receiver && currentItem.receiver.id === currentUser.id) {
+                    applyBtn.textContent = '✓ 您已获得此物品';
+                    applyBtn.disabled = true;
+                } else {
+                    applyBtn.textContent = '已被其他同学接收';
+                    applyBtn.disabled = true;
+                }
+            } else if (applyStatus === 'pending') {
+                applyBtn.textContent = '⏳ 等待发布者确认...';
+                applyBtn.disabled = true;
+            } else if (applyStatus === 'accepted') {
+                applyBtn.textContent = '✓ 恭喜！您已获得此物品';
+                applyBtn.disabled = true;
+            } else if (applyStatus === 'rejected') {
+                applyBtn.textContent = '↻ 重新申请';
+                applyBtn.disabled = false;
+            } else {
+                applyBtn.textContent = '🌟 申请接收';
+                applyBtn.disabled = false;
+            }
+            
+            detailModal.classList.add('active');
+        }
+        
+        // ========== 确认申请 ==========
+        function confirmApply() {
+            var reason = document.getElementById('applyReason').value.trim();
+            if (!reason) {
+                alert('请填写申请原因');
+                return;
+            }
+            
+            var currentUser = getCurrentUser();
+            var list = getDonationList();
+            
+            list = list.map(function(item) {
+                if (item.id === currentItem.id) {
+                    item.receiver = currentUser;
+                    item.receiveReason = reason;
+                    item.receiveTime = new Date().toISOString();
+                    item.status = 'receiving';
+                }
+                return item;
+            });
+            
+            localStorage.setItem(STORAGE_KEY, JSON.stringify(list));
+            
+            applyModal.classList.remove('active');
+            detailModal.classList.remove('active');
+            
+            // 提示发布者确认
+            alert('申请已提交！\n\n请等待发布者确认，确认后转赠完成。\n\n感谢您的爱心！🌟');
+            
+            updateStats();
+            renderList(document.querySelector('.filter-tab.active').dataset.filter);
+        }
+        
+        // ========== 获取转赠列表 ==========
+        function getDonationList() {
+            var listStr = localStorage.getItem(STORAGE_KEY);
+            return listStr ? JSON.parse(listStr) : [];
+        }
+        
+        // ========== 获取当前用户 ==========
+        function getCurrentUser() {
+            var userStr = localStorage.getItem(USER_KEY);
+            if (userStr) {
+                return JSON.parse(userStr);
+            }
+            return {
+                id: 'user_' + Date.now(),
+                name: '爱心同学',
+                studentId: '2024****',
+                college: '爱心学院'
+            };
+        }
+        
+        // ========== 获取我的申请状态 ==========
+        function getMyApplyStatus(item) {
+            var currentUser = getCurrentUser();
+            
+            if (item.status === 'pending') {
+                return 'none';
+            }
+            
+            if (item.status === 'receiving') {
+                if (item.receiver && item.receiver.id === currentUser.id) {
+                    if (item.rejected) {
+                        return 'rejected';
+                    }
+                    return 'pending';
+                }
+                return 'none';
+            }
+            
+            if (item.status === 'completed' && item.receiver && item.receiver.id === currentUser.id) {
+                return 'accepted';
+            }
+            
+            return 'none';
+        }
+        
+        // ========== 格式化时间 ==========
+        function formatTime(isoString) {
+            var date = new Date(isoString);
+            var now = new Date();
+            var diff = now - date;
+            
+            if (diff < 60000) return '刚刚';
+            if (diff < 3600000) return Math.floor(diff / 60000) + '分钟前';
+            if (diff < 86400000) return Math.floor(diff / 3600000) + '小时前';
+            if (diff < 604800000) return Math.floor(diff / 86400000) + '天前';
+            
+            return (date.getMonth() + 1) + '月' + date.getDate() + '日';
+        }
+        
+        // ========== 启动 ==========
+        init();
+    })();
+    </script>
+</body>
+</html>

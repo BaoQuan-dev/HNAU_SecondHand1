@@ -1,0 +1,1264 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>农大闲置 - 校园循环经济平台</title>
+    <link rel="stylesheet" href="./style/main.css">
+    <style>
+        /* ========== 视频背景 ========== */
+        body { position: relative; margin: 0; padding: 0; }
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
+            z-index: -1;
+            background: #0a0a1a;
+        }
+        .video-bg {
+            position: fixed;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
+            object-fit: cover;
+            object-position: center;
+            z-index: -1;
+            image-rendering: -webkit-optimize-contrast;
+            image-rendering: crisp-edges;
+        }
+        /* ========== 主界面 ========== */
+        .home-header {
+            padding: 60px 20px 0;
+            text-align: center;
+        }
+        .home-header h1 {
+            margin: 0 0 8px 0;
+            font-size: 32px;
+            font-weight: 800;
+            background: linear-gradient(90deg, #fff, #60A5FA, #C084FC, #F472B6, #FBBF24, #34D399, #22D3EE, #60A5FA);
+            background-size: 300% 100%;
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            animation: titleGlow 4s ease-in-out infinite;
+            filter: drop-shadow(0 0 10px rgba(96, 165, 250, 0.5));
+        }
+        
+        @keyframes titleGlow {
+            0%, 100% {
+                background-position: 0% 50%;
+                filter: drop-shadow(0 0 10px rgba(96, 165, 250, 0.5)) drop-shadow(0 0 20px rgba(192, 132, 252, 0.3));
+            }
+            25% {
+                background-position: 25% 0%;
+                filter: drop-shadow(0 0 15px rgba(192, 132, 252, 0.6)) drop-shadow(0 0 30px rgba(244, 114, 182, 0.4));
+            }
+            50% {
+                background-position: 50% 50%;
+                filter: drop-shadow(0 0 20px rgba(244, 114, 182, 0.7)) drop-shadow(0 0 40px rgba(251, 191, 36, 0.5));
+            }
+            75% {
+                background-position: 75% 100%;
+                filter: drop-shadow(0 0 15px rgba(52, 211, 153, 0.6)) drop-shadow(0 0 30px rgba(34, 211, 238, 0.4));
+            }
+        }
+        .home-header p {
+            margin: 0;
+            color: rgba(255,255,255,0.6);
+            font-size: 15px;
+        }
+        /* ========== 功能组件容器 ========== */
+        .home-container {
+            max-width: 800px;
+            margin: 30px auto;
+            padding: 0 20px 100px;
+            position: relative;
+            z-index: 1;
+        }
+        /* ========== 环形功能布局 ========== */
+        .feature-ring {
+            position: relative;
+            width: 100%;
+            max-width: 500px;
+            aspect-ratio: 1;
+            margin: 0 auto;
+        }
+        .center-indicator {
+            position: absolute;
+            top: 50%; left: 50%;
+            transform: translate(-50%, -50%);
+            width: 80px; height: 80px;
+            background: linear-gradient(135deg, rgba(96,165,250,0.3), rgba(192,132,252,0.3));
+            backdrop-filter: blur(20px);
+            border: 2px solid rgba(255,255,255,0.2);
+            border-radius: 50%;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        .center-indicator:hover {
+            transform: translate(-50%, -50%) scale(1.1);
+            border-color: rgba(255,255,255,0.4);
+        }
+        .center-indicator .logo {
+            font-size: 24px;
+            margin-bottom: 2px;
+        }
+        .center-indicator .text {
+            font-size: 15px;
+            color: rgba(255,255,255,0.8);
+        }
+        /* 星星形状的功能模块 */
+        .feature-item {
+            position: absolute;
+            width: 130px;
+            height: 130px;
+            /* 真正的玻璃拟态效果 - 更透明 */
+            background: rgba(255, 255, 255, 0.12);
+            backdrop-filter: blur(20px) saturate(180%);
+            -webkit-backdrop-filter: blur(20px) saturate(180%);
+            /* 星星形状边框 */
+            clip-path: polygon(50% 0%, 61% 12%, 88% 12%, 72% 26%, 90% 50%, 72% 74%, 88% 88%, 61% 88%, 50% 100%, 39% 88%, 12% 88%, 28% 74%, 10% 50%, 28% 26%, 12% 12%, 39% 12%);
+            /* 发光边框 */
+            outline: 3px solid rgba(139, 92, 246, 0.8);
+            outline-offset: 8px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            text-decoration: none;
+            color: inherit;
+            /* 融入背景的阴影 */
+            box-shadow: 
+                0 0 40px rgba(96, 165, 250, 0.2),
+                0 0 60px rgba(139, 92, 246, 0.3),
+                inset 0 0 40px rgba(255, 255, 255, 0.03);
+        }
+        .feature-item:hover {
+            background: rgba(255, 255, 255, 0.25);
+            outline-color: rgba(255, 255, 255, 1);
+            transform: scale(2);
+            box-shadow: 
+                0 0 100px rgba(139, 92, 246, 0.9),
+                0 0 200px rgba(96, 165, 250, 0.7),
+                0 0 300px rgba(192, 132, 252, 0.5),
+                0 0 400px rgba(255, 255, 255, 0.3),
+                inset 0 0 80px rgba(255, 255, 255, 0.2);
+            z-index: 100;
+            transition: all 0.25s cubic-bezier(0.175, 0.885, 0.32, 1.5);
+        }
+        .feature-item .icon {
+            font-size: 32px;
+            margin-bottom: 4px;
+            background: linear-gradient(90deg, #60A5FA, #C084FC, #F472B6, #FBBF24, #34D399, #22D3EE, #60A5FA);
+            background-size: 300% 100%;
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            animation: iconRainbow 3s ease-in-out infinite;
+            transition: all 0.25s cubic-bezier(0.175, 0.885, 0.32, 1.5);
+        }
+        .feature-item:hover .icon {
+            filter: drop-shadow(0 0 40px rgba(255, 255, 255, 1)) drop-shadow(0 0 80px rgba(139, 92, 246, 1));
+            // transform跟随父元素
+        }
+        .feature-item .label {
+            font-size: 15px;
+            font-weight: 600;
+            background: linear-gradient(90deg, #fff, #60A5FA, #C084FC, #F472B6, #FBBF24, #34D399, #22D3EE, #fff);
+            background-size: 300% 100%;
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            animation: labelRainbow 4s ease-in-out infinite;
+            transition: all 0.25s cubic-bezier(0.175, 0.885, 0.32, 1.5);
+        }
+        .feature-item:hover .label {
+            text-shadow: 0 0 40px rgba(255, 255, 255, 1), 0 0 80px rgba(139, 92, 246, 1);
+            // transform跟随父元素
+            color: #fff;
+        }
+        
+        @keyframes iconRainbow {
+            0%, 100% {
+                background-position: 0% 50%;
+                filter: drop-shadow(0 0 10px rgba(96, 165, 250, 0.6));
+            }
+            25% {
+                background-position: 25% 0%;
+                filter: drop-shadow(0 0 15px rgba(192, 132, 252, 0.7));
+            }
+            50% {
+                background-position: 50% 50%;
+                filter: drop-shadow(0 0 20px rgba(244, 114, 182, 0.8));
+            }
+            75% {
+                background-position: 75% 100%;
+                filter: drop-shadow(0 0 15px rgba(251, 191, 36, 0.7));
+            }
+        }
+        
+        @keyframes labelRainbow {
+            0%, 100% { background-position: 0% 50%; }
+            25% { background-position: 25% 0%; }
+            50% { background-position: 50% 50%; }
+            75% { background-position: 75% 100%; }
+        }
+        .feature-item .glow-ring {
+            display: none; /* 星星形状不需要额外glow-ring */
+        }
+        /* 星星闪亮动画 */
+        @keyframes starSparkle {
+            0%, 100% { 
+                background: rgba(255, 255, 255, 0.12);
+                outline-color: rgba(139, 92, 246, 0.5);
+                box-shadow: 0 0 40px rgba(96, 165, 250, 0.2), inset 0 0 40px rgba(255, 255, 255, 0.03);
+            }
+            50% { 
+                background: rgba(255, 255, 255, 0.3);
+                outline-color: rgba(255, 255, 255, 1);
+                box-shadow: 0 0 80px rgba(139, 92, 246, 0.8), 0 0 150px rgba(96, 165, 250, 0.5), inset 0 0 80px rgba(255, 255, 255, 0.4);
+            }
+        }
+        .feature-item.sparkle {
+            animation: starSparkle 1s ease-in-out;
+        }
+        .feature-item.sparkle .icon {
+            animation: iconStarGlow 1s ease-in-out;
+        }
+        @keyframes iconStarGlow {
+            0%, 100% { filter: drop-shadow(0 0 10px rgba(255, 255, 255, 0.6)); }
+            50% { filter: drop-shadow(0 0 30px rgba(255, 255, 255, 1)) drop-shadow(0 0 50px rgba(139, 92, 246, 1)); }
+        }
+        /* 星星模块位置 */
+        .feature-item.top { top: 0; left: 50%; transform: translateX(-50%); }
+        .feature-item.top:hover { transform: translateX(-50%) scale(1.08); }
+        .feature-item.left { top: 50%; left: 0; transform: translateY(-50%); }
+        .feature-item.left:hover { transform: translateY(-50%) scale(1.08); }
+        .feature-item.right { top: 50%; right: 0; transform: translateY(-50%); }
+        .feature-item.right:hover { transform: translateY(-50%) scale(1.08); }
+        .feature-item.bottom-left { bottom: 0; left: 10%; transform: scale(1); }
+        .feature-item.bottom-right { bottom: 0; right: 10%; transform: scale(1); }
+        /* ========== 底部登录按钮 ========== */
+        .login-section {
+            position: fixed;
+            bottom: 30px;
+            left: 50%;
+            transform: translateX(-50%);
+            z-index: 10;
+        }
+        .login-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 14px 32px;
+            background: linear-gradient(135deg, rgba(236,72,153,0.8), rgba(192,132,252,0.8));
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(255,255,255,0.2);
+            border-radius: 30px;
+            color: #fff;
+            font-size: 16px;
+            font-weight: 600;
+            text-decoration: none;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 20px rgba(236,72,153,0.4);
+        }
+        .login-btn:hover {
+            transform: scale(1.05);
+            box-shadow: 0 6px 30px rgba(236,72,153,0.5);
+        }
+        /* ========== 底部导航 ========== */
+        .bottom-nav {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: linear-gradient(to top, rgba(10,10,30,0.9), rgba(10,10,30,0.6));
+            padding: 20px;
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            z-index: 100;
+        }
+        .nav-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 4px;
+            color: rgba(255,255,255,0.6);
+            text-decoration: none;
+            font-size: 12px;
+            transition: color 0.3s;
+        }
+        .nav-item:hover, .nav-item.active { color: #fff; }
+        .nav-item .icon { font-size: 32px; }
+        /* 登录弹窗 */
+        .modal-overlay {
+            position: fixed;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
+            background: rgba(0,0,0,0.7);
+            display: none;
+            align-items: center;
+            justify-content: center;
+            z-index: 1000;
+        }
+        .modal-overlay.show { display: flex; }
+        .modal {
+            background: linear-gradient(135deg, rgba(30,30,50,0.95), rgba(20,20,40,0.95));
+            backdrop-filter: blur(30px);
+            border: 1px solid rgba(255,255,255,0.1);
+            border-radius: 24px;
+            padding: 40px;
+            width: 90%;
+            max-width: 380px;
+            text-align: center;
+        }
+        .modal h2 {
+            margin: 0 0 8px 0;
+            font-size: 32px;
+            background: linear-gradient(135deg, #fff, #60A5FA);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        .modal p {
+            margin: 0 0 24px 0;
+            color: rgba(255,255,255,0.6);
+            font-size: 15px;
+        }
+        .modal-btn {
+            display: block;
+            width: 100%;
+            padding: 14px;
+            background: linear-gradient(135deg, #60A5FA, #3B82F6);
+            border: none;
+            border-radius: 12px;
+            color: #fff;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            margin-bottom: 12px;
+            transition: all 0.3s;
+        }
+        .modal-btn:hover {
+            transform: scale(1.02);
+            box-shadow: 0 4px 20px rgba(96,165,250,0.4);
+        }
+        .modal-btn.secondary {
+            background: transparent;
+            border: 1px solid rgba(255,255,255,0.2);
+        }
+        .close-btn {
+            position: absolute;
+            top: 16px; right: 16px;
+            background: none;
+            border: none;
+            color: rgba(255,255,255,0.6);
+            font-size: 24px;
+            cursor: pointer;
+        }
+        
+        /* ========== 登录引导悬浮卡片 - 小猫云朵版 ========== */
+        .login-guide-card {
+            position: fixed;
+            bottom: 100px;
+            right: 20px;
+            z-index: 90;
+            animation: slideInUp 0.6s ease-out;
+            transition: transform 0.3s ease;
+        }
+        
+        /* 鼠标靠近时卡片倾斜 */
+        .login-guide-card:hover {
+            transform: translateY(-5px) rotate(2deg);
+        }
+        
+        @keyframes slideInUp {
+            from {
+                opacity: 0;
+                transform: translateY(40px) scale(0.9);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0) scale(1);
+            }
+        }
+        
+        /* 云朵容器 */
+        .cloud-wrapper {
+            position: relative;
+            width: 200px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        
+        /* 小猫呼吸动画 */
+        /* 小猫容器 - 整体呼吸动画 */
+        .cat-container {
+            position: relative;
+            width: 120px;
+            height: 120px;
+            animation: catBreathing 3s ease-in-out infinite;
+        }
+        
+        @keyframes catBreathing {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-8px); }
+        }
+        
+        /* 小猫图片 */
+        .cat-avatar {
+            width: 120px;
+            height: 120px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 3px solid rgba(255,255,255,0.3);
+            box-shadow: 
+                0 0 40px rgba(147, 112, 219, 0.4);
+            position: relative;
+            z-index: 2;
+            transition: all 0.3s ease;
+            cursor: pointer;
+            animation: catWaveAvatar 3s ease-in-out infinite;
+            transform-origin: bottom center;
+        }
+        
+        @keyframes catWaveAvatar {
+            0%, 100% { transform: rotate(0deg) translateY(0); }
+            15% { transform: rotate(-8deg) translateY(-5px); }
+            30% { transform: rotate(0deg) translateY(0); }
+            45% { transform: rotate(8deg) translateY(-5px); }
+            60% { transform: rotate(0deg) translateY(0); }
+            75% { transform: rotate(-5deg) translateY(-3px); }
+            90% { transform: rotate(0deg) translateY(0); }
+        }
+        
+        /* 悬停时更激烈招手 */
+        .cat-avatar:hover {
+            animation: catWaveAvatarExcited 0.6s ease-in-out infinite;
+            transform: scale(1.15);
+        }
+        
+        @keyframes catWaveAvatarExcited {
+            0%, 100% { transform: rotate(-12deg) scale(1.15); }
+            50% { transform: rotate(12deg) scale(1.15); }
+        }
+        
+        /* 眨眼覆盖层 */
+        .cat-avatar::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            border-radius: 50%;
+            background: linear-gradient(
+                to bottom,
+                transparent 38%,
+                rgba(255,255,255,0.9) 38%,
+                rgba(255,255,255,0.9) 42%,
+                transparent 42%
+            );
+            opacity: 0;
+            animation: catBlink 4s ease-in-out infinite;
+            z-index: 3;
+            pointer-events: none;
+        }
+        
+        @keyframes catBlink {
+            0%, 90%, 100% { opacity: 0; }
+            93%, 97% { opacity: 1; }
+        }
+        
+        /* 招手小爪子 */
+        .cat-paw {
+            position: absolute;
+            bottom: 15px;
+            right: -5px;
+            font-size: 28px;
+            z-index: 4;
+            animation: catWave 2s ease-in-out infinite;
+            filter: drop-shadow(0 2px 4px rgba(0,0,0,0.3));
+        }
+        
+        @keyframes catWave {
+            0%, 100% { transform: rotate(-20deg); }
+            50% { transform: rotate(20deg); }
+        }
+        
+        .cat-avatar:hover ~ .cat-paw,
+        .cat-container:hover .cat-paw {
+            animation: catWaveExcited 0.5s ease-in-out infinite;
+        }
+        
+        @keyframes catWaveExcited {
+            0%, 100% { transform: rotate(-30deg) scale(1.2); }
+            50% { transform: rotate(30deg) scale(1.2); }
+        }
+        
+        .cat-avatar:hover {
+            transform: scale(1.15) rotate(5deg);
+            box-shadow: 
+                0 12px 40px rgba(0,0,0,0.4),
+                0 0 80px rgba(147, 112, 219, 0.5),
+                0 0 120px rgba(96, 165, 250, 0.3);
+        }
+        
+        /* 点击时的歪头效果 */
+        .cat-avatar.tilt {
+            animation: catTilt 0.5s ease-in-out;
+        }
+        
+        @keyframes catTilt {
+            0%, 100% { transform: rotate(0deg); }
+            25% { transform: rotate(-15deg) scale(1.1); }
+            75% { transform: rotate(15deg) scale(1.1); }
+        }
+        
+        /* 点击时的爱心效果 */
+        .cat-avatar.love {
+            animation: catLove 0.6s ease-in-out;
+        }
+        
+        @keyframes catLove {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.2); }
+        }
+        
+        /* 星星喷发容器 */
+        .star-burst {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 0;
+            height: 0;
+            pointer-events: none;
+            z-index: 100;
+        }
+        
+        .star-particle {
+            position: absolute;
+            font-size: 16px;
+            animation: starFly 1s ease-out forwards;
+            opacity: 0;
+        }
+        
+        @keyframes starFly {
+            0% {
+                opacity: 1;
+                transform: translate(-50%, -50%) scale(0);
+            }
+            50% {
+                opacity: 1;
+            }
+            100% {
+                opacity: 0;
+                transform: translate(var(--tx), var(--ty)) scale(1) rotate(360deg);
+            }
+        }
+        
+        @keyframes catBounce {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-8px); }
+        }
+        
+        /* 对话气泡 */
+        .speech-bubble {
+            position: relative;
+            background: rgba(30, 30, 60, 0.9);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border: 1px solid rgba(255,255,255,0.15);
+            border-radius: 20px;
+            padding: 16px 20px;
+            margin-bottom: 12px;
+            max-width: 240px;
+            box-shadow: 0 8px 32px rgba(0,0,0,0.3);
+        }
+        
+        .speech-bubble::after {
+            content: '';
+            position: absolute;
+            bottom: -10px;
+            left: 50%;
+            transform: translateX(-50%);
+            border: 10px solid transparent;
+            border-top-color: rgba(30, 30, 60, 0.9);
+            border-bottom: 0;
+        }
+        
+        .speech-bubble h4 {
+            margin: 0 0 6px 0;
+            font-size: 15px;
+            font-weight: 600;
+            background: linear-gradient(90deg, #fff, #A78BFA, #60A5FA);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        
+        .speech-bubble p {
+            margin: 0;
+            font-size: 13px;
+            color: rgba(255,255,255,0.7);
+            line-height: 1.4;
+            transition: opacity 0.15s ease;
+        }
+        
+        /* 闪烁眼睛效果 */
+        .sparkle-eyes {
+            position: absolute;
+            top: -5px;
+            right: -5px;
+            font-size: 20px;
+            animation: sparkle 2s ease-in-out infinite;
+        }
+        
+        @keyframes sparkle {
+            0%, 100% { opacity: 1; transform: scale(1); }
+            50% { opacity: 0.5; transform: scale(0.8); }
+        }
+        
+        /* 按钮组 */
+        .guide-actions {
+            display: flex;
+            gap: 10px;
+            justify-content: center;
+            position: relative;
+            z-index: 2;
+        }
+        
+        .guide-btn {
+            padding: 12px 24px;
+            border-radius: 25px;
+            font-size: 14px;
+            font-weight: 600;
+            text-decoration: none;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .guide-btn.login {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: #fff;
+            box-shadow: 0 4px 20px rgba(102, 126, 234, 0.4);
+        }
+        
+        .guide-btn.login:hover {
+            transform: translateY(-3px) scale(1.05);
+            box-shadow: 0 8px 30px rgba(102, 126, 234, 0.6);
+        }
+        
+        .guide-btn.register {
+            background: rgba(255,255,255,0.1);
+            color: #fff;
+            border: 1px solid rgba(255,255,255,0.2);
+            backdrop-filter: blur(10px);
+        }
+        
+        .guide-btn.register:hover {
+            background: rgba(255,255,255,0.2);
+            transform: translateY(-3px);
+        }
+        
+        /* 关闭按钮 */
+        .guide-close {
+            position: absolute;
+            top: -10px;
+            right: -10px;
+            width: 28px;
+            height: 28px;
+            background: rgba(0,0,0,0.5);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255,255,255,0.2);
+            border-radius: 50%;
+            color: #fff;
+            font-size: 16px;
+            cursor: pointer;
+            z-index: 10;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .guide-close:hover {
+            background: rgba(255,100,100,0.7);
+            transform: scale(1.1) rotate(90deg);
+        }
+        
+        /* 隐藏状态 */
+        .login-guide-card.hidden {
+            display: none;
+        }
+        
+        /* 移动端适配 */
+        @media (max-width: 480px) {
+            .login-guide-card {
+                bottom: 90px;
+                right: 10px;
+                left: 10px;
+            }
+            .cloud-wrapper {
+                width: 160px;
+            }
+            .cat-avatar {
+                width: 100px;
+                height: 100px;
+            }
+            .speech-bubble {
+                max-width: 200px;
+                padding: 12px 16px;
+            }
+        }
+    </style>
+    
+    <!-- 星空漩涡过渡效果样式 -->
+    <style>
+        /* 五个模块旋转缩小过渡效果 */
+        .feature-item {
+            transition: all 1s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+    </style>
+</head>
+<body>
+    <!-- 星空漩涡过渡效果 -->
+
+    
+    <!-- 视频背景 -->
+    <video class="video-bg" autoplay muted loop playsinline preload="auto" style="image-rendering: auto;">
+        <source src="./images/bg-video.mp4" type="video/mp4">
+    </video>
+    
+    <!-- 主界面 -->
+    <div class="home-header">
+        <h1>🌟 农大闲置</h1>
+        <p>探索校园闲置 开启循环生活</p>
+    </div>
+    
+    <div class="home-container">
+        <div class="feature-ring">
+            <!-- 中心 -->
+            <div class="center-indicator" onclick="awakenAll()">
+                <span class="logo">✨</span>
+                <span class="text">点击唤醒</span>
+            </div>
+            
+            <!-- 发布闲置 -->
+            <a href="explore.html" class="feature-item top">
+                <span class="icon">📦</span>
+                <span class="label">发布闲置</span>
+            </a>
+            
+            <!-- 个人中心 -->
+            <a href="explore.html" class="feature-item left">
+                <span class="icon">👤</span>
+                <span class="label">个人中心</span>
+            </a>
+            
+            <!-- 公益转赠 -->
+            <a href="explore.html" class="feature-item right">
+                <span class="icon">💝</span>
+                <span class="label">公益转赠</span>
+            </a>
+            
+            <!-- 碳足迹 -->
+            <a href="explore.html" class="feature-item bottom-left">
+                <span class="icon">🌱</span>
+                <span class="label">碳足迹</span>
+            </a>
+            
+            <!-- 需求广场 -->
+            <a href="explore.html" class="feature-item bottom-right">
+                <span class="icon">🔍</span>
+                <span class="label">需求广场</span>
+            </a>
+        </div>
+    </div>
+    
+    <!-- 登录引导悬浮卡片 - 小猫云朵版 -->
+    <div class="login-guide-card" id="loginGuide">
+        <button class="guide-close" onclick="closeLoginGuide()">×</button>
+        
+        <div class="cloud-wrapper">
+            <!-- 对话气泡 -->
+            <div class="speech-bubble">
+                <h4>✨ 欢迎来到农大闲置</h4>
+                <p>登录后解锁更多功能，开启你的校园循环之旅~</p>
+                <span class="sparkle-eyes">✨</span>
+            </div>
+            
+            <!-- 小猫头像 -->
+            <div class="cat-container">
+                <img src="./images/cat-waving.jpg" alt="欢迎小猫" class="cat-avatar">
+                <span class="cat-paw">🐾</span>
+            </div>
+        </div>
+        
+        <!-- 按钮 -->
+        <div class="guide-actions">
+            <a href="user_login.html" class="guide-btn login">登录</a>
+            <a href="user_register.html" class="guide-btn register">注册</a>
+        </div>
+    </div>
+    
+    <!-- 登录弹窗 -->
+    <div class="modal-overlay" id="loginModal">
+        <div class="modal">
+            <h2>登录农大闲置</h2>
+            <p>发现更多校园闲置，开启绿色循环生活</p>
+            <button class="modal-btn" onclick="goToLogin()">立即登录</button>
+            <button class="modal-btn secondary" onclick="goToRegister()">注册账号</button>
+        </div>
+    </div>
+    
+    <script>
+        // 唤醒所有功能 - 同时闪亮
+        function awakenAll() {
+            const items = document.querySelectorAll('.feature-item');
+            items.forEach((item) => {
+                item.classList.add('awaken');
+            });
+            // 2秒后移除动画
+            setTimeout(() => {
+                items.forEach((item) => {
+                    item.classList.remove('awaken');
+                });
+            }, 2000);
+        }
+        
+        // 动态添加唤醒动画样式
+        (function() {
+            const s = document.createElement('style');
+            s.id = 'awaken-dynamic';
+            s.textContent = `
+                .feature-item.awaken { animation: awakenEffect 0.35s ease-in-out 3 !important; }
+                .feature-item.awaken .icon { animation: iconEffect 0.35s ease-in-out 3 !important; }
+                @keyframes awakenEffect {
+                    0%,100% { 
+                        box-shadow: 
+                            0 0 40px rgba(96,165,250,0.4),
+                            0 0 8px #60A5FA at 10% 10%,
+                            0 0 8px #818CF8 at 30% 20%,
+                            0 0 8px #C084FC at 50% 5%,
+                            0 0 8px #F472B6 at 70% 15%,
+                            0 0 8px #FB923C at 90% 25%,
+                            0 0 8px #FBBF24 at 15% 85%,
+                            0 0 8px #34D399 at 35% 90%,
+                            0 0 8px #22D3EE at 55% 95%,
+                            0 0 8px #60A5FA at 75% 88%,
+                            0 0 8px #818CF8 at 85% 92%,
+                            0 0 8px #60A5FA at 5% 50%,
+                            0 0 8px #C084FC at 95% 50%;
+                        border-color: rgba(255,255,255,0.4);
+                        background: rgba(255,255,255,0.08);
+                    }
+                    50% { 
+                        box-shadow: 
+                            0 0 200px rgba(255,255,255,0.9),
+                            0 0 300px rgba(96,165,250,1),
+                            0 0 400px rgba(139,92,246,0.8),
+                            0 0 80px #fff at 10% 10%,
+                            0 0 90px #fff at 30% 20%,
+                            0 0 100px #fff at 50% 5%,
+                            0 0 90px #fff at 70% 15%,
+                            0 0 80px #fff at 90% 25%,
+                            0 0 90px #fff at 15% 85%,
+                            0 0 80px #fff at 35% 90%,
+                            0 0 90px #fff at 55% 95%,
+                            0 0 80px #fff at 75% 88%,
+                            0 0 90px #fff at 85% 92%,
+                            0 0 80px #fff at 5% 50%,
+                            0 0 90px #fff at 95% 50%;
+                        border-color: #fff;
+                        background: rgba(255,255,255,0.35);
+                    }
+                }
+                @keyframes iconEffect {
+                    0% { filter: drop-shadow(0 0 20px #fff) drop-shadow(0 0 40px rgba(96,165,250,0.5)); transform: scale(1); }
+                    50% { filter: drop-shadow(0 0 80px #fff) drop-shadow(0 0 150px #60A5FA) drop-shadow(0 0 200px rgba(139,92,246,1)); transform: scale(2); }
+                    100% { filter: drop-shadow(0 0 20px #fff) drop-shadow(0 0 40px rgba(96,165,250,0.5)); transform: scale(1); }
+                }
+            `;
+            document.head.appendChild(s);
+        })();
+        
+        // 登录弹窗
+        function showLoginModal() {
+            document.getElementById('loginModal').classList.add('show');
+        }
+        
+        function goToLogin() {
+            window.location.href = 'user_login.html';
+        }
+        
+        function goToRegister() {
+            window.location.href = 'user_register.html';
+        }
+        
+        // 点击弹窗外部关闭
+        document.getElementById('loginModal').addEventListener('click', function(e) {
+            if (e.target === this) {
+                this.classList.remove('show');
+            }
+        });
+        
+        // 添加脉冲动画
+        const style = document.createElement('style');
+        style.textContent = `
+            @keyframes pulse {
+            0%, 100% {
+            }
+            50% {
+            }
+        }
+
+        @keyframes oldPulse {
+                0%, 100% { transform: scale(1); }
+                50% { transform: scale(2); }
+            }
+            @keyframes awaken {
+                0% {
+                    box-shadow: 0 0 20px rgba(255,255,255,0.1), inset 0 0 10px rgba(255,255,255,0.05);
+                    border-color: rgba(255,255,255,0.15);
+                }
+                50% {
+                    box-shadow: 0 0 60px rgba(96,165,250,0.8), 0 0 120px rgba(192,132,252,0.5), inset 0 0 30px rgba(96,165,250,0.2);
+                    border-color: rgba(96,165,250,0.8);
+                }
+                100% {
+                    box-shadow: 0 0 20px rgba(96,165,250,0.3), 0 0 40px rgba(192,132,252,0.2), inset 0 0 10px rgba(96,165,250,0.1);
+                    border-color: rgba(96,165,250,0.5);
+                }
+            }
+
+        @keyframes oldAwaken {
+                0% { 
+                    transform: scale(1); 
+                    box-shadow: 0 0 20px rgba(255,255,255,0.2);
+                }
+                50% { 
+                    transform: scale(2.1); 
+                    box-shadow: 0 0 40px rgba(255,255,255,0.8), 0 0 60px rgba(96,165,250,0.5);
+                }
+                100% { 
+                    transform: scale(1); 
+                    box-shadow: 0 0 20px rgba(255,255,255,0.2);
+                }
+            }
+            .feature-item.awaken {
+                animation: awaken 0.8s ease-in-out infinite;
+            }
+            .feature-item.awaken .glow-ring {
+                animation: ringGlow 0.5s ease-in-out infinite alternate;
+            }
+            @keyframes ringGlow {
+                from { opacity: 0.5; }
+                to { opacity: 1; }
+            }
+        `;
+        document.head.appendChild(style);
+        
+        // 关闭登录引导卡片
+        function closeLoginGuide() {
+            const guide = document.getElementById('loginGuide');
+            guide.classList.add('hidden');
+            // 存储到本地，7天内不再显示
+            localStorage.setItem('loginGuideClosed', Date.now().toString());
+        }
+        
+        // ========== 小猫互动效果 ==========
+        const catAvatar = document.querySelector('.cat-avatar');
+        let clickCount = 0;
+        
+        if (catAvatar) {
+            // 点击小猫的效果
+            catAvatar.addEventListener('click', function(e) {
+                clickCount++;
+                
+                // 移除之前的动画类
+                this.classList.remove('tilt', 'love');
+                
+                // 交替使用歪头和爱心效果
+                if (clickCount % 2 === 1) {
+                    this.classList.add('tilt');
+                    // 创建星星喷发
+                    createStarBurst(this);
+                    // 更新气泡文字
+                    updateSpeechBubble('喵呜~ 主人想登录吗？🐾');
+                } else {
+                    this.classList.add('love');
+                    // 创建爱心喷发
+                    createHeartBurst(this);
+                    // 更新气泡文字
+                    updateSpeechBubble('喜欢就登录吧~ 💕');
+                }
+                
+                // 动画结束后移除类
+                setTimeout(() => {
+                    this.classList.remove('tilt', 'love');
+                }, 600);
+            });
+            
+            // 鼠标进入时添加光晕
+            catAvatar.addEventListener('mouseenter', function() {
+                this.style.boxShadow = `
+                    0 12px 40px rgba(0,0,0,0.4),
+                    0 0 80px rgba(147, 112, 219, 0.5),
+                    0 0 120px rgba(96, 165, 250, 0.3)
+                `;
+            });
+            
+            // 鼠标离开时恢复
+            catAvatar.addEventListener('mouseleave', function() {
+                this.style.boxShadow = `
+                    0 8px 32px rgba(0,0,0,0.3),
+                    0 0 60px rgba(147, 112, 219, 0.3)
+                `;
+            });
+        }
+        
+        // 创建星星喷发效果
+        function createStarBurst(element) {
+            const stars = ['✨', '⭐', '🌟', '💫', '✦', '✧'];
+            const container = document.createElement('div');
+            container.className = 'star-burst';
+            element.parentElement.appendChild(container);
+            
+            for (let i = 0; i < 12; i++) {
+                const star = document.createElement('span');
+                star.className = 'star-particle';
+                star.textContent = stars[Math.floor(Math.random() * stars.length)];
+                
+                const angle = (i / 12) * Math.PI * 2;
+                const distance = 60 + Math.random() * 40;
+                const tx = Math.cos(angle) * distance + 'px';
+                const ty = Math.sin(angle) * distance - 30 + 'px';
+                
+                star.style.setProperty('--tx', tx);
+                star.style.setProperty('--ty', ty);
+                star.style.animationDelay = (i * 0.03) + 's';
+                
+                container.appendChild(star);
+            }
+            
+            // 1秒后移除容器
+            setTimeout(() => container.remove(), 1000);
+        }
+        
+        // 创建爱心喷发效果
+        function createHeartBurst(element) {
+            const hearts = ['💕', '💖', '💗', '💓', '💝', '💘'];
+            const container = document.createElement('div');
+            container.className = 'star-burst';
+            element.parentElement.appendChild(container);
+            
+            for (let i = 0; i < 8; i++) {
+                const heart = document.createElement('span');
+                heart.className = 'star-particle';
+                heart.textContent = hearts[Math.floor(Math.random() * hearts.length)];
+                
+                const angle = (i / 8) * Math.PI * 2;
+                const distance = 50 + Math.random() * 30;
+                const tx = Math.cos(angle) * distance + 'px';
+                const ty = Math.sin(angle) * distance - 20 + 'px';
+                
+                heart.style.setProperty('--tx', tx);
+                heart.style.setProperty('--ty', ty);
+                heart.style.animationDelay = (i * 0.05) + 's';
+                
+                container.appendChild(heart);
+            }
+            
+            setTimeout(() => container.remove(), 1000);
+        }
+        
+        // 更新对话气泡内容
+        function updateSpeechBubble(text) {
+            const speechBubble = document.querySelector('.speech-bubble p');
+            if (speechBubble) {
+                speechBubble.style.opacity = '0';
+                setTimeout(() => {
+                    speechBubble.textContent = text;
+                    speechBubble.style.opacity = '1';
+                }, 150);
+            }
+        }
+        
+        // 小猫轻微跟随鼠标（视差效果）
+        const catContainer = document.querySelector('.cat-container');
+        document.addEventListener('mousemove', function(e) {
+            if (catContainer && !catContainer.matches(':hover')) {
+                const rect = catContainer.getBoundingClientRect();
+                const catCenterX = rect.left + rect.width / 2;
+                const catCenterY = rect.top + rect.height / 2;
+                
+                const deltaX = (e.clientX - catCenterX) / 50;
+                const deltaY = (e.clientY - catCenterY) / 50;
+                
+                // 限制移动范围
+                const moveX = Math.max(-5, Math.min(5, deltaX));
+                const moveY = Math.max(-5, Math.min(5, deltaY));
+                
+                catContainer.style.transform = `translate(${moveX}px, ${moveY}px)`;
+            }
+        });
+        
+        // 鼠标离开卡片区域时重置位置
+        document.querySelector('.login-guide-card')?.addEventListener('mouseleave', function() {
+            if (catContainer) {
+                catContainer.style.transform = '';
+            }
+        });
+        
+        // 页面加载时检查是否显示引导
+        document.addEventListener('DOMContentLoaded', function() {
+            // 为所有跳转链接添加模块旋转缩小效果
+            document.querySelectorAll('a[href="explore.html"]').forEach(link => {
+                link.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    triggerModulesZoom('explore.html');
+                });
+            });
+            
+            const lastClosed = localStorage.getItem('loginGuideClosed');
+            const now = Date.now();
+            const sevenDays = 7 * 24 * 60 * 60 * 1000;
+            
+            // 如果7天内关闭过，不再显示
+            if (lastClosed && (now - parseInt(lastClosed)) < sevenDays) {
+                document.getElementById('loginGuide').classList.add('hidden');
+            }
+            
+            // 双击右下角召唤回小猫
+            document.addEventListener('dblclick', function(e) {
+                const x = e.clientX;
+                const y = e.clientY;
+                const w = window.innerWidth;
+                const h = window.innerHeight;
+                
+                // 右下角区域 (右侧1/4 + 底部1/3)
+                if (x > w * 0.75 && y > h * 0.66) {
+                    const guide = document.getElementById('loginGuide');
+                    guide.classList.remove('hidden');
+                    localStorage.removeItem('loginGuideClosed');
+                    
+                    // 添加召唤动画
+                    const card = guide.querySelector('.login-guide-card');
+                    if (card) {
+                        card.style.animation = 'none';
+                        card.offsetHeight; // 触发重排
+                        card.style.animation = 'loginGuideAppear 0.6s ease-out';
+                    }
+                }
+            });
+        });
+        
+        // 五个模块：先膨胀再旋转缩小吸入效果
+        function triggerModulesZoom(targetUrl) {
+            const modules = document.querySelectorAll('.feature-item');
+            const header = document.querySelector('.home-header');
+            const loginGuide = document.getElementById('loginGuide');
+            
+            if (modules.length === 0) {
+                window.location.href = targetUrl;
+                return;
+            }
+            
+            // 隐藏其他元素
+            if (loginGuide) loginGuide.style.opacity = '0';
+            if (header) header.style.opacity = '0';
+            
+            // 获取屏幕中心
+            const centerX = window.innerWidth / 2;
+            const centerY = window.innerHeight / 2;
+            
+            // 五个模块围绕中心的位置（初始小圆）
+            const smallRadius = Math.min(window.innerWidth, window.innerHeight) * 0.15;
+            const largeRadius = Math.min(window.innerWidth, window.innerHeight) * 0.35; // 膨胀后的大圆
+            const startAngles = [0, 72, 144, 216, 288];
+            
+            // 初始化模块位置到小圆周上
+            modules.forEach((mod, index) => {
+                const angle = (startAngles[index] - 90) * Math.PI / 180;
+                const x = centerX + smallRadius * Math.cos(angle);
+                const y = centerY + smallRadius * Math.sin(angle);
+                
+                mod.style.position = 'fixed';
+                mod.style.left = x + 'px';
+                mod.style.top = y + 'px';
+                mod.style.transform = 'translate(-50%, -50%) scale(1)';
+                mod.style.zIndex = '10000';
+                mod.style.transition = 'none';
+                mod.style.opacity = '1';
+            });
+            
+            // 动画参数
+            const expandDuration = 1500;  // 膨胀阶段 1.5秒
+            const shrinkDuration = 5500;  // 缩小吸入阶段 5.5秒
+            const totalDuration = expandDuration + shrinkDuration;
+            const startTime = performance.now();
+            const totalRotation = 8; // 旋转8圈
+            
+            function animate(currentTime) {
+                const elapsed = currentTime - startTime;
+                
+                if (elapsed < expandDuration) {
+                    // 阶段1：向外膨胀
+                    const progress = elapsed / expandDuration;
+                    const easeProgress = 1 - Math.pow(1 - progress, 3); // 缓出
+                    
+                    const currentRadius = smallRadius + (largeRadius - smallRadius) * easeProgress;
+                    
+                    modules.forEach((mod, index) => {
+                        const angle = (startAngles[index] - 90 + progress * 360) * Math.PI / 180;
+                        const x = centerX + currentRadius * Math.cos(angle);
+                        const y = centerY + currentRadius * Math.sin(angle);
+                        
+                        mod.style.left = x + 'px';
+                        mod.style.top = y + 'px';
+                        mod.style.transform = `translate(-50%, -50%) scale(${1 + easeProgress * 0.3})`;
+                    });
+                    
+                    requestAnimationFrame(animate);
+                } else if (elapsed < totalDuration) {
+                    // 阶段2：旋转缩小吸入
+                    const progress = (elapsed - expandDuration) / shrinkDuration;
+                    const easeProgress = 1 - Math.pow(1 - progress, 2); // 缓出
+                    
+                    const currentRadius = largeRadius * (1 - easeProgress);
+                    
+                    modules.forEach((mod, index) => {
+                        const angle = (startAngles[index] - 90 + 360 + easeProgress * totalRotation * 360) * Math.PI / 180;
+                        const x = centerX + currentRadius * Math.cos(angle);
+                        const y = centerY + currentRadius * Math.sin(angle);
+                        
+                        mod.style.left = x + 'px';
+                        mod.style.top = y + 'px';
+                        mod.style.transform = `translate(-50%, -50%) scale(${1.3 * (1 - easeProgress)})`;
+                    });
+                    
+                    requestAnimationFrame(animate);
+                } else {
+                    // 动画结束，跳转
+                    modules.forEach(mod => mod.style.opacity = '0');
+                    setTimeout(() => {
+                        window.location.href = targetUrl;
+                    }, 200);
+                }
+            }
+            
+            requestAnimationFrame(animate);
+        }
+    </script>
+</body>
+</html>

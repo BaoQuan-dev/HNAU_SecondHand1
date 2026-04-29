@@ -1,0 +1,971 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>管理员后台 - 农大闲置</title>
+    <link rel="stylesheet" href="./style/main.css">
+    
+    <!-- 引入公共脚本 -->
+    <script src="./script/common.js"></script>
+    <style>
+        /* ========== 星空背景 ========== */
+        body { position: relative; }
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
+            z-index: -1;
+            background: url('./images/bg-starry.jpg') center center / cover no-repeat;
+        }
+        
+        /* ========== 管理员后台 - 星空玻璃拟态风格 ========== */
+        
+        .page-header {
+            padding: 80px 20px 10px;
+            text-align: left;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        
+        .page-header h1 {
+            margin: 0 0 8px 0;
+            font-size: 26px;
+            font-weight: 700;
+            background: transparent;
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        
+        .page-header p {
+            margin: 0;
+            color: rgba(255,255,255,0.6);
+            font-size: 13px;
+        }
+        
+        .page-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 24px 16px 100px;
+        }
+        
+        /* 返回按钮 - 玻璃拟态风格 */
+        .ai-back-btn {
+            position: fixed;
+            top: 20px;
+            left: 16px;
+            background: rgba(255,255,255,0.05);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            color: #fff;
+            border: 1px solid rgba(255,255,255,0.15);
+            padding: 10px 16px;
+            border-radius: 25px;
+            font-weight: 600;
+            cursor: pointer;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.3);
+            z-index: 100;
+            text-decoration: none;
+            transition: all 0.3s ease;
+        }
+        
+        .ai-back-btn:hover {
+            background: rgba(255,255,255,0.1);
+            transform: translateY(-2px);
+            box-shadow: 0 6px 25px rgba(96,165,250,0.3);
+        }
+        
+        /* ========== 统计卡片 ========== */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 16px;
+            margin-bottom: 24px;
+        }
+        
+        @media (max-width: 768px) {
+            .stats-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+        
+        .stat-card {
+            background: transparent;
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border: 1px solid rgba(255,255,255,0.12);
+            border-radius: 16px;
+            padding: 20px;
+            text-align: center;
+            transition: all 0.3s ease;
+        }
+        
+        .stat-card:hover {
+            transform: translateY(-2px);
+            border-color: rgba(96,165,250,0.3);
+        }
+        
+        .stat-icon {
+            font-size: 32px;
+            margin-bottom: 8px;
+        }
+        
+        .stat-value {
+            font-size: 28px;
+            font-weight: 700;
+            background: transparent;
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 4px;
+        }
+        
+        .stat-label {
+            font-size: 13px;
+            color: rgba(255,255,255,0.5);
+        }
+        
+        /* ========== 标签页 ========== */
+        .tabs-container {
+            margin-bottom: 20px;
+        }
+        
+        .tabs-header {
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap;
+            margin-bottom: 20px;
+        }
+        
+        .tab-btn {
+            padding: 10px 20px;
+            background: rgba(255,255,255,0.05);
+            border: 1px solid rgba(255,255,255,0.1);
+            border-radius: 10px;
+            color: rgba(255,255,255,0.6);
+            font-size: 14px;
+            cursor: pointer;
+            transition: all 0.25s ease;
+        }
+        
+        .tab-btn:hover {
+            background: rgba(255,255,255,0.1);
+            color: #fff;
+        }
+        
+        .tab-btn.active {
+            background: rgba(96,165,250,0.2);
+            border-color: rgba(96,165,250,0.4);
+            color: #60a5fa;
+        }
+        
+        .tab-content {
+            display: none;
+        }
+        
+        .tab-content.active {
+            display: block;
+        }
+        
+        /* ========== 数据表格 ========== */
+        .data-card {
+            background: transparent;
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border: 1px solid rgba(255,255,255,0.12);
+            border-radius: 20px;
+            box-shadow: 0 8px 32px rgba(0,0,0,0.3);
+            overflow: hidden;
+            margin-bottom: 20px;
+        }
+        
+        .data-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 16px 20px;
+            border-bottom: 1px solid rgba(255,255,255,0.08);
+        }
+        
+        .data-title {
+            font-size: 16px;
+            font-weight: 600;
+            background: transparent;
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        
+        .data-actions {
+            display: flex;
+            gap: 8px;
+        }
+        
+        .data-btn {
+            padding: 6px 12px;
+            background: rgba(96,165,250,0.15);
+            border: 1px solid rgba(96,165,250,0.25);
+            border-radius: 6px;
+            color: #60a5fa;
+            font-size: 12px;
+            cursor: pointer;
+            transition: all 0.25s ease;
+        }
+        
+        .data-btn:hover {
+            background: rgba(96,165,250,0.3);
+        }
+        
+        .data-table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        
+        .data-table th,
+        .data-table td {
+            padding: 14px 20px;
+            text-align: left;
+            border-bottom: 1px solid rgba(255,255,255,0.05);
+        }
+        
+        .data-table th {
+            font-size: 12px;
+            font-weight: 600;
+            color: rgba(255,255,255,0.4);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+        
+        .data-table td {
+            font-size: 14px;
+            color: rgba(255,255,255,0.8);
+        }
+        
+        .data-table tr:hover td {
+            background: rgba(255,255,255,0.03);
+        }
+        
+        .data-table tr:last-child td {
+            border-bottom: none;
+        }
+        
+        /* ========== 状态标签 ========== */
+        .status-tag {
+            display: inline-block;
+            padding: 4px 10px;
+            border-radius: 12px;
+            font-size: 11px;
+            font-weight: 600;
+        }
+        
+        .status-tag.pending {
+            background: rgba(251,191,36,0.15);
+            color: #fbbf24;
+        }
+        
+        .status-tag.approved {
+            background: rgba(52,211,153,0.15);
+            color: #34d399;
+        }
+        
+        .status-tag.rejected {
+            background: rgba(239,68,68,0.15);
+            color: #ef4444;
+        }
+        
+        .status-tag.active {
+            background: rgba(96,165,250,0.15);
+            color: #60a5fa;
+        }
+        
+        /* ========== 操作按钮 ========== */
+        .action-btns {
+            display: flex;
+            gap: 8px;
+        }
+        
+        .action-btn {
+            padding: 6px 12px;
+            border-radius: 6px;
+            font-size: 12px;
+            cursor: pointer;
+            transition: all 0.25s ease;
+            border: none;
+        }
+        
+        .action-btn.approve {
+            background: rgba(52,211,153,0.15);
+            color: #34d399;
+        }
+        
+        .action-btn.approve:hover {
+            background: rgba(52,211,153,0.3);
+        }
+        
+        .action-btn.reject {
+            background: rgba(239,68,68,0.15);
+            color: #ef4444;
+        }
+        
+        .action-btn.reject:hover {
+            background: rgba(239,68,68,0.3);
+        }
+        
+        .action-btn.view {
+            background: rgba(96,165,250,0.15);
+            color: #60a5fa;
+        }
+        
+        .action-btn.view:hover {
+            background: rgba(96,165,250,0.3);
+        }
+        
+        /* ========== 分页 ========== */
+        .pagination {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 8px;
+            padding: 20px;
+        }
+        
+        .page-btn {
+            width: 36px;
+            height: 36px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: rgba(255,255,255,0.05);
+            border: 1px solid rgba(255,255,255,0.1);
+            border-radius: 8px;
+            color: rgba(255,255,255,0.6);
+            font-size: 14px;
+            cursor: pointer;
+            transition: all 0.25s ease;
+        }
+        
+        .page-btn:hover {
+            background: rgba(255,255,255,0.1);
+            color: #fff;
+        }
+        
+        .page-btn.active {
+            background: rgba(96,165,250,0.2);
+            border-color: rgba(96,165,250,0.4);
+            color: #60a5fa;
+        }
+        
+        .page-btn:disabled {
+            opacity: 0.3;
+            cursor: not-allowed;
+        }
+        
+        /* ========== 搜索栏 ========== */
+        .search-bar {
+            display: flex;
+            gap: 12px;
+            margin-bottom: 20px;
+        }
+        
+        .search-input {
+            flex: 1;
+            padding: 12px 16px;
+            background: rgba(255,255,255,0.08);
+            border: 1px solid rgba(255,255,255,0.15);
+            border-radius: 12px;
+            font-size: 14px;
+            color: #fff;
+            outline: none;
+            transition: all 0.25s ease;
+        }
+        
+        .search-input:focus {
+            border-color: rgba(96,165,250,0.5);
+            background: rgba(255,255,255,0.12);
+        }
+        
+        .search-input::placeholder {
+            color: rgba(255,255,255,0.4);
+        }
+        
+        .search-btn {
+            padding: 12px 24px;
+            background: rgba(96,165,250,0.15);
+            border: 1px solid rgba(96,165,250,0.25);
+            border-radius: 12px;
+            color: #60a5fa;
+            font-size: 14px;
+            cursor: pointer;
+            transition: all 0.25s ease;
+        }
+        
+        .search-btn:hover {
+            background: rgba(96,165,250,0.3);
+        }
+    
+        /* 页面头部 */
+        .page-header {
+            padding: 80px 20px 20px;
+            text-align: left;
+            max-width: 900px;
+            margin: 0 auto;
+        }
+        .page-header h1 {
+            font-size: 28px;
+            font-weight: 700;
+            margin: 0 0 8px 0;
+            background: linear-gradient(135deg, #fff 0%, #60A5FA 50%, #C084FC 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        .page-header p {
+            font-size: 14px;
+            color: rgba(255,255,255,0.6);
+            margin: 0;
+        }
+        .page-container {
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 0 16px 100px;
+        }
+        </style>
+</head>
+<body>
+    <!-- 返回按钮 -->
+    <a href="explore.html" class="ai-back-btn">← 返回</a>
+    
+    <!-- 页面标题 -->
+    <div class="page-header">
+        <h1>⚙️ 管理员后台</h1>
+        <p>管理平台数据与用户认证审核</p>
+    </div>
+    
+    <div class="page-container">
+        <!-- 统计卡片 -->
+        <div class="stats-grid">
+            <div class="stat-card">
+                <div class="stat-icon">📦</div>
+                <div class="stat-value">128</div>
+                <div class="stat-label">闲置物品</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-icon">👥</div>
+                <div class="stat-value">56</div>
+                <div class="stat-label">认证用户</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-icon">⏳</div>
+                <div class="stat-value">12</div>
+                <div class="stat-label">待审核</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-icon">🎁</div>
+                <div class="stat-value">34</div>
+                <div class="stat-label">公益转赠</div>
+            </div>
+        </div>
+
+        <!-- 标签页 -->
+        <div class="tabs-container">
+            <div class="tabs-header">
+                <button class="tab-btn active" onclick="switchTab('users')">👥 用户管理</button>
+                <button class="tab-btn" onclick="switchTab('goods')">📦 物品管理</button>
+                <button class="tab-btn" onclick="switchTab('certifications')">🎓 认证审核</button>
+                <button class="tab-btn" onclick="switchTab('donations')">🎁 公益审核</button>
+            </div>
+
+            <!-- 用户管理 -->
+            <div id="tab-users" class="tab-content active">
+                <div class="search-bar">
+                    <input type="text" class="search-input" placeholder="搜索用户名、学号...">
+                    <button class="search-btn">🔍 搜索</button>
+                </div>
+                
+                <div class="data-card">
+                    <div class="data-header">
+                        <span class="data-title">用户列表</span>
+                        <div class="data-actions">
+                            <button class="data-btn">📊 导出数据</button>
+                        </div>
+                    </div>
+                    <table class="data-table">
+                        <thead>
+                            <tr>
+                                <th>用户ID</th>
+                                <th>用户名</th>
+                                <th>学号</th>
+                                <th>学院</th>
+                                <th>认证状态</th>
+                                <th>注册时间</th>
+                                <th>操作</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>#1001</td>
+                                <td>张同学</td>
+                                <td>2022010123</td>
+                                <td>农学院</td>
+                                <td><span class="status-tag approved">已认证</span></td>
+                                <td>2024-01-15</td>
+                                <td>
+                                    <div class="action-btns">
+                                        <button class="action-btn view">查看</button>
+                                        <button class="action-btn reject">禁用</button>
+                                    </div>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>#1002</td>
+                                <td>李同学</td>
+                                <td>2022010234</td>
+                                <td>机电学院</td>
+                                <td><span class="status-tag approved">已认证</span></td>
+                                <td>2024-01-16</td>
+                                <td>
+                                    <div class="action-btns">
+                                        <button class="action-btn view">查看</button>
+                                        <button class="action-btn reject">禁用</button>
+                                    </div>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>#1003</td>
+                                <td>王同学</td>
+                                <td>2023010456</td>
+                                <td>经管学院</td>
+                                <td><span class="status-tag pending">待审核</span></td>
+                                <td>2024-01-18</td>
+                                <td>
+                                    <div class="action-btns">
+                                        <button class="action-btn view">查看</button>
+                                        <button class="action-btn approve">审核</button>
+                                    </div>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    <div class="pagination">
+                        <button class="page-btn" disabled>‹</button>
+                        <button class="page-btn active">1</button>
+                        <button class="page-btn">2</button>
+                        <button class="page-btn">3</button>
+                        <button class="page-btn">›</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 物品管理 -->
+            <div id="tab-goods" class="tab-content">
+                <div class="search-bar">
+                    <input type="text" class="search-input" id="goodsSearchInput" placeholder="搜索物品名称..." oninput="searchGoods()">
+                    <button class="search-btn" onclick="searchGoods()">🔍 搜索</button>
+                </div>
+                
+                <div class="data-card">
+                    <div class="data-header">
+                        <span class="data-title">物品列表</span>
+                    </div>
+                    <table class="data-table">
+                        <thead>
+                            <tr>
+                                <th>物品ID</th>
+                                <th>物品名称</th>
+                                <th>分类</th>
+                                <th>价格</th>
+                                <th>发布者</th>
+                                <th>状态</th>
+                                <th>操作</th>
+                            </tr>
+                        </thead>
+                        <tbody id="goodsTableBody">
+                            <!-- 动态加载 -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- 认证审核 -->
+            <div id="tab-certifications" class="tab-content">
+                <div class="data-card">
+                    <div class="data-header">
+                        <span class="data-title">待审核认证申请</span>
+                    </div>
+                    <table class="data-table">
+                        <thead>
+                            <tr>
+                                <th>申请ID</th>
+                                <th>姓名</th>
+                                <th>学号</th>
+                                <th>学院</th>
+                                <th>提交时间</th>
+                                <th>操作</th>
+                            </tr>
+                        </thead>
+                        <tbody id="pendingCertTable">
+                            <tr><td colspan="6" style="text-align:center;padding:20px;color:#999;">暂无待审核申请</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- 公益审核 -->
+            <div id="tab-donations" class="tab-content">
+                <div class="data-card">
+                    <div class="data-header">
+                        <span class="data-title">待审核公益捐赠</span>
+                    </div>
+                    <table class="data-table">
+                        <thead>
+                            <tr>
+                                <th>捐赠ID</th>
+                                <th>物品名称</th>
+                                <th>捐赠者</th>
+                                <th>类型</th>
+                                <th>提交时间</th>
+                                <th>操作</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>#D001</td>
+                                <td>冬季衣物</td>
+                                <td>张同学</td>
+                                <td><span class="status-tag">物品捐赠</span></td>
+                                <td>2024-01-17 09:15</td>
+                                <td>
+                                    <div class="action-btns">
+                                        <button class="action-btn view">查看</button>
+                                        <button class="action-btn approve">通过</button>
+                                        <button class="action-btn reject">拒绝</button>
+                                    </div>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // 用户认证状态管理
+        const CertificationManager = {
+            // 获取待审核列表
+            getPending: function() {
+                const pending = localStorage.getItem('pendingCertifications');
+                return pending ? JSON.parse(pending) : [];
+            },
+            
+            // 保存待审核列表
+            setPending: function(list) {
+                localStorage.setItem('pendingCertifications', JSON.stringify(list));
+            },
+            
+            // 添加待审核
+            add: function(data) {
+                const list = this.getPending();
+                list.push({
+                    id: 'C' + Date.now(),
+                    ...data,
+                    time: new Date().toLocaleString()
+                });
+                this.setPending(list);
+            },
+            
+            // 审核通过
+            approve: function(id) {
+                const list = this.getPending();
+                const index = list.findIndex(item => item.id === id);
+                if (index > -1) {
+                    const approved = list.splice(index, 1)[0];
+                    this.setPending(list);
+                    
+                    // 保存到已认证列表
+                    const approvedList = JSON.parse(localStorage.getItem('approvedCertifications') || '[]');
+                    approvedList.push({...approved, status: 'approved'});
+                    localStorage.setItem('approvedCertifications', JSON.stringify(approvedList));
+                    
+                    // 使用 Auth 类更新用户认证状态（通过用户名查找）
+                    if (approved.username) {
+                        Auth.updateUserAuthStatus(approved.username, 'approved');
+                    }
+                    // 同步更新 localStorage
+                    localStorage.setItem('isCertified', 'true');
+                    localStorage.removeItem('isPending');
+                    
+                    return true;
+                }
+                return false;
+            },
+            
+            // 审核拒绝
+            reject: function(id) {
+                const list = this.getPending();
+                const index = list.findIndex(item => item.id === id);
+                if (index > -1) {
+                    list.splice(index, 1);
+                    this.setPending(list);
+                    return true;
+                }
+                return false;
+            },
+            
+            // 渲染待审核列表
+            render: function() {
+                const pending = this.getPending();
+                const tbody = document.getElementById('pendingCertTable');
+                if (!tbody) return;
+                
+                if (pending.length === 0) {
+                    tbody.innerHTML = '<tr><td colspan="6" style="text-align:center;padding:20px;color:#999;">暂无待审核申请</td></tr>';
+                    return;
+                }
+                
+                tbody.innerHTML = pending.map(item => `
+                    <tr>
+                        <td>${item.id}</td>
+                        <td>${item.realName || '-'}</td>
+                        <td>${item.studentId || '-'}</td>
+                        <td>${item.college || '-'}</td>
+                        <td>${item.time || '-'}</td>
+                        <td>
+                            <div class="action-btns">
+                                <button class="action-btn view" onclick="viewCert('${item.id}')">查看</button>
+                                <button class="action-btn approve" onclick="approveCert('${item.id}')">通过</button>
+                                <button class="action-btn reject" onclick="rejectCert('${item.id}')">拒绝</button>
+                            </div>
+                        </td>
+                    </tr>
+                `).join('');
+            },
+        };
+        
+        // 渲染待审核认证列表（兼容旧调用）
+        function renderPendingCertifications() {
+            CertificationManager.render();
+        }
+
+        function switchTab(tabName) {
+            // 移除所有active
+            document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
+            document.querySelectorAll('.tab-content').forEach(content => content.classList.remove('active'));
+            
+            // 添加active到当前
+            event.target.classList.add('active');
+            document.getElementById('tab-' + tabName).classList.add('active');
+            
+            // 如果是认证审核tab，刷新列表
+            if (tabName === 'certifications') {
+                renderPendingCertifications();
+            }
+            // 如果是公益审核tab，刷新列表
+            if (tabName === 'donations') {
+                loadDonationsList();
+            }
+        }
+        
+        // 加载公益转赠列表
+        function loadDonationsList() {
+            const tbody = document.querySelector('#tab-donations .data-table tbody');
+            const donations = JSON.parse(localStorage.getItem('hnau_admin_pending_donations') || '[]');
+            
+            if (donations.length === 0) {
+                tbody.innerHTML = '<tr><td colspan="6" style="text-align:center;padding:30px;color:#888;">暂无公益转赠记录</td></tr>';
+                return;
+            }
+            
+            tbody.innerHTML = donations.map(item => `
+                <tr>
+                    <td>#${item.id || '无'}</td>
+                    <td>${item.itemName || item.name || '未填写'}</td>
+                    <td>${item.category || '未填写'}</td>
+                    <td>${item.publisher?.name || item.publisherName || '未填写'}</td>
+                    <td><span class="status-badge status-${item.status || 'pending'}">${item.status === 'approved' ? '已通过' : item.status === 'rejected' ? '已拒绝' : '待审核'}</span></td>
+                    <td>
+                        <button class="btn-small" onclick="viewDonation('${item.id}')">查看</button>
+                        <button class="btn-small btn-danger" onclick="removeDonation('${item.id}')">删除</button>
+                    </td>
+                </tr>
+            `).join('');
+        }
+        
+        // 查看公益转赠详情
+        function viewDonation(id) {
+            const donations = JSON.parse(localStorage.getItem('hnau_admin_pending_donations') || '[]');
+            const item = donations.find(d => d.id == id);
+            if (item) {
+                alert('物品名称: ' + (item.itemName || item.name) + '\n分类: ' + (item.category || '未填写') + '\n成色: ' + (item.condition || '未填写') + '\n描述: ' + (item.description || '无') + '\n发布者: ' + (item.publisher?.name || item.publisherName || '未知'));
+            }
+        }
+        
+        // 删除公益转赠
+        function removeDonation(id) {
+            if (confirm('确定要删除这条记录吗？')) {
+                let donations = JSON.parse(localStorage.getItem('hnau_admin_pending_donations') || '[]');
+                donations = donations.filter(d => d.id != id);
+                localStorage.setItem('hnau_admin_pending_donations', JSON.stringify(donations));
+                loadDonationsList();
+            }
+        }
+
+        // 渲染待审核列表
+        function renderPendingCertifications() {
+            const tbody = document.querySelector('#tab-certifications .data-table tbody');
+            const pending = CertificationManager.getPending();
+            
+            if (pending.length === 0) {
+                tbody.innerHTML = '<tr><td colspan="6" style="text-align:center;padding:30px;color:#888;">暂无待审核申请</td></tr>';
+                return;
+            }
+            
+            tbody.innerHTML = pending.map(item => `
+                <tr>
+                    <td>#${item.id}</td>
+                    <td>${item.realName}</td>
+                    <td>${item.studentId}</td>
+                    <td>${item.college}</td>
+                    <td>${item.time}</td>
+                    <td>
+                        <div class="action-btns">
+                            <button class="action-btn view" onclick="viewCert('${item.id}')">查看</button>
+                            <button class="action-btn approve" onclick="approveCert('${item.id}')">通过</button>
+                            <button class="action-btn reject" onclick="rejectCert('${item.id}')">拒绝</button>
+                        </div>
+                    </td>
+                </tr>
+            `).join('');
+        }
+
+        // 查看认证详情
+        function viewCert(id) {
+            const pending = CertificationManager.getPending();
+            const item = pending.find(i => i.id === id);
+            if (item) {
+                alert('认证详情：\n\n姓名：' + item.realName + '\n学号：' + item.studentId + '\n学院：' + item.college + '\n年级：' + item.grade + '\n专业：' + (item.major || '未填'));
+            }
+        }
+
+        // 审核通过
+        function approveCert(id) {
+            if (confirm('确认通过此认证申请？')) {
+                if (CertificationManager.approve(id)) {
+                    alert('审核通过！');
+                    renderPendingCertifications();
+                    // 更新统计
+                    updateStats();
+                }
+            }
+        }
+
+        // 审核拒绝
+        function rejectCert(id) {
+            if (confirm('确认拒绝此认证申请？')) {
+                if (CertificationManager.reject(id)) {
+                    alert('已拒绝');
+                    renderPendingCertifications();
+                }
+            }
+        }
+
+        // 更新统计数据
+        function updateStats() {
+            const pending = CertificationManager.getPending();
+            const approved = JSON.parse(localStorage.getItem('approvedCertifications') || '[]').length;
+            // 使用正确的选择器
+            const statCards = document.querySelectorAll('.stat-card .stat-value');
+            if (statCards[1]) statCards[1].textContent = approved;  // 认证用户
+            if (statCards[2]) statCards[2].textContent = pending.length;  // 待审核
+        }
+        
+        // ========== 商品管理功能 ==========
+        const GOODS_STORAGE_KEY = 'hnau_goods_list';
+        
+        // 加载商品列表
+        function loadGoodsList() {
+            const goods = JSON.parse(localStorage.getItem(GOODS_STORAGE_KEY) || '[]');
+            renderGoodsTable(goods);
+        }
+        
+        // 渲染商品表格
+        function renderGoodsTable(goods) {
+            const tbody = document.getElementById('goodsTableBody');
+            if (!tbody) return;
+            
+            if (goods.length === 0) {
+                tbody.innerHTML = '<tr><td colspan="7" style="text-align:center;color:#999;">暂无商品</td></tr>';
+                return;
+            }
+            
+            tbody.innerHTML = goods.map(item => {
+                const status = item.status === 'approved' ? '<span class="status-tag active">在售</span>' : 
+                              item.status === 'reserved' ? '<span class="status-tag warning">已预定</span>' : 
+                              '<span class="status-tag">已下架</span>';
+                return `
+                    <tr>
+                        <td>#${item.id}</td>
+                        <td>${item.name || item.goodsName || '未命名'}</td>
+                        <td>${item.category || '未分类'}</td>
+                        <td>¥${item.price || 0}</td>
+                        <td>${item.publisher ? (item.publisher.name || item.publisherId || '未知') : '未知'}</td>
+                        <td>${status}</td>
+                        <td>
+                            <div class="action-btns">
+                                <button class="action-btn view" onclick="viewGoods('${item.id}')">查看</button>
+                                <button class="action-btn reject" onclick="removeGoods('${item.id}')">下架</button>
+                            </div>
+                        </td>
+                    </tr>
+                `;
+            }).join('');
+        }
+        
+        // 查看商品详情
+        function viewGoods(id) {
+            const goods = JSON.parse(localStorage.getItem(GOODS_STORAGE_KEY) || '[]');
+            const item = goods.find(g => g.id === id);
+            if (item) {
+                const images = item.images && item.images.length > 0 ? 
+                    `<img src="${item.images[0]}" style="max-width:200px;max-height:200px;margin:10px 0;">` : '';
+                alert(`商品详情：\n\n名称：${item.name || item.goodsName}\n分类：${item.category}\n价格：¥${item.price}\n成色：${item.condition || '未填写'}\n交易方式：${item.tradeType || '未填写'}\n发布者：${item.publisher ? (item.publisher.name || item.publisherId) : '未知'}\n\n描述：${item.description || item.goodsDesc || '无'}\n\n${images ? '【图片预览已在上方显示】' : ''}`);
+            }
+        }
+        
+        // 下架商品
+        function removeGoods(id) {
+            if (confirm('确认下架此商品？')) {
+                const goods = JSON.parse(localStorage.getItem(GOODS_STORAGE_KEY) || '[]');
+                const index = goods.findIndex(g => g.id === id);
+                if (index > -1) {
+                    goods.splice(index, 1);
+                    localStorage.setItem(GOODS_STORAGE_KEY, JSON.stringify(goods));
+                    alert('商品已下架');
+                    loadGoodsList();
+                }
+            }
+        }
+        
+        // 搜索商品
+        function searchGoods() {
+            const keyword = document.getElementById('goodsSearchInput').value.toLowerCase();
+            const goods = JSON.parse(localStorage.getItem(GOODS_STORAGE_KEY) || '[]');
+            const filtered = goods.filter(g => 
+                (g.name || g.goodsName || '').toLowerCase().includes(keyword) ||
+                (g.category || '').toLowerCase().includes(keyword) ||
+                (g.publisher ? (g.publisher.name || g.publisherId || '').toLowerCase().includes(keyword) : false)
+            );
+            renderGoodsTable(filtered);
+        }
+
+        // 页面加载时初始化
+        document.addEventListener('DOMContentLoaded', function() {
+            renderPendingCertifications();
+            updateStats();
+            loadGoodsList();  // 加载商品列表
+        });
+    </script>
+</body>
+</html>
