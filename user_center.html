@@ -606,9 +606,7 @@
         // 退出登录
         function logout() {
             if (confirm('确定要退出登录吗？')) {
-                localStorage.removeItem('currentUser');
-                localStorage.removeItem('authToken');
-                location.href = 'user_login.html';
+                Auth.logout();
             }
         }
         

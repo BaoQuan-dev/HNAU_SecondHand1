@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>农大闲置 - 校园循环经济平台</title>
     <link rel="stylesheet" href="./style/main.css">
+    <script src="./script/common.js"></script>
     <style>
         /* ========== 视频背景 ========== */
         body { position: relative; margin: 0; padding: 0; }
@@ -822,6 +823,65 @@
     </div>
     
     <script>
+        // 根据用户状态更新欢迎消息
+        function updateWelcomeMessage() {
+            const speechBubbleH4 = document.querySelector('.speech-bubble h4');
+            const speechBubbleP = document.querySelector('.speech-bubble p');
+            
+            if (!speechBubbleH4 || !speechBubbleP) return;
+            
+            // 检查登录状态
+            const isLoggedIn = Auth.isLoggedIn();
+            
+            if (!isLoggedIn) {
+                // 未登录
+                speechBubbleH4.innerHTML = '✨ 欢迎来到农大闲置';
+                speechBubbleP.textContent = '登录后解锁更多功能，开启你的校园循环之旅~';
+                return;
+            }
+            
+            // 已登录，获取用户信息
+            const currentUser = Auth.getCurrentUser();
+            const username = currentUser ? currentUser.username : '用户';
+            const authStatus = Auth.getUserAuthStatus(username);
+            
+            if (authStatus === 'unsubmitted') {
+                // 已登录 + 未认证
+                speechBubbleH4.innerHTML = `👋 你好！用户 ${username}，请先完成校园认证哦～`;
+                speechBubbleP.textContent = '完成认证后即可发布商品，开启交易之旅！';
+            } else if (authStatus === 'pending') {
+                // 已登录 + 审核中
+                speechBubbleH4.innerHTML = `⏳ 认证审核中，用户 ${username}，你的认证正在审核中...`;
+                speechBubbleP.textContent = '请耐心等待审核结果，通常1-2个工作日内完成~';
+            } else if (authStatus === 'approved') {
+                // 已登录 + 已认证
+                speechBubbleH4.innerHTML = `🎉 欢迎回来！用户 ${username}，认证已通过，祝你交易愉快～`;
+                speechBubbleP.textContent = '快去发布闲置或浏览商品吧！';
+            } else {
+                // 其他状态，默认显示未认证
+                speechBubbleH4.innerHTML = `👋 你好！用户 ${username}，请先完成校园认证哦～`;
+                speechBubbleP.textContent = '完成认证后即可发布商品，开启交易之旅！';
+            }
+        }
+        
+        // 页面加载完成后更新欢迎消息
+        document.addEventListener('DOMContentLoaded', function() {
+            updateWelcomeMessage();
+        });
+        
+        // 监听localStorage变化，实时更新欢迎消息
+        window.addEventListener('storage', function(e) {
+            // 当登录状态相关的存储项改变时，更新欢迎消息
+            if (e.key === 'hnau_login_state' || e.key === null) {
+                updateWelcomeMessage();
+            }
+        });
+        
+        // 页面获得焦点时也更新欢迎消息（防止切换标签页时状态不同步）
+        window.addEventListener('focus', function() {
+            updateWelcomeMessage();
+        });
+        
         // 唤醒所有功能 - 同时闪亮
         function awakenAll() {
             const items = document.querySelectorAll('.feature-item');
